@@ -1,0 +1,7 @@
+{
+  "name": "horseman",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "deno run --allow-net --allow-read --watch --unstable server/server.tsx"
+  }
+}
