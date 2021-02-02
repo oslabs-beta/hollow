@@ -1,8 +1,17 @@
-import { Application, Router, React, ReactDOMServer } from "../deps.ts"
-import App from "../client/components/App.tsx";
+import { Application, Router, React, ReactDOMServer } from '../deps.ts';
+import tableController from './controllers/tableController.ts';
+import App from '../client/components/App.tsx';
 
 const router = new Router();
-router.get("/", (ctx) => {
+
+router
+  .get('/api/tables', tableController.getAllTables)
+  .post('/api/tables', tableController.createTable)
+  .get('/api/tables/:name', tableController.getTableByName)
+  .delete('/api/tables/:name', tableController.deleteTableByName);
+
+router.get('/', (ctx) => {
+  console.log('test test');
   const app = (ReactDOMServer as any).renderToString(<App />);
   ctx.response.body =
     `<html>
