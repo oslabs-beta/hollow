@@ -1,4 +1,5 @@
 import { React } from "../../deps.ts";
+import Sidebar from './sidebar/Sidebar.tsx';
 
 declare global {
   namespace JSX {
@@ -11,7 +12,7 @@ declare global {
 const App = () => {
   return (
     <div>
-      This is a test.
+      <Sidebar />
     </div>
   );
 };
