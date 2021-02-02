@@ -11,7 +11,6 @@ router
   .delete('/api/tables/:name', tableController.deleteTableByName);
 
 router.get('/', (ctx) => {
-  console.log('test test');
   const app = (ReactDOMServer as any).renderToString(<App />);
   ctx.response.body =
     `<html>
