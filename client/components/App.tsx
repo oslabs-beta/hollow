@@ -1,19 +1,13 @@
-import { React } from "../../deps.ts";
+import { React } from '../../deps.ts';
 import Sidebar from './sidebar/Sidebar.tsx';
+import Header from './header/Header.tsx'
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [key: string]: any;
-    }
-  }
-}
-
-const App = () => {
+const App: React.FC = () => {
   return (
-    <div>
-      <Sidebar />
-    </div>
+    <>
+      <Sidebar text='hi' />
+      <Header text='hi' />
+    </>
   );
 };
 

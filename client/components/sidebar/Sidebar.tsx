@@ -1,9 +1,18 @@
 import { React } from '../../../deps.ts';
 import * as style from './style.ts';
 
-const Sidebar = () => {
+interface Props {
+  text: string;
+}
+
+
+
+const Sidebar: React.FC<Props> = () => {
   return (
     <div style={style.container} >
+      <div>
+        
+      </div>
       <ul style={style.list} >
         <li>Collections
           <ul style={style.inner}>

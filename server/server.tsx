@@ -10,7 +10,7 @@ router.get("/", (ctx) => {
         <link rel="stylesheet" href="style.css">
       </head>
       <body>
-        <div id="root">${app}</div>
+        <main id="root">${app}</main>
       </body>
     </html>`;
 });
