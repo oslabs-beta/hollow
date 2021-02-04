@@ -1,5 +1,5 @@
 // Server
-export { Application, Router } from 'https://deno.land/x/oak/mod.ts';
+export { Application, Router } from 'https://deno.land/x/oak@v6.5.0/mod.ts';
 
 // React
 export { default as React } from 'https://dev.jspm.io/react@16.13.1';
@@ -8,3 +8,6 @@ export { default as ReactDOMServer } from 'https://dev.jspm.io/react-dom@16.13.1
 
 // Database
 export { Client } from 'https://deno.land/x/postgres@v0.7.0/mod.ts';
+
+// File system
+export { ensureDir } from 'https://deno.land/std@0.85.0/fs/mod.ts';
