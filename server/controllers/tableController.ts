@@ -2,7 +2,7 @@ import db from '../secret.ts';
 
 const tableController: any = {};
 
-tableController.getAllTables = async (ctx: any) => {
+tableController.getAllTables = async (ctx: any, next: any) => {
   const text = `
     SELECT table_name
     FROM information_schema.tables
@@ -15,12 +15,9 @@ tableController.getAllTables = async (ctx: any) => {
     await db.connect();
     const result = await db.queryArray(text);
     const tables = result.rows.map((tableArr: any) => tableArr[0]);
+    ctx.state.tables = tables;
 
-    ctx.response.status = 200;
-    ctx.response.body = {
-      success: true,
-      data: tables
-    };
+    return next();
   }
   catch(err) {
     ctx.response.status = 500;
@@ -34,7 +31,7 @@ tableController.getAllTables = async (ctx: any) => {
   }
 }
 
-tableController.getTableByName = async (ctx: any) => {
+tableController.getTableByName = async (ctx: any, next: any) => {
   const rowText = `SELECT * FROM ${ctx.params.name}`;
 
   const columnText = `
@@ -47,16 +44,12 @@ tableController.getTableByName = async (ctx: any) => {
   try {
     await db.connect();
     const rowResult = await db.queryObject(rowText);
-    const rows = rowResult.rows;
+    ctx.state.rows = rowResult.rows;
 
     const columnResult = await db.queryObject(columnText, ctx.params.name);
-    const columns = columnResult.rows;
+    ctx.state.columns = columnResult.rows;
 
-    ctx.response.status = 200;
-    ctx.response.body = {
-      success: true,
-      data: { rows, columns }
-    };
+    return next();
   }
   catch(err) {
     ctx.response.status = 500;
@@ -70,7 +63,7 @@ tableController.getTableByName = async (ctx: any) => {
   }
 }
 
-tableController.createTable = async (ctx: any) => {
+tableController.createTable = async (ctx: any, next: any) => {
   if (!ctx.request.hasBody) {
     ctx.response.status = 400;
     ctx.response.body = {
@@ -95,10 +88,8 @@ tableController.createTable = async (ctx: any) => {
     await db.connect();
     const result = await db.queryObject(text);
 
-    ctx.response.status = 200;
-    ctx.response.body = {
-      success: true
-    };
+    ctx.state.collectionName = tableName;
+    return next();
   }
   catch(err) {
     ctx.response.status = 500;
@@ -112,17 +103,14 @@ tableController.createTable = async (ctx: any) => {
   }
 };
 
-tableController.deleteTableByName = async (ctx: any) => {
+tableController.deleteTableByName = async (ctx: any, next: any) => {
   const text = `DROP TABLE ${ctx.params.name}`;
 
   try {
     await db.connect();
     await db.queryObject(text);
 
-    ctx.response.status = 200;
-    ctx.response.body = {
-      success: true
-    };
+    return next();
   }
   catch(err) {
     ctx.response.status = 500;
