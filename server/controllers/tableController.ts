@@ -2,7 +2,7 @@ import db from '../secret.ts';
 
 const tableController: any = {};
 
-tableController.getAllTables = async (ctx: any, next: any) => {
+tableController.getAllTables = async (ctx: any, next: Function) => {
   const text = `
     SELECT table_name
     FROM information_schema.tables
@@ -17,7 +17,7 @@ tableController.getAllTables = async (ctx: any, next: any) => {
     const tables = result.rows.map((tableArr: any) => tableArr[0]);
     ctx.state.tables = tables;
 
-    return next();
+    return await next();
   }
   catch(err) {
     ctx.response.status = 500;
@@ -31,7 +31,7 @@ tableController.getAllTables = async (ctx: any, next: any) => {
   }
 }
 
-tableController.getTableByName = async (ctx: any, next: any) => {
+tableController.getTableByName = async (ctx: any, next: Function) => {
   const rowText = `SELECT * FROM ${ctx.params.name}`;
 
   const columnText = `
@@ -49,7 +49,7 @@ tableController.getTableByName = async (ctx: any, next: any) => {
     const columnResult = await db.queryObject(columnText, ctx.params.name);
     ctx.state.columns = columnResult.rows;
 
-    return next();
+    return await next();
   }
   catch(err) {
     ctx.response.status = 500;
@@ -63,7 +63,7 @@ tableController.getTableByName = async (ctx: any, next: any) => {
   }
 }
 
-tableController.createTable = async (ctx: any, next: any) => {
+tableController.createTable = async (ctx: any, next: Function) => {
   if (!ctx.request.hasBody) {
     ctx.response.status = 400;
     ctx.response.body = {
@@ -89,7 +89,7 @@ tableController.createTable = async (ctx: any, next: any) => {
     const result = await db.queryObject(text);
 
     ctx.state.collectionName = tableName;
-    return next();
+    return await next();
   }
   catch(err) {
     ctx.response.status = 500;
@@ -103,14 +103,14 @@ tableController.createTable = async (ctx: any, next: any) => {
   }
 };
 
-tableController.deleteTableByName = async (ctx: any, next: any) => {
+tableController.deleteTableByName = async (ctx: any, next: Function) => {
   const text = `DROP TABLE ${ctx.params.name}`;
 
   try {
     await db.connect();
     await db.queryObject(text);
 
-    return next();
+    return await next();
   }
   catch(err) {
     ctx.response.status = 500;

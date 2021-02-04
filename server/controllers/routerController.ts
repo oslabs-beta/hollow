@@ -3,23 +3,23 @@ import routerTemplate from '../templates/routerTemplate.ts';
 
 const routerController: any = {};
 
-routerController.createRouter = async (ctx: any, next: any) => {
+routerController.createRouter = async (ctx: any, next: Function) => {
   await ensureDir('./api/routes');
   await Deno.writeTextFile(
     `./api/routes/${ctx.state.collectionName}.ts`,
     routerTemplate(ctx.state.collectionName)
   );
 
-  return next();
+  return await next();
 };
 
-routerController.deleteRouter = async (ctx: any, next: any) => {
+routerController.deleteRouter = async (ctx: any, next: Function) => {
   try {
     await Deno.remove(`./api/routes/${ctx.params.name}.ts`);
   }
   catch(err) {}
-  
-  return next();
+
+  return await next();
 };
 
 export default routerController;
