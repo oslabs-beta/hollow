@@ -1,6 +1,6 @@
 export default (collectionName: string) => 
 
-`import { Router } from 'https://deno.land/x/oak/mod.ts';
+`import { Router } from 'https://deno.land/x/oak@v6.5.0/mod.ts';
 import { getAll, getOne, create, update, deleteOne } from '../controllers/defaultController.ts';
 
 const router = new Router({ prefix: '/api/${collectionName}' });
