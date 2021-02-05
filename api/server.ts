@@ -1,19 +1,28 @@
+import { existsSync } from "https://deno.land/std@0.85.0/fs/exists.ts";
 import { Application } from '../deps.ts';
 const app = new Application();
 
 const PORT = 3000;
 const routers: any = {};
 
-for (const dirEntry of Deno.readDirSync('api/routes')) {
-  if (dirEntry.name.endsWith('.ts')) {
-    // Import route files
-    const collectionName = dirEntry.name.slice(0, -3);
-    const module = await import('./routes/' + dirEntry.name);
-    routers[collectionName] = module.default;
+// Do not remove, prevents error if no routers
+app.use(async (ctx, next) => {
+  console.log(`${ctx.request.method} ${ctx.request.url}`);
+  return await next();
+});
 
-    // Use collection router
-    app.use(routers[collectionName].routes());
-    app.use(routers[collectionName].allowedMethods());
+if (existsSync('./api/routes')) {
+  for (const dirEntry of Deno.readDirSync('api/routes')) {
+    if (dirEntry.name.endsWith('.ts')) {
+      // Import route files
+      const collectionName = dirEntry.name.slice(0, -3);
+      const module = await import('./routes/' + dirEntry.name);
+      routers[collectionName] = module.default;
+
+      // Use collection router
+      app.use(routers[collectionName].routes());
+      app.use(routers[collectionName].allowedMethods());
+    }
   }
 }
 
