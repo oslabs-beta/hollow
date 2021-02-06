@@ -15,8 +15,22 @@ router.get('/', (ctx) => {
       </head>
       <body>
         <main id="root">${app}</main>
+        <script src="bundle.js" defer></script>
       </body>
     </html>`;
+});
+
+ // @ts-ignore
+ const { files } = await Deno.emit('./client/index.tsx', {
+  bundle: 'esm',
+});
+
+
+
+router.get('/static/client.js', (ctx) => {
+  console.log('bundle!');
+  ctx.response.headers.set('Content-Type', 'text/javascript');
+  ctx.response.body = `(async () => { // @ts-ignore ${files['deno:///bundle.js']} })()`
 });
 
 const app = new Application();

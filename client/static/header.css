@@ -1,0 +1,23 @@
+.headerContainer {
+    border-bottom: 2px solid #212021;
+    position: fixed;
+    top: 0;
+    left: 14rem;
+    width: 85.5%;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: none;
+    height: 3.5rem;
+}
+
+.headerTextRight {
+    color: grey;
+    text-align: right;
+}
+
+.headerTextLeft {
+    color: grey;
+    text-align: justify;
+}

@@ -1,0 +1,92 @@
+  /**
+ * @description CSS rules for Sidebar component
+ */
+
+
+.sidebarContainer {
+  background-color: #212021;
+  height: 100%;
+  min-width: 14rem;
+  max-width: 14rem;
+  position: fixed;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0px 0px 3px #212021;
+}
+
+.sidebarLogo {
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  border-bottom: 1px solid #39393A;
+  box-shadow: 0 1px 1px #2b2b2e;
+  color: #297373;
+  width: 14rem;
+}
+
+.sidebarLogo:hover {
+  cursor: pointer;
+}
+
+.sidebarList {
+  margin-top: 1rem;
+  list-style-type: none;
+}
+
+.sidebarListHeader {
+  color: #8a128a;
+  margin-top: 1rem;
+  padding-left: 1rem;
+}
+
+.sidebarItem {
+  color: #819494;
+  list-style-type: none;
+  width: 14rem;
+  padding-left: 0rem;
+  overflow: hidden;
+  padding-top: .5rem;
+}
+
+.sidebarItem:hover {
+  background-color: #343636;
+  cursor: pointer;
+}
+
+.sidebarItem p {
+  height: 100%;
+  margin-left: 3.5rem;
+  margin-bottom: .5rem;
+}
+
+.sidebarSettings {
+  text-align: center;
+  margin-top: auto;
+  color: #212021;
+  font-size: .8rem;
+  box-shadow: 0px 0px 3px #46105e;
+  width: 100%;
+  background-color: #8a128a;
+  opacity: 0.6;
+}
+
+.sidebarSettings:hover {
+  cursor: pointer;
+  background-color: #c478c4;
+}
+
+.active {
+  color: #297373;
+  opactiy: 1;
+  display: list-item;
+  list-style-type: disc;
+}
+
+.inactive {
+  opacity: 0.5;
+}

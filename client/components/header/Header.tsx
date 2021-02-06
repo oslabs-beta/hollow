@@ -1,4 +1,5 @@
-import { React } from '../../../deps.ts';
+// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/master/react/v16.13.1/react.d.ts"
+import React from "https://cdn.pika.dev/react@16.13.1";
 
 interface Props {
     text: string;
@@ -6,8 +7,9 @@ interface Props {
 
 const Header: React.FC<Props> = () => {
     return (
-        <div> 
-            hello!
+        <div className='headerContainer'> 
+            <h1 className='headerTextLeft'>Hello Left!</h1>
+            <h1 className='headerTextRight'>Hello Right!</h1> 
         </div>
     )
 }
