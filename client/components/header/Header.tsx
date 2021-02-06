@@ -1,4 +1,4 @@
-import { React } from '../../../deps.ts';
+import { React } from '../../../deps.ts'
 
 interface Props {
     text: string;
@@ -6,8 +6,9 @@ interface Props {
 
 const Header: React.FC<Props> = () => {
     return (
-        <div> 
-            hello!
+        <div className='headerContainer'> 
+            <h1 className='headerTextLeft'>Hello Left!</h1>
+            <h1 className='headerTextRight'>Hello Right!</h1> 
         </div>
     )
 }
