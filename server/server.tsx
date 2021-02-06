@@ -1,14 +1,10 @@
 import { Application, Router, React, ReactDOMServer } from '../deps.ts';
-import tableController from './controllers/tableController.ts';
+import tableRouter from './routes/tableRouter.ts';
+
 import App from '../client/components/App.tsx';
 
+const PORT = 8000;
 const router = new Router();
-
-router
-  .get('/api/tables', tableController.getAllTables)
-  .post('/api/tables', tableController.createTable)
-  .get('/api/tables/:name', tableController.getTableByName)
-  .delete('/api/tables/:name', tableController.deleteTableByName);
 
 router.get('/', (ctx) => {
   const app = (ReactDOMServer as any).renderToString(<App />);
@@ -24,8 +20,12 @@ router.get('/', (ctx) => {
 });
 
 const app = new Application();
+
 app.use(router.routes());
 app.use(router.allowedMethods());
+
+app.use(tableRouter.routes());
+app.use(tableRouter.allowedMethods());
 
 app.use(async (ctx, next) => {
   const root = `${Deno.cwd()}/client/static`

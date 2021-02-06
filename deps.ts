@@ -1,5 +1,5 @@
 // Server
-export { Application, Router } from 'https://deno.land/x/oak/mod.ts';
+export { Application, Router } from 'https://deno.land/x/oak@v6.5.0/mod.ts';
 
 // React
 // @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/master/react/v16.13.1/react.d.ts"
