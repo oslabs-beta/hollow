@@ -45,21 +45,13 @@ export const getOne = async (ctx: any) => {
 };
 
 export const create = async (ctx: any) => {
-  // const { value } = await ctx.request.body({ type: 'json' });
-  // const { tableName, columns } = await value;
-
   const { value } = await ctx.request.body({ type: 'json' });
   const { name } = await value;
   const text = `INSERT INTO ${table} ( name) VALUES ($1) RETURNING *`;
-  console.log('inside CREATE');
-  console.log('name', name);
-  console.log(ctx.params.name);
-  let max = -Infinity;
 
   try {
     await db.connect();
     let result = await db.queryObject(text, name);
-    console.log('CREAT result: ', result);
     ctx.response.status = 200;
     ctx.response.body = {
       success: true,
@@ -96,7 +88,6 @@ export const update = async (ctx: any) => {
         await db.connect();
         const result = await db.queryObject(
           `UPDATE ${table} SET name = $1 WHERE id = $2 RETURNING *`,
-
           name,
           ctx.params.id
         );
@@ -120,8 +111,6 @@ export const update = async (ctx: any) => {
 
 export const deleteOne = async (ctx: any) => {
   const text = `DELETE FROM ${table} WHERE id = $1`;
-  console.log('inside delete');
-  console.log(ctx.params.id);
   try {
     await db.connect();
     const result = await db.queryObject(text, ctx.params.id);
