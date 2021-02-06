@@ -27,10 +27,10 @@ router.get('/', (ctx) => {
 
 
 
-router.get('/static/client.js', (ctx) => {
+router.get('/bundle.js', (ctx) => {
   console.log('bundle!');
   ctx.response.headers.set('Content-Type', 'text/javascript');
-  ctx.response.body = `(async () => { // @ts-ignore ${files['deno:///bundle.js']} })()`
+  ctx.response.body = files['deno:///bundle.js'];
 });
 
 const app = new Application();

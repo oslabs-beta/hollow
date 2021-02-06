@@ -1,21 +1,30 @@
-import { React } from '../../../deps.ts';
-
+// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/master/react/v16.13.1/react.d.ts"
+import React from 'https://dev.jspm.io/react';
 
 interface Props {
   text: string;
 }
 
-
 interface ItemType {
   type: string;
-  active: string;
-  handleClick: React.MouseEventHandler<HTMLDivElement>;
 }
 
-const ListItem: React.FC<ItemType> = ({ type, active, handleClick }) => {
+const ListItem: React.FC<ItemType> = ({ type }) => {
+
+  
+
+  const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    alert('clickes');
+    // if (active) {
+      // setActive(false);
+    // } else {
+    //   setActive(true);
+    // }
+  };
+
   return (
       <div onClick={handleClick} className='sidebarItem'>
-        <p className={active}>{type}</p>
+        <p className='active'>{type}</p>
       </div>
   );
 };
@@ -34,23 +43,23 @@ const ListHeader: React.FC<HeaderType> = ({ type }) => {
 
 
 const Sidebar: React.FC<Props> = () => {
-  const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    console.log('here');
-    alert('clickeddd!!');
-    e.preventDefault();
-  };
+const [active, setActive] = React.useState<boolean>(false);
+const activeCollections = ['Users', 'Reviews', 'Likes'];
+
+const collections = activeCollections.map(collection => {
+  return (<ListItem type={collection} />);
+});
+
   return (
     <div className='sidebarContainer'>
       <div className='sidebarLogo'>
         hollow
       </div>
       <ListHeader type='Collections'/>
-        <ListItem handleClick={handleClick} active='active' type='Users' />
-        <ListItem handleClick={handleClick} active='inactive' type='Reviews' />
-        <ListItem handleClick={handleClick} active='inactive' type='Likes' />
+        {collections}
       <ListHeader type='Tools' />
-        <ListItem handleClick={handleClick} active='inactive' type='Content-Builder' />
-        <ListItem handleClick={handleClick} active='inactive' type='Plugins' />
+        <ListItem type='Content-Builder' />
+        <ListItem type='Plugins' />
       <div className='sidebarSettings'>
         <h3>Settings</h3>
       </div>
