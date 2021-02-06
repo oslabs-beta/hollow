@@ -5,6 +5,11 @@ import { getAll, getOne, create, update, deleteOne } from '../controllers/defaul
 
 const router = new Router({ prefix: '/api/${collectionName}' });
 
+router.use(async (ctx, next) => {
+  ctx.state.collectionName = '${collectionName}';
+  return await next();
+});
+
 router
   .get('/', getAll)
   .get('/:id', getOne)
