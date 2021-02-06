@@ -6,6 +6,11 @@ import App from '../client/components/App.tsx';
 const PORT = 8000;
 const router = new Router();
 
+// @ts-ignore
+const { files } = await Deno.emit('./client/client.tsx', {
+  bundle: 'esm'
+});
+
 router.get('/', (ctx) => {
   const app = (ReactDOMServer as any).renderToString(<App />);
   ctx.response.body =
@@ -15,8 +20,14 @@ router.get('/', (ctx) => {
       </head>
       <body>
         <div id="root">${app}</div>
+        <script src="bundle.js" defer></script>
       </body>
     </html>`;
+});
+
+router.get('/bundle.js', (ctx) => {
+  ctx.response.headers.set('Content-Type', 'text/javascript');
+  ctx.response.body = files['deno:///bundle.js'];
 });
 
 const app = new Application();

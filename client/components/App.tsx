@@ -1,4 +1,4 @@
-import { React } from "../../deps.ts";
+import React from 'https://dev.jspm.io/react@16.13.1';
 
 declare global {
   namespace JSX {
@@ -11,7 +11,7 @@ declare global {
 const App = () => {
   return (
     <div>
-      This is a test.
+      <button onClick={() => alert('HYDRATED')}>Hydration Button</button>
     </div>
   );
 };
