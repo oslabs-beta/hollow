@@ -2,7 +2,9 @@ import { existsSync } from "https://deno.land/std@0.85.0/fs/exists.ts";
 import { Application } from '../deps.ts';
 const app = new Application();
 
-const PORT = 3000;
+const env = Deno.env.toObject();
+const PORT = Number(env.PORT) || 3000;
+
 const routers: any = {};
 
 // Do not remove, prevents error if no routers
