@@ -1,12 +1,10 @@
 // Placeholder, will swap out
 import db from '../../server/secret.ts';
 
-const table = 'restaurants';
-
 export const getAll = async (ctx: any) => {
-  const text = `SELECT * FROM ${table}`;
-  console.log('inside get all');
-  console.log(ctx.params);
+  const table = ctx.state.collectionName;
+  const text = `SELECT * FROM ${table} ORDER BY id ASC`;
+
   try {
     await db.connect();
     const result = await db.queryObject(text);
@@ -25,17 +23,26 @@ export const getAll = async (ctx: any) => {
 };
 
 export const getOne = async (ctx: any) => {
+  const table = ctx.state.collectionName;
   const text = `SELECT * FROM ${table} WHERE id = $1`;
-  console.log('inside get one');
   console.log(ctx.params.id);
+  //   PREPARE errthing AS SELECT * FROM  table
+  //   `PREPARE foo(text,text,text) AS
+  //     SELECT  *
+  //     FROM    foobar
+  //     WHERE   foo = $1
+  //        AND  bar = $2
+  //         OR  baz = $3`  ;
+  // EXECUTE foo('foo','bar','baz');
+
   try {
     await db.connect();
     const result = await db.queryObject(text, ctx.params.id);
-    console.log('result: ', result);
+
     ctx.response.status = 200;
     ctx.response.body = {
       success: true,
-      data: result.rows,
+      data: result.rows[0],
     };
   } catch (err) {
     console.log('err: ', err);
@@ -45,13 +52,14 @@ export const getOne = async (ctx: any) => {
 };
 
 export const create = async (ctx: any) => {
+  const table = ctx.state.collectionName;
   const { value } = await ctx.request.body({ type: 'json' });
   const { name } = await value;
   const text = `INSERT INTO ${table} ( name) VALUES ($1) RETURNING *`;
 
   try {
     await db.connect();
-    let result = await db.queryObject(text, name);
+    const result = await db.queryObject(text, name);
     ctx.response.status = 200;
     ctx.response.body = {
       success: true,
@@ -65,6 +73,7 @@ export const create = async (ctx: any) => {
 };
 
 export const update = async (ctx: any) => {
+  const table = ctx.state.collectionName;
   if (ctx.response.status === 400) {
     ctx.response.body = {
       success: false,
@@ -110,6 +119,7 @@ export const update = async (ctx: any) => {
 };
 
 export const deleteOne = async (ctx: any) => {
+  const table = ctx.state.collectionName;
   const text = `DELETE FROM ${table} WHERE id = $1`;
   try {
     await db.connect();
