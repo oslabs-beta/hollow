@@ -1,8 +1,8 @@
 {
-  "name": "hollow",
+  "name": "Hollow",
   "version": "1.0.0",
   "scripts": {
-    "start": "deno run --allow-net --allow-read --allow-write --watch --unstable server/server.tsx",
+    "start": "denon run --allow-net --allow-read --allow-write --watch --unstable server/server.tsx",
     "start-api": "deno run --allow-net --allow-read --watch --unstable api/server.ts"
   }
 }
