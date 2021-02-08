@@ -1,0 +1,32 @@
+  /**
+ *  @description CSS rules for Header component
+ */
+
+
+.headerContainer {
+    background-color: #2e2d2e;
+    border-bottom: 1px solid #39393A;
+    position: fixed;
+    top: 0;
+    left: 14rem;
+    width: 85.5%;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: none;
+    height: 3.5rem;
+    z-index: 2;
+}
+
+.headerTextRight {
+    color: grey;
+    text-align: right;
+    display: none;
+}
+
+.headerTextLeft {
+    color: grey;
+    text-align: justify;
+    display: none;
+}
