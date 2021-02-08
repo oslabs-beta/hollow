@@ -50,7 +50,7 @@ app.use(async (ctx, next) => {
   }
 });
 
-await app.listen({ port: PORT })
-.then(() => console.log('listening on port 8000...'))
-.catch(err => console.log(err));
-
+app.addEventListener('listen', () => {
+  console.log(`Listening on port ${PORT}.`);
+});
+await app.listen({ port: PORT });
