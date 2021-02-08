@@ -13,9 +13,30 @@ import ActiveCollection from "./dashboard/activeCollection/ActiveCollection.tsx"
 class App extends React.Component<{}, AppState> {
   constructor(props: any){
     super(props);
-    this.state = { activeItem: 'Users', view: 'collection' };
+    this.state = { activeItem: '', view: 'collection', collections: [], collectionHeaders: [], collectionEntries: [[]] };
     this.handleClick = this.handleClick.bind(this);
   }
+
+  componentDidMount() {
+    fetch('/api/tables')
+      .then(data => data.json())
+      .then((data) => {
+        this.setState({ ...this.state, activeItem: data.data[0], collections: this.state.collections.concat(data.data) })
+      })
+      .then(() => {
+        fetch(`/api/tables/${this.state.activeItem}`)
+          .then(data => data.json())
+          .then(data => {
+            const headers = data.data.columns.map((header: any) => header.column_name)
+            const entries = data.data.rows.map((entry:any) => Object.values(entry).map(value => value));
+            this.setState({ ...this.state, collectionHeaders: headers, collectionEntries: entries } );
+          })
+          .catch(error => console.log('error', error));
+      })
+      .catch(error => console.log('error', error));
+  };
+
+
 
   /**
    * @description sets state to active item (collection or tool) on click of sidebar item
@@ -24,7 +45,6 @@ class App extends React.Component<{}, AppState> {
   handleClick(event: React.MouseEvent) {
     // @ts-ignore
     const active = event.target.innerText;
-
     // Sets correct view based on which item was clicked
     switch(active) {
       case 'Settings':
@@ -49,17 +69,27 @@ class App extends React.Component<{}, AppState> {
           this.setState({ activeItem: active });
         }
     }
+    if (this.state.view === 'collection') {
+      fetch(`/api/tables/${active}`)
+          .then(data => data.json())
+          .then(data => {
+            const headers = data.data.columns.map((header: any) => header.column_name)
+            const entries = data.data.rows.map((entry:any) => Object.values(entry).map(value => value));
+            this.setState({ ...this.state, collectionHeaders: headers, collectionEntries: entries } );
+          })
+          .catch(error => console.log('error', error));
+    }
   };
 
   render () {
     // will need to get current collections from api - these are dummy values for testing
-    const currentCollections = ['Users', 'Reviews', 'Likes'];
+    const currentCollections = this.state.collections;
     const currentTools = ['Content-Builder', 'Plugins'];
 
     let activeView;
 
     if (this.state.view === 'collection') {
-      activeView = <ActiveCollection activeCollection={this.state.activeItem}  />;
+      activeView = <ActiveCollection activeCollection={this.state.activeItem} collectionHeaders={this.state.collectionHeaders} collectionEntries={this.state.collectionEntries} />;
     } else if (this.state.view === 'content-builder') {
       // need to create content builder compononent before assinging to activeView
       // activeView = <ContentBuilder />

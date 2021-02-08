@@ -5,6 +5,8 @@
 
 export interface ActiveCollectionProps {
   activeCollection: string;
+  collectionHeaders: string[];
+  collectionEntries: string[][];
 }
 
 export interface EntryProps  {
@@ -16,4 +18,9 @@ export interface EntryProps  {
 export interface FieldProps {
   fieldName: string;
   activeCollection: string;
+}
+
+export interface ActiveCollectionState {
+  activePage: string;
+  activeResultsPerPage: string;
 }
