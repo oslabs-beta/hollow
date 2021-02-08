@@ -1,38 +1,25 @@
 // @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/master/react/v16.13.1/react.d.ts"
-import React from 'https://dev.jspm.io/react';
+import React from 'https://dev.jspm.io/react@16.13.1';
+import { ItemType, SidebarProps, HeaderType } from './interface.ts';
 
-interface Props {
-  text: string;
-}
-
-interface ItemType {
-  type: string;
-}
-
-const ListItem: React.FC<ItemType> = ({ type }) => {
-
-  
-
-  const handleClick: React.MouseEventHandler<HTMLDivElement> = (e) => {
-    alert('clickes');
-    // if (active) {
-      // setActive(false);
-    // } else {
-    //   setActive(true);
-    // }
-  };
-
+/**
+ * @description Renders each individual list item for sidebar
+ * @param type: item name
+ * @param handleClick: sets active state to clicked item
+ * @param active: boolean - sets className to 'active' or 'inactive 
+ */
+const ListItem: React.FC<ItemType> = ({ type, handleClick, active }) => {
   return (
-      <div onClick={handleClick} className='sidebarItem'>
-        <p className='active'>{type}</p>
-      </div>
+    <div onClick={(e) => handleClick(e)} className='sidebarItem'>
+      <p className={active ? 'active' : 'inactive'}>{type}</p>
+    </div>
   );
 };
 
-interface HeaderType {
-  type: string;
-}
-
+/**
+ * @description Renders each individual list header for sidebar
+ * @param type: header name
+ */
 const ListHeader: React.FC<HeaderType> = ({ type }) => {
   return (
     <div>
@@ -41,30 +28,48 @@ const ListHeader: React.FC<HeaderType> = ({ type }) => {
   );
 }
 
+/**
+ * @description Renders sidebar component
+ * @param SidebarProps:
+ * activeItem - currently selected sidebar item
+ * handleClick - handles change of selected sidebar item
+ * currentCollections - array of all current collections
+ * currentTools - array of all current tools
+ */
+const Sidebar: React.FC<SidebarProps> = ({ currentCollections, currentTools, handleClick, activeItem }) => {
+  // TODO:
+  // build settings component
+  // build content-builder component
+  // fix up styling
 
-const Sidebar: React.FC<Props> = () => {
-const [active, setActive] = React.useState<boolean>(false);
-const activeCollections = ['Users', 'Reviews', 'Likes'];
+  // maps each collection to List item and renders below - currently uses dummy data
+    const collections = currentCollections.map((collection, i) => {
+      let active = false;
+      if (collection === activeItem) active = true;
+      return (<ListItem key={collection} type={collection} handleClick={handleClick} active={active} />);
+    });
 
-const collections = activeCollections.map(collection => {
-  return (<ListItem type={collection} />);
-});
+    // maps each tool to List item and renders below - plugins is filler for now
+    const tools = currentTools.map((tool, i) => {
+      let active = false;
+      if (tool === activeItem) active = true;
+      return (<ListItem key={tool} type={tool} handleClick={handleClick} active={active} />);
+    });
 
-  return (
-    <div className='sidebarContainer'>
+    return(
+      <div className='sidebarContainer'>
       <div className='sidebarLogo'>
         hollow
       </div>
       <ListHeader type='Collections'/>
         {collections}
       <ListHeader type='Tools' />
-        <ListItem type='Content-Builder' />
-        <ListItem type='Plugins' />
-      <div className='sidebarSettings'>
+        {tools}
+      <div className='sidebarSettings' onClick={(e) => handleClick(e)}>
         <h3>Settings</h3>
       </div>
     </div>
-  );
-};
+    );
+}
 
 export default Sidebar;

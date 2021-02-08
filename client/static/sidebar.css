@@ -15,6 +15,7 @@
   align-items: flex-start;
   font-family: 'Poppins', sans-serif;
   box-shadow: 0px 0px 3px #212021;
+  border-right: 1px solid #39393A;
 }
 
 .sidebarLogo {

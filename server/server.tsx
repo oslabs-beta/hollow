@@ -3,21 +3,25 @@ import tableRouter from './routes/tableRouter.ts';
 
 import App from '../client/components/App.tsx';
 
+
 const PORT = 8000;
 const router = new Router();
 
-router.get('/', (ctx) => {
+router.get('/', async (ctx) => {
   const app = (ReactDOMServer as any).renderToString(<App />);
-  ctx.response.body =
-    `<html>
+  ctx.response.headers.set('Content-Type', 'text/html');
+  const html = 
+    `<!DOCTYPE html>
+    <html>
       <head>
         <link rel="stylesheet" href="style.css">
       </head>
       <body>
-        <main id="root">${app}</main>
-        <script src="bundle.js" defer></script>
+      <script type="module" src="bundle.js"></script>
+        <div id="root">${app}</div>
       </body>
     </html>`;
+    ctx.response.body = html;
 });
 
  // @ts-ignore
@@ -25,11 +29,8 @@ router.get('/', (ctx) => {
   bundle: 'esm',
 });
 
-
-
 router.get('/bundle.js', (ctx) => {
-  console.log('bundle!');
-  ctx.response.headers.set('Content-Type', 'text/javascript');
+  ctx.response.headers.set('Content-Type', 'application/javascript');
   ctx.response.body = files['deno:///bundle.js'];
 });
 
@@ -50,4 +51,7 @@ app.use(async (ctx, next) => {
   }
 });
 
-await app.listen({ port: 8000 });
+await app.listen({ port: PORT })
+.then(() => console.log('listening on port 8000...'))
+.catch(err => console.log(err));
+

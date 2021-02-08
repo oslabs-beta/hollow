@@ -1,5 +1,11 @@
+  /**
+ *  @description CSS rules for Header component
+ */
+
+
 .headerContainer {
-    border-bottom: 2px solid #212021;
+    background-color: #2e2d2e;
+    border-bottom: 1px solid #39393A;
     position: fixed;
     top: 0;
     left: 14rem;
@@ -10,14 +16,17 @@
     align-items: center;
     box-shadow: none;
     height: 3.5rem;
+    z-index: 2;
 }
 
 .headerTextRight {
     color: grey;
     text-align: right;
+    display: none;
 }
 
 .headerTextLeft {
     color: grey;
     text-align: justify;
+    display: none;
 }

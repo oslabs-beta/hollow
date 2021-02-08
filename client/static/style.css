@@ -1,5 +1,6 @@
 @import 'sidebar.css';
 @import 'header.css';
+@import 'activeCollection.css';
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
@@ -10,5 +11,5 @@
 }
 
 body {
-  background-color: #39393A;
+  background-color: #2e2d2e;
 }

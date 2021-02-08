@@ -1,6 +1,6 @@
 // @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/master/react/v16.13.1/react.d.ts"
-import React from 'https://dev.jspm.io/react';
-import ReactDOM from 'https://dev.jspm.io/react';
+import React from "https://cdn.pika.dev/react@16.13.1";
+import ReactDOM from "https://dev.jspm.io/react-dom@16.13.1";
 
 import App from './components/App.tsx';
 
