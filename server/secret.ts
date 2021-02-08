@@ -6,4 +6,5 @@ const client = new Client({
   hostname: 'ziggy.db.elephantsql.com',
   port: 5432,
 });
+
 export default client;

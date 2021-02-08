@@ -74,8 +74,6 @@ class App extends React.Component<{}, AppState> {
       activeView = <div></div>;
     }
 
-
-
     return (
       <div>
         <Header text='hi' />

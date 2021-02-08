@@ -3,7 +3,6 @@ import tableRouter from './routes/tableRouter.ts';
 
 import App from '../client/components/App.tsx';
 
-
 const PORT = 8000;
 const router = new Router();
 

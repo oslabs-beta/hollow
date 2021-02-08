@@ -9,7 +9,13 @@ import { ActiveCollectionProps, EntryProps, FieldProps } from './interface.ts';
 const Field: React.FC<FieldProps> = ({ fieldName, activeCollection }) => {
   return (
     <>
-      <th key={`${activeCollection}-${fieldName}`} scope='col' className='activeCollectionFieldName'>{fieldName}</th>
+      <th 
+        key={`${activeCollection}-${fieldName}`}
+        scope='col'
+        className='activeCollectionFieldName'
+      >
+        {fieldName}
+      </th>
     </>
   );
 };
