@@ -4,9 +4,9 @@ import { ItemType, SidebarProps, HeaderType } from './interface.ts';
 
 /**
  * @description Renders each individual list item for sidebar
- * @param type: item name
- * @param handleClick: sets active state to clicked item
- * @param active: boolean - sets className to 'active' or 'inactive 
+ * @prop type: item name
+ * @prop handleClick: sets active state to clicked item
+ * @prop active: boolean - sets className to 'active' or 'inactive 
  */
 const ListItem: React.FC<ItemType> = ({ type, handleClick, active }) => {
   return (
@@ -18,7 +18,7 @@ const ListItem: React.FC<ItemType> = ({ type, handleClick, active }) => {
 
 /**
  * @description Renders each individual list header for sidebar
- * @param type: header name
+ * @prop type: header name
  */
 const ListHeader: React.FC<HeaderType> = ({ type }) => {
   return (
@@ -30,11 +30,11 @@ const ListHeader: React.FC<HeaderType> = ({ type }) => {
 
 /**
  * @description Renders sidebar component
- * @param SidebarProps:
- * activeItem - currently selected sidebar item
- * handleClick - handles change of selected sidebar item
- * currentCollections - array of all current collections
- * currentTools - array of all current tools
+ * @prop SidebarProps:
+ * @prop activeItem - currently selected sidebar item
+ * @prop handleClick - handles change of selected sidebar item
+ * @prop currentCollections - array of all current collections
+ * @prop currentTools - array of all current tools
  */
 const Sidebar: React.FC<SidebarProps> = ({ currentCollections, currentTools, handleClick, activeItem }) => {
   // TODO:
@@ -56,7 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentCollections, currentTools, han
       return (<ListItem key={tool} type={tool} handleClick={handleClick} active={active} />);
     });
 
-    return(
+    return (
       <div className='sidebarContainer'>
       <div className='sidebarLogo'>
         hollow

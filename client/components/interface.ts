@@ -11,4 +11,5 @@ export interface AppState {
   collections: string[];
   collectionHeaders: string[];
   collectionEntries: string[][];
+  activeEntry: object;
 }

@@ -90,13 +90,13 @@
 }
 
 .activeCollectionTable tbody {
-  overflow-y: scroll;
-  scrollbar-width: 0;
+  overflow-y: auto;
+  /* scrollbar-width: 0; */
 }
 
-.activeCollectionTable tbody::-webkit-scrollbar {
+/* .activeCollectionTable tbody::-webkit-scrollbar {
   width: 0;
-}
+} */
 
 .activeCollectionEntry, .activeCollectionTable thead {
   display: table;
@@ -109,6 +109,10 @@
   height: 2rem;
   color: #171417;
   width: 100%;
+}
+
+.activeCollectionEntryDeleteBtn {
+  
 }
 
 .activeCollectionEntryValue {

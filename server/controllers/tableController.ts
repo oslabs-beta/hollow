@@ -1,4 +1,4 @@
-import db from '../secret.ts';
+import { dbPool as db, runQuery} from '../secret.ts';
 
 const tableController: any = {};
 
@@ -12,11 +12,9 @@ tableController.getAllTables = async (ctx: any, next: Function) => {
   `;
 
   try {
-    await db.connect();
-    const result = await db.queryArray(text);
-    const tables = result.rows.map((tableArr: any) => tableArr[0]);
+    const result = await runQuery(text);
+    const tables = result.rows.map((tableArr: any) => tableArr.table_name);
     ctx.state.tables = tables;
-
     return await next();
   }
   catch(err) {
@@ -25,9 +23,6 @@ tableController.getAllTables = async (ctx: any, next: Function) => {
       success: false,
       message: err.toString()
     };
-  }
-  finally {
-    await db.end();
   }
 }
 
@@ -42,13 +37,12 @@ tableController.getTableByName = async (ctx: any, next: Function) => {
   `;
 
   try {
-    await db.connect();
-    const rowResult = await db.queryObject(rowText);
+    const rowResult = await runQuery(rowText);
+
     ctx.state.rows = rowResult.rows;
 
-    const columnResult = await db.queryObject(columnText, ctx.params.name);
+    const columnResult = await runQuery(columnText, ctx.params.name);
     ctx.state.columns = columnResult.rows;
-
     return await next();
   }
   catch(err) {
@@ -57,9 +51,6 @@ tableController.getTableByName = async (ctx: any, next: Function) => {
       success: false,
       message: err.toString()
     };
-  }
-  finally {
-    await db.end();
   }
 }
 
@@ -85,8 +76,7 @@ tableController.createTable = async (ctx: any, next: Function) => {
   const text = `CREATE TABLE ${tableName} (id SERIAL PRIMARY KEY, ${columnInfo})`;
 
   try {
-    await db.connect();
-    const result = await db.queryObject(text);
+    const result = await runQuery(text);
 
     ctx.state.collectionName = tableName;
     return await next();
@@ -98,16 +88,12 @@ tableController.createTable = async (ctx: any, next: Function) => {
       message: err.toString()
     };
   }
-  finally {
-    await db.end();
-  }
 };
 
 tableController.deleteTableByName = async (ctx: any, next: Function) => {
   const text = `DROP TABLE ${ctx.params.name}`;
 
   try {
-    await db.connect();
     await db.queryObject(text);
 
     return await next();
@@ -118,9 +104,6 @@ tableController.deleteTableByName = async (ctx: any, next: Function) => {
       success: false,
       message: err.toString()
     };
-  }
-  finally {
-    await db.end();
   }
 };
 

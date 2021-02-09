@@ -27,15 +27,23 @@ const Field: React.FC<FieldProps> = ({ fieldName, activeCollection }) => {
  * @param index - index determines background color of table row
  * @param fieldNames - field name for each value; used to give each value a unique key
  */
-const Entry: React.FC<EntryProps> = ({ values, index, fieldNames }) => {
-  const row = values.map((value, index) => <td key={`${fieldNames[index]}-${value}-${index}`}>{value}</td>)
+const Entry: React.FC<EntryProps> = ({ values, index, fieldNames, handleClick, activeCollection, entryCount }) => {
+  const row = values.map((value, i) => <td id='field' className={fieldNames[i]} key={`${fieldNames[index]}-${value}-${index}`}>{value}</td>)
   return (
     <>
       {index % 2 === 0
-        ? (<tr className='activeCollectionEntry backgroundA'>
+        ? (<tr onClick={(e) => handleClick(e)} className='activeCollectionEntry backgroundA'>
+            <td id='field'>
+              <input type='checkbox' id={`${activeCollection}-${entryCount}`} />
+              &nbsp;
+            </td>
             {row}
           </tr>)
-        : (<tr className='activeCollectionEntry backgroundB'>
+        : (<tr onClick={(e) => handleClick(e)} className='activeCollectionEntry backgroundB'>
+          <td id='field'>
+            <input type='checkbox' id={`${activeCollection}-${entryCount}`} />
+            &nbsp;
+          </td>
             {row}
           </tr>)
       }
@@ -57,48 +65,58 @@ class ActiveCollection extends React.Component<ActiveCollectionProps, ActiveColl
 
   // TODO:
   // Fix up styling / responsiveness
-  // handleClick of individual entry - redirects to entry page where you can edit
   // add delete button to end of each row - handleClick and delete entry from db
-  // handle requests for collection data from api
-  // add functinality for resultsPerPage Arrows
-  // fix pagination bugs
+  // Fix bug: when you are on a page greater than the collection you click on to, it breaks - reset page state on click?
 
 
+  componentWillUnmount() {
+    this.setState({ ...this.state, activePage: '1' });
+  };
+
+
+  // handles click of page
   handlePageClick(event: React.MouseEvent) {
     // @ts-ignore
     const text = event.target.innerText;
-    this.setState({ activePage: text });
+
+    switch(text) {
+      case '«':
+        if (this.state.activePage === '1') break;
+        const leftNum = String(Number(this.state.activePage) - 1);
+        this.setState({ activePage: leftNum });
+        break;
+      case '»':
+        const pageCount = Math.ceil(this.props.collectionEntries.length / Number(this.state.activeResultsPerPage));
+        if (Number(this.state.activePage) === pageCount) break;
+        const rightNum = String(Number(this.state.activePage) + 1);
+        this.setState({ activePage: rightNum });
+        break;
+      default:
+        this.setState({ activePage: text });
+        break;
+    }
+    
   };
   
+  // handles click of results per page
   handleResultsPerPageClick(event: React.MouseEvent) {
     //@ts-ignore
     const text = event.target.innerText;
-    this.setState({ activeResultsPerPage: text });
+    this.setState({ activePage: '1', activeResultsPerPage: text });
   };
-
-
-  componentDidMount() {
-
-    
-      
-      
-  };
-
 
   render () {
-
     // destructure props
-    const { activeCollection, collectionEntries, collectionHeaders } = this.props;
+    const { activeCollection, collectionEntries, collectionHeaders, handleClick } = this.props;
 
-    // Dummy data for testing purposes
-    // Will probably make request to api here to get active collection details/entries
-    // const dummyFields = ['Id', 'Username', 'Email', 'Password'];
+    // maps each field name
     const fields = collectionHeaders.map(field => <Field activeCollection={activeCollection} fieldName={field} />)
 
-    // const dummyEntries = [['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['2', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['3', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95'], ['1', 'matt', 'matt@matt.com', 'banana95']];
+    // sets entriesCount based on length of collectionEntries prop
     const entriesCount = collectionEntries.length;
 
-    // render pages for pagination
+    // creates object with each page as a key, and each value an array of entries
+    // size of array and amount of pages is based on selected results per page
     const pagesCache: any = {};
     const resultsPerPage: number = Number(this.state.activeResultsPerPage);
     let count: number = 0;
@@ -112,15 +130,24 @@ class ActiveCollection extends React.Component<ActiveCollectionProps, ActiveColl
       pagesCache[page.toString()].push(entry);
       count += 1;
     });
+    let keyCount = 0;
+    // maps each entry based on selected page and selected page
+    const entriesPerPage = pagesCache[this.state.activePage].map((entry:Array<string>, index: number) => {
+      keyCount += 1;
+      return (
+        <Entry
+          key={`${activeCollection}-Entry-${index}`}
+          values={entry}
+          index={index}
+          fieldNames={collectionHeaders}
+          handleClick={handleClick}
+          activeCollection={activeCollection}
+          entryCount={keyCount}
+        />
+      );
+    });
 
-    const entriesPerPage = pagesCache[this.state.activePage].map((entry:Array<string>, index: number) => (
-      <Entry
-        key={`${activeCollection}-Entry-${index}`}
-        values={entry}
-        index={index}
-        fieldNames={collectionHeaders}
-    />));
-
+    // maps page numbers based on results per page and amount of entries
     const pagination = Object.keys(pagesCache).map(page => {
       let paginationClass;
       page.toString() === this.state.activePage ? paginationClass = 'collectionCurrentPage' : paginationClass = 'collectionStalePage';
@@ -135,7 +162,6 @@ class ActiveCollection extends React.Component<ActiveCollectionProps, ActiveColl
       );
     });
       
-
     return (
       <div className='activeCollectionContainer'>
         <div className='activeCollectionHeader'>
@@ -149,6 +175,7 @@ class ActiveCollection extends React.Component<ActiveCollectionProps, ActiveColl
           <table className='activeCollectionTable'>
             <thead>
               <tr>
+                <th scope='col' className='activeCollectionFieldName'>check</th>
                 {fields}
               </tr>
             </thead>

@@ -2,7 +2,7 @@
 import React from 'https://dev.jspm.io/react@16.13.1';
 
 /**
- * @description typescript models
+ * @description typescript models for sidebar
  */
 
 export interface ItemType {
