@@ -3,7 +3,8 @@ import db from '../../server/secret.ts';
 
 export const getAll = async (ctx: any) => {
   const table = ctx.state.collectionName;
-  const text = `SELECT * FROM ${table} ORDER BY id ASC`;
+  console.log(ctx.params.name);
+  const text = `SELECT * FROM ${table} ORDER BY id ASC;`;
 
   try {
     await db.connect();
@@ -24,7 +25,8 @@ export const getAll = async (ctx: any) => {
 
 export const getOne = async (ctx: any) => {
   const table = ctx.state.collectionName;
-  const text = `SELECT * FROM ${table} WHERE id = $1`;
+  const text = `SELECT * FROM ${table} WHERE id = $1;`;
+  console.log('ctx params: ', ctx.params);
   console.log(ctx.params.id);
   //   PREPARE errthing AS SELECT * FROM  table
   //   `PREPARE foo(text,text,text) AS
@@ -55,7 +57,7 @@ export const create = async (ctx: any) => {
   const table = ctx.state.collectionName;
   const { value } = await ctx.request.body({ type: 'json' });
   const { name } = await value;
-  const text = `INSERT INTO ${table} ( name) VALUES ($1) RETURNING *`;
+  const text = `INSERT INTO ${table} (name) VALUES ($1) RETURNING *;`;
 
   try {
     await db.connect();
@@ -74,6 +76,9 @@ export const create = async (ctx: any) => {
 
 export const update = async (ctx: any) => {
   const table = ctx.state.collectionName;
+  // console.log('ctx state: ', ctx.state);
+  // console.log('ctx.request', ctx.request);
+  // console.log('ctx.request.body', ctx.request.body);
   if (ctx.response.status === 400) {
     ctx.response.body = {
       success: false,
@@ -84,6 +89,17 @@ export const update = async (ctx: any) => {
   } else {
     const { value } = await ctx.request.body({ type: 'json' });
     const { name } = await value;
+    // const entries = Object.entries(await value);
+    // console.log('keys: ', entries);
+    // let paramKeys = Object.keys(await value);
+    // let paramVals = Object.values(await value);
+    // const arrLength = entries.length;
+    // for(let i = 1; i < arrLength; i++){
+    //set += `${paramKeys[i]}`
+    // };
+    // const set = "SET "
+    // const where = "WHERE ",
+    // const returning = "RETURNING *;"
 
     if (!ctx.request.hasBody) {
       ctx.response.status = 400;
@@ -93,13 +109,12 @@ export const update = async (ctx: any) => {
       };
     } else {
       try {
-        console.log('inside UPDATE');
         await db.connect();
-        const result = await db.queryObject(
-          `UPDATE ${table} SET name = $1 WHERE id = $2 RETURNING *`,
-          name,
-          ctx.params.id
-        );
+        const fieldArr = [name, ctx.params.id];
+        const result = await db.queryObject({
+          text: `UPDATE ${table} SET name = $1 WHERE id = $2 RETURNING *;`,
+          fields: fieldArr,
+        });
         ctx.response.status = 200;
         ctx.response.body = {
           success: true,
@@ -120,7 +135,7 @@ export const update = async (ctx: any) => {
 
 export const deleteOne = async (ctx: any) => {
   const table = ctx.state.collectionName;
-  const text = `DELETE FROM ${table} WHERE id = $1`;
+  const text = `DELETE FROM ${table} WHERE id = $1;`;
   try {
     await db.connect();
     const result = await db.queryObject(text, ctx.params.id);
