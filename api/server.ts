@@ -1,5 +1,5 @@
 import { existsSync } from "https://deno.land/std@0.85.0/fs/exists.ts";
-import { Application } from '../deps.ts';
+import { Application } from 'https://deno.land/x/oak@v6.5.0/mod.ts';
 const app = new Application();
 
 const env = Deno.env.toObject();

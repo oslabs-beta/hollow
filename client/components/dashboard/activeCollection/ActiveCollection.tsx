@@ -1,12 +1,11 @@
-// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/master/react/v16.13.1/react.d.ts"
-import React from 'https://dev.jspm.io/react@16.13.1';
+import { h, Fragment } from 'https://unpkg.com/preact@10.5.12?module';
 import { ActiveCollectionProps, EntryProps, FieldProps } from './interface.ts';
 
 /**
  * @description Renders Field names for active collection (table headers)
  * @param fieldName - individual field name from active collection
  */
-const Field: React.FC<FieldProps> = ({ fieldName, activeCollection }) => {
+const Field = ({ fieldName, activeCollection }: FieldProps) => {
   return (
     <>
       <th 
@@ -26,7 +25,7 @@ const Field: React.FC<FieldProps> = ({ fieldName, activeCollection }) => {
  * @param index - index determines background color of table row
  * @param fieldNames - field name for each value; used to give each value a unique key
  */
-const Entry: React.FC<EntryProps> = ({ values, index, fieldNames }) => {
+const Entry = ({ values, index, fieldNames }: EntryProps) => {
   const row = values.map((value, index) => <td key={`${fieldNames[index]}-${value}-${index}`}>{value}</td>)
   return (
     <>
@@ -46,7 +45,7 @@ const Entry: React.FC<EntryProps> = ({ values, index, fieldNames }) => {
  * @description Renders all details for active collection; Gives option to add new entry, delete entry & edit values of entry
  * @param activeCollection - currently selected collection from sidebar
  */
-const ActiveCollection: React.FC<ActiveCollectionProps> = ({ activeCollection }) => {
+const ActiveCollection = ({ activeCollection }: ActiveCollectionProps) => {
   // TODO:
   // Fix up styling / responsiveness
   // handleClick of individual entry - redirects to entry page where you can edit

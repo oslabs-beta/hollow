@@ -1,4 +1,4 @@
-import { ensureDir } from '../../deps.ts';
+import { ensureDir } from 'https://deno.land/std@0.85.0/fs/mod.ts';
 import routerTemplate from '../templates/routerTemplate.ts';
 
 const routerController: any = {};

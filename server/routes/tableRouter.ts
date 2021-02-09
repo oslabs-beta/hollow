@@ -1,4 +1,4 @@
-import { Router } from '../../deps.ts';
+import { Router } from 'https://deno.land/x/oak@v6.5.0/mod.ts';
 import tableController from '../controllers/tableController.ts';
 import routerController from '../controllers/routerController.ts';
 
