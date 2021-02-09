@@ -1,10 +1,19 @@
-// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/master/react/v16.13.1/react.d.ts"
-import React from 'https://dev.jspm.io/react@16.13.1';
-import { AppState } from './interface.ts';
-import Sidebar from './sidebar/Sidebar.tsx';
+import { h } from 'https://unpkg.com/preact@10.5.12?module';
+import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
+
 import Header from './header/Header.tsx';
+import Sidebar from './sidebar/Sidebar.tsx';
 import ActiveCollection from "./dashboard/activeCollection/ActiveCollection.tsx";
 import FieldView from './dashboard/fieldView/FieldView.tsx';
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      [elemName: string]: any;
+    }
+  }
+}
+
 /**
  * @description holds state of app & renders app
  * @state activeItem - stores name of currently selected collection
@@ -13,49 +22,46 @@ import FieldView from './dashboard/fieldView/FieldView.tsx';
  * @state collectionHeaders - stores headers of curenntly selected collection
  * @state collectionEntries - stores array of arrays - each array holds values for a given entry 
  */
-class App extends React.Component<{}, AppState> {
-  constructor(props: any) {
-    super(props);
-    this.state = { 
-      activeItem: '', 
-      view: 'collection', 
-      collections: [], 
-      collectionHeaders: [], 
-      collectionEntries: [[]],
-      activeEntry: {}
-    };
-    this.handleClick = this.handleClick.bind(this);
-  }
+const App = () => {
+  const [activeItem, setActiveItem] = useState('');
+  const [view, setView] = useState('collection');
+  const [collections, setCollections] = useState([]);
+  const [collectionHeaders, setCollectionHeaders] = useState([]);
+  const [collectionEntries, setCollectionEntries] = useState([[]]);
+  const [activeEntry, setActiveEntry] = useState({});
 
   // On mount:
   // make a request to api to get all table names (collections) - update state with results
   // make a request to api to get active table entries - update state with results
-  componentDidMount() {
+  useEffect(() => {
     fetch('/api/tables')
       .then(data => data.json())
       .then((data) => {
-        this.setState({ ...this.state, activeItem: data.data[0], collections: this.state.collections.concat(data.data) })
-      })
-      .then(() => {
-        fetch(`/api/tables/${this.state.activeItem}`)
-          .then(data => data.json())
-          .then(data => {
-            // map headers for active collection
-            const headers = data.data.columns.map((header: any) => header.column_name)
-            // map entries for active collection
-            const entries = data.data.rows.map((entry:any) => Object.values(entry).map(value => value));
-            this.setState({ ...this.state, collectionHeaders: headers, collectionEntries: entries } );
-          })
-          .catch(error => console.log('error', error));
+        setCollections(collections.concat(data.data));
+        setActiveItem(data.data[0]);
       })
       .catch(error => console.log('error', error));
-  };
+  }, []);
+
+  useEffect(() => {
+    fetch(`/api/tables/${activeItem}`)
+      .then(data => data.json())
+      .then(data => {
+        // map headers for active collection
+        const headers = data.data.columns.map((header: any) => header.column_name)
+        // map entries for active collection
+        const entries = data.data.rows.map((entry:any) => Object.values(entry).map(value => value));
+        setCollectionHeaders(headers);
+        setCollectionEntries(entries);
+      })
+      .catch(error => console.log('error', error));
+  }, [activeItem]);
 
   /**
    * @description sets state to active item (collection or tool) on click of sidebar item
    * @param event
    */
-  handleClick(event: React.MouseEvent) {
+  const handleClick = (event: any) => {
     let active;
     // @ts-ignore
     if (event.target.id === 'field') active = 'field';
@@ -76,21 +82,25 @@ class App extends React.Component<{}, AppState> {
           entryData[field] = value;
           count += 1;
         }
-        this.setState({ view: 'field', activeEntry: entryData })
+        setView('field');
+        setActiveEntry(entryData);
         break;
       case 'Settings':
-        if (this.state.view !== 'settings') {
-          this.setState({ activeItem: active, view: 'settings' });
+        if (view !== 'settings') {
+          setActiveItem(active);
+          setView('settings');
         }
         break;
       case 'Content-Builder':
-        if (this.state.view !== 'content-builder') {
-          this.setState({ activeItem: active, view: 'content-builder' });
+        if (view !== 'content-builder') {
+          setActiveItem(active);
+          setView('content-builder');
         }
         break;
       case 'Plugins':
-        if (this.state.view !== 'plugins') {
-          this.setState({ activeItem: active, view: 'plugins' });
+        if (view !== 'plugins') {
+          setActiveItem(active);
+          setView('plugins');
         }
         break;
 
@@ -99,71 +109,56 @@ class App extends React.Component<{}, AppState> {
       // make a request to api to get active table entries - update state with results
       // set correct view if needed
       default:
-        fetch(`/api/tables/${active}`)
-          .then(data => data.json())
-          .then(data => {
-            // map headers for active collection
-            const headers = data.data.columns.map((header: any) => header.column_name)
-            // map entries fpr active collection
-            const entries = data.data.rows.map((entry:any) => Object.values(entry).map(value => value));
-            this.setState({ ...this.state, collectionHeaders: headers, collectionEntries: entries } );
-          })
-          .catch(error => console.log('error', error));
-        if (this.state.view !== 'collection') {
-          this.setState({ view: 'collection', activeItem: active });
-        } else {
-          this.setState({ activeItem: active });
-        }
+        setView('collection');
+        setActiveItem(active);
     }
   };
 
-  render () {
     // will need to get current collections from api - these are dummy values for testing
-    const currentCollections = this.state.collections;
+    const currentCollections = collections;
     const currentTools = ['Content-Builder', 'Plugins'];
 
     // stores component to render - based on view in state
     let activeView;
     
     // set view for collection component
-    if (this.state.view === 'collection') {
+    if (view === 'collection') {
       activeView = (
         <ActiveCollection 
-          activeCollection={this.state.activeItem}
-          collectionHeaders={this.state.collectionHeaders}
-          collectionEntries={this.state.collectionEntries}
-          handleClick={this.handleClick}
+          activeCollection={activeItem}
+          collectionHeaders={collectionHeaders}
+          collectionEntries={collectionEntries}
+          handleClick={handleClick}
         />
       );
-    } else if (this.state.view === 'content-builder') {
+    } else if (view === 'content-builder') {
       // need to create content builder compononent before assinging to activeView
       // activeView = <ContentBuilder />
       activeView = <div></div>;
-    } else if (this.state.view === 'plugins') {
+    } else if (view === 'plugins') {
       // need to create plugins compononent before assinging to activeView - or not. dont really have a use for it atm
       // activeView = <Plugins />
       activeView = <div></div>;
-    } else if (this.state.view === 'settings') {
+    } else if (view === 'settings') {
       // need to create settings compononent before assinging to activeView
       // activeView = <Settings />
       activeView = <div></div>;
-    } else if (this.state.view === 'field') {
-        activeView = <FieldView activeEntry={this.state.activeEntry} activeItem={this.state.activeItem} />
+    } else if (view === 'field') {
+      activeView = <FieldView activeEntry={activeEntry} activeItem={activeItem} />
     }
 
-    return (
-      <div>
-        <Header text='hi' />
-        <Sidebar
-          activeItem={this.state.activeItem}
-          currentCollections={currentCollections} 
-          currentTools={currentTools} 
-          handleClick={this.handleClick}  
-        />
-        {activeView}
-      </div>
-    );
-  }
+  return (
+    <div>
+      <Header />
+      <Sidebar
+        activeItem={activeItem}
+        currentCollections={currentCollections} 
+        currentTools={currentTools} 
+        handleClick={handleClick}  
+      />
+      {activeView}
+    </div>
+  );
 }
 
 export default App;

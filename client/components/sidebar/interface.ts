@@ -1,13 +1,11 @@
-// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/master/react/v16.13.1/react.d.ts"
-import React from 'https://dev.jspm.io/react@16.13.1';
-
 /**
  * @description typescript models for sidebar
  */
 
 export interface ItemType {
+  key: string;
   type: string;
-  handleClick: (event: React.MouseEvent) => void;
+  handleClick: (event: any) => void;
   active: boolean;
 }
 
@@ -19,5 +17,5 @@ export interface SidebarProps {
   activeItem: string;
   currentCollections: Array<string>;
   currentTools: Array<string>;
-  handleClick: (event: React.MouseEvent) => void;
+  handleClick: (event: any) => void;
 }

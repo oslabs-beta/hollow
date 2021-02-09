@@ -1,12 +1,4 @@
-// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/master/react/v16.13.1/react.d.ts"
-import React from "https://cdn.pika.dev/react@16.13.1";
-import ReactDOM from "https://dev.jspm.io/react-dom@16.13.1";
-
+import { h, hydrate } from 'https://unpkg.com/preact@10.5.12?module';
 import App from './components/App.tsx';
 
-(ReactDOM as any).hydrate(
-  <App />,
-  //@ts-ignore
-  document.getElementById('root')
-);
-
+hydrate(<App />, document.getElementById("root"));
