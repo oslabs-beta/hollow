@@ -2,11 +2,7 @@
   "name": "Hollow",
   "version": "1.0.0",
   "scripts": {
-<<<<<<< HEAD
-    "start": "deno run --allow-net --allow-read --allow-write --watch --unstable server/server.tsx",
-=======
     "start": "deno run --allow-net --allow-read --allow-write --watch --unstable --config tsconfig.json server/server.tsx",
->>>>>>> 5f9a224451395d1e9b3f5098395de357490cfdf3
     "start-api": "deno run --allow-net --allow-read --watch --unstable api/server.ts"
   }
 }
