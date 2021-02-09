@@ -90,13 +90,13 @@
 }
 
 .activeCollectionTable tbody {
-  overflow-y: scroll;
-  scrollbar-width: 0;
+  overflow-y: auto;
+  /* scrollbar-width: 0; */
 }
 
-.activeCollectionTable tbody::-webkit-scrollbar {
+/* .activeCollectionTable tbody::-webkit-scrollbar {
   width: 0;
-}
+} */
 
 .activeCollectionEntry, .activeCollectionTable thead {
   display: table;
@@ -109,6 +109,10 @@
   height: 2rem;
   color: #171417;
   width: 100%;
+}
+
+.activeCollectionEntryDeleteBtn {
+  
 }
 
 .activeCollectionEntryValue {
@@ -176,4 +180,27 @@
   opacity: 1;
   font-size: 1.2rem;
   margin-top: -0.3rem;
+}
+
+.resultsPerPage {
+  display: flex;
+  color: #819494;
+  font-size: .6rem;
+  alig-items: center;
+  cursor: pointer;
+  margin-top: .6rem;
+  margin-left: .6rem;
+}
+
+.activeResultsPerPage {
+  text-decoration: underline;
+  padding: .1rem;
+}
+
+.staleResultsPerPage {
+  padding: .1rem;
+}
+
+.resultsSlash {
+  padding: .1rem;
 }

@@ -1,13 +1,15 @@
-import { Application, Router, React, ReactDOMServer } from '../deps.ts';
+import { Application, Router } from '../deps.ts';
 import tableRouter from './routes/tableRouter.ts';
 
+import { h } from 'https://unpkg.com/preact@10.5.12?module';
+import { render } from 'https://unpkg.com/preact-render-to-string@5.1.12?module';
 import App from '../client/components/App.tsx';
 
 const PORT = 8000;
 const router = new Router();
 
 router.get('/', async (ctx) => {
-  const app = (ReactDOMServer as any).renderToString(<App />);
+  const app = render(<App />);
   ctx.response.headers.set('Content-Type', 'text/html');
   const html = 
     `<!DOCTYPE html>
@@ -26,6 +28,11 @@ router.get('/', async (ctx) => {
  // @ts-ignore
  const { files } = await Deno.emit('./client/index.tsx', {
   bundle: 'esm',
+  compilerOptions: {
+    jsx: 'react',
+    jsxFactory: 'h',
+    jsxFragmentFactory: 'Fragment'
+  }
 });
 
 router.get('/bundle.js', (ctx) => {

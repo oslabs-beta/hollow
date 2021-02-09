@@ -1,16 +1,15 @@
-// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/master/react/v16.13.1/react.d.ts"
-import React from 'https://dev.jspm.io/react@16.13.1';
+import { h } from 'https://unpkg.com/preact@10.5.12?module';
 import { ItemType, SidebarProps, HeaderType } from './interface.ts';
 
 /**
  * @description Renders each individual list item for sidebar
- * @param type: item name
- * @param handleClick: sets active state to clicked item
- * @param active: boolean - sets className to 'active' or 'inactive 
+ * @prop type: item name
+ * @prop handleClick: sets active state to clicked item
+ * @prop active: boolean - sets className to 'active' or 'inactive 
  */
-const ListItem: React.FC<ItemType> = ({ type, handleClick, active }) => {
+const ListItem = ({ type, handleClick, active }: ItemType) => {
   return (
-    <div onClick={(e) => handleClick(e)} className='sidebarItem'>
+    <div onClick={(e: any) => handleClick(e)} className='sidebarItem'>
       <p className={active ? 'active' : 'inactive'}>{type}</p>
     </div>
   );
@@ -18,9 +17,9 @@ const ListItem: React.FC<ItemType> = ({ type, handleClick, active }) => {
 
 /**
  * @description Renders each individual list header for sidebar
- * @param type: header name
+ * @prop type: header name
  */
-const ListHeader: React.FC<HeaderType> = ({ type }) => {
+const ListHeader = ({ type }: HeaderType) => {
   return (
     <div>
       <p className='sidebarListHeader'>{type}</p>
@@ -30,13 +29,13 @@ const ListHeader: React.FC<HeaderType> = ({ type }) => {
 
 /**
  * @description Renders sidebar component
- * @param SidebarProps:
- * activeItem - currently selected sidebar item
- * handleClick - handles change of selected sidebar item
- * currentCollections - array of all current collections
- * currentTools - array of all current tools
+ * @prop SidebarProps:
+ * @prop activeItem - currently selected sidebar item
+ * @prop handleClick - handles change of selected sidebar item
+ * @prop currentCollections - array of all current collections
+ * @prop currentTools - array of all current tools
  */
-const Sidebar: React.FC<SidebarProps> = ({ currentCollections, currentTools, handleClick, activeItem }) => {
+const Sidebar = ({ currentCollections, currentTools, handleClick, activeItem }: SidebarProps) => {
   // TODO:
   // build settings component
   // build content-builder component
@@ -56,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentCollections, currentTools, han
       return (<ListItem key={tool} type={tool} handleClick={handleClick} active={active} />);
     });
 
-    return(
+    return (
       <div className='sidebarContainer'>
       <div className='sidebarLogo'>
         hollow
@@ -65,7 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentCollections, currentTools, han
         {collections}
       <ListHeader type='Tools' />
         {tools}
-      <div className='sidebarSettings' onClick={(e) => handleClick(e)}>
+      <div className='sidebarSettings' onClick={(e: any) => handleClick(e)}>
         <h3>Settings</h3>
       </div>
     </div>
