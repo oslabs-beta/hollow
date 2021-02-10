@@ -1,4 +1,4 @@
-import { runQuery} from '../secret.ts';
+import { runQuery } from '../secret.ts';
 
 const tableController: any = {};
 
@@ -16,15 +16,14 @@ tableController.getAllTables = async (ctx: any, next: Function) => {
     const tables = result.rows.map((tableArr: any) => tableArr.table_name);
     ctx.state.tables = tables;
     return await next();
-  }
-  catch(err) {
+  } catch (err) {
     ctx.response.status = 500;
     ctx.response.body = {
       success: false,
-      message: err.toString()
+      message: err.toString(),
     };
   }
-}
+};
 
 tableController.getTableByName = async (ctx: any, next: Function) => {
   const rowText = `SELECT * FROM ${ctx.params.name}`;
@@ -41,26 +40,25 @@ tableController.getTableByName = async (ctx: any, next: Function) => {
 
     ctx.state.rows = rowResult.rows;
 
-    const columnResult = await runQuery(columnText, ctx.params.name);
+    const columnResult = await runQuery(columnText, [ctx.params.name]);
     ctx.state.columns = columnResult.rows;
     return await next();
-  }
-  catch(err) {
+  } catch (err) {
     ctx.response.status = 500;
     ctx.response.body = {
       success: false,
-      message: err.toString()
+      message: err.toString(),
     };
   }
-}
+};
 
 tableController.createTable = async (ctx: any, next: Function) => {
   if (!ctx.request.hasBody) {
     ctx.response.status = 400;
     ctx.response.body = {
       success: false,
-      message: 'No data'
-    }
+      message: 'No data',
+    };
     return;
   }
 
@@ -68,11 +66,16 @@ tableController.createTable = async (ctx: any, next: Function) => {
   const { tableName, columns } = await value;
 
   let columnInfo = '';
-  columns.forEach(({ columnName, dataType }: { columnName: string, dataType: string }, index: number) => {
-    columnInfo += `${columnName} ${dataType}`;
-    if (index !== columns.length - 1) columnInfo += ', ';
-  });
-  
+  columns.forEach(
+    (
+      { columnName, dataType }: { columnName: string; dataType: string },
+      index: number
+    ) => {
+      columnInfo += `${columnName} ${dataType}`;
+      if (index !== columns.length - 1) columnInfo += ', ';
+    }
+  );
+
   const text = `CREATE TABLE ${tableName} (id SERIAL PRIMARY KEY, ${columnInfo})`;
 
   try {
@@ -80,12 +83,11 @@ tableController.createTable = async (ctx: any, next: Function) => {
 
     ctx.state.collectionName = tableName;
     return await next();
-  }
-  catch(err) {
+  } catch (err) {
     ctx.response.status = 500;
     ctx.response.body = {
       success: false,
-      message: err.toString()
+      message: err.toString(),
     };
   }
 };
@@ -97,12 +99,11 @@ tableController.deleteTableByName = async (ctx: any, next: Function) => {
     await runQuery(text);
 
     return await next();
-  }
-  catch(err) {
+  } catch (err) {
     ctx.response.status = 500;
     ctx.response.body = {
       success: false,
-      message: err.toString()
+      message: err.toString(),
     };
   }
 };
