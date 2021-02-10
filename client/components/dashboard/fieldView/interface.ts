@@ -5,4 +5,5 @@
  export interface FieldViewProps {
   activeEntry: object;
   activeItem: string;
+  newEntry: boolean;
  }

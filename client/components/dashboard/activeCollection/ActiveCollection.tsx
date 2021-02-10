@@ -33,17 +33,17 @@ const Entry = ({ values, index, fieldNames, handleClick, activeCollection, entry
     <>
       {index % 2 === 0
         ? (<tr onClick={(e: any) => handleClick(e)} className='activeCollectionEntry backgroundA'>
-            <td id='field'>
+            {/* <td id='field'>
               <input type='checkbox' id={`${activeCollection}-${entryCount}`} />
               &nbsp;
-            </td>
+            </td> */}
             {row}
           </tr>)
         : (<tr onClick={(e: any) => handleClick(e)} className='activeCollectionEntry backgroundB'>
-          <td id='field'>
+          {/* <td id='field'>
             <input type='checkbox' id={`${activeCollection}-${entryCount}`} />
             &nbsp;
-          </td>
+          </td> */}
             {row}
           </tr>)
       }
@@ -101,25 +101,28 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
 
   // sets entriesCount based on length of collectionEntries prop
   const entriesCount = collectionEntries.length;
-
+  let entriesPerPage;
   // creates object with each page as a key, and each value an array of entries
   // size of array and amount of pages is based on selected results per page
   const pagesCache: any = {};
-  const resultsPerPage: number = Number(activeResultsPerPage);
-  let count: number = 0;
-  let page: number = 1;
-  collectionEntries.forEach(entry => {
-    if (count === resultsPerPage) {
-      page += 1;
-      count = 0;
-    }
-    if (!pagesCache[page]) pagesCache[page.toString()] = [];
-    pagesCache[page.toString()].push(entry);
-    count += 1;
+  if (entriesCount) {
+    const resultsPerPage: number = Number(activeResultsPerPage);
+    let count: number = 0;
+    let page: number = 1;
+    collectionEntries.forEach(entry => {
+      if (count === resultsPerPage) {
+        page += 1;
+        count = 0;
+      }
+      if (!pagesCache[page]) pagesCache[page.toString()] = [];
+      pagesCache[page.toString()].push(entry);
+      count += 1;
   });
   let keyCount = 0;
+
+
   // maps each entry based on selected page and selected page
-  const entriesPerPage = pagesCache[activePage].map((entry:Array<string>, index: number) => {
+  entriesPerPage = pagesCache[activePage].map((entry:Array<string>, index: number) => {
     keyCount += 1;
     return (
       <Entry
@@ -134,6 +137,9 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
     );
   });
 
+ } else entriesPerPage = [];
+  
+
   // maps page numbers based on results per page and amount of entries
   const pagination = Object.keys(pagesCache).map(page => {
     let paginationClass;
@@ -141,7 +147,7 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
     return (
       <a 
         className={paginationClass} 
-        onClick={(e: any) => handlePageClick(e)} 
+        onClick={(e: any) => handlePageClick(e)}
         href="#"
       >
         {page}
@@ -156,13 +162,13 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
           <p className='activeCollectionName'>{activeCollection}</p>
           <p className='activeCollectionCount'>{entriesCount} entries found</p>
         </div>
-        <button className='addEntryBtn'>Add New {activeCollection}</button>
+        <button className='addEntryBtn' id='addNewEntryBtn' onClick={handleClick} >Add New {activeCollection}</button>
       </div>
       <div className='activeTableContainer'>
         <table className='activeCollectionTable'>
           <thead>
             <tr>
-              <th scope='col' className='activeCollectionFieldName'>check</th>
+              {/* <th scope='col' className='activeCollectionFieldName'>check</th> */}
               {fields}
             </tr>
           </thead>
@@ -171,20 +177,23 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
           </tbody>
         </table>
       </div>
-      <div className='paginationContainer'>
-        <div className="pagination">
-          <a className='collectionsPaginationLeft' onClick={(e: any) => handlePageClick(e)} href="#" >&laquo;</a>
-            {pagination}
-          <a className='collectionsPaginationRight' onClick={(e: any) => handlePageClick(e)} href="#">&raquo;</a>            
-        </div>
-        <div className='resultsPerPage'>
-          <p onClick={(e: any) => handleResultsPerPageClick(e)} className={activeResultsPerPage === '10' ? 'activeResultsPerPage' : 'staleResultsPerPage'}>10</p>
-          <p className='resultsSlash'>/</p>
-          <p onClick={(e: any) => handleResultsPerPageClick(e)} className={activeResultsPerPage === '20' ? 'activeResultsPerPage' : 'staleResultsPerPage'}>20</p>
-          <p className='resultsSlash'>/</p>
-          <p onClick={(e: any) => handleResultsPerPageClick(e)} className={activeResultsPerPage === '50' ? 'activeResultsPerPage' : 'staleResultsPerPage'}>50</p>
-        </div>
-      </div>
+      {pagination.length  
+        ? (<div className='paginationContainer'>
+            <div className="pagination">
+              <a className='collectionsPaginationLeft' onClick={(e: any) => handlePageClick(e)} href="#" >&laquo;</a>
+                {pagination}
+              <a className='collectionsPaginationRight' onClick={(e: any) => handlePageClick(e)} href="#">&raquo;</a>            
+            </div>
+            <div className='resultsPerPage'>
+              <p onClick={(e: any) => handleResultsPerPageClick(e)} className={activeResultsPerPage === '10' ? 'activeResultsPerPage' : 'staleResultsPerPage'}>10</p>
+              <p className='resultsSlash'>/</p>
+              <p onClick={(e: any) => handleResultsPerPageClick(e)} className={activeResultsPerPage === '20' ? 'activeResultsPerPage' : 'staleResultsPerPage'}>20</p>
+              <p className='resultsSlash'>/</p>
+              <p onClick={(e: any) => handleResultsPerPageClick(e)} className={activeResultsPerPage === '50' ? 'activeResultsPerPage' : 'staleResultsPerPage'}>50</p>
+            </div>
+          </div>)
+        : <div></div>
+      }
     </div>
   );
 };
