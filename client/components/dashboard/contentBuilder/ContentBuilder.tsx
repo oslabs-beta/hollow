@@ -2,6 +2,9 @@ import { h } from 'https://unpkg.com/preact@10.5.12?module';
 import { useState } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
 import { FieldRowProps, FormMessageProps } from './interface.ts';
 
+/**
+ * @description Renders Content-Builder panel to create collections
+ */
 const ContentBuilder = () => {
   const [displayName, setDisplayName] = useState('');
   const [fields, setFields] = useState([{ columnName: '', dataType: 'text' }]);
@@ -118,6 +121,14 @@ const ContentBuilder = () => {
   );
 }
 
+/**
+ * @description Renders single data row on Content Builder table
+ * @param index - Index of data row
+ * @param columnName - Name of column, if user has inputted string
+ * @param dataType - Type of data (string, number, boolean)
+ * @param handleFieldChange - Function that updates the current fields in state
+ * @param deleteRow - Deletes the data row
+ */
 const FieldRow = ({ index, columnName, dataType, handleFieldChange, deleteRow }: FieldRowProps) => {
   return (
     <div key={`row-${index}`}>
@@ -155,6 +166,10 @@ const FieldRow = ({ index, columnName, dataType, handleFieldChange, deleteRow }:
   );
 }
 
+/**
+ * @description Renders error messages or table submission confimration
+ * @param messages - array of messages to display
+ */
 const FormMessage = ({messages}: FormMessageProps) => {
   const errDescriptions = messages.map(message => <li>{message}</li>);
 
