@@ -3,7 +3,7 @@ import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist
 
 import { FieldViewProps } from './interface.ts';
 
-const FieldView = ({ activeEntry, activeItem }: FieldViewProps) => {
+const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
   const [saveFail, setSaveFail] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,30 @@ const FieldView = ({ activeEntry, activeItem }: FieldViewProps) => {
       data[inputName] = value;
       count += 1;
     }
-    console.log(data);
+
+    setTimeout(() => {
+      setLoading(false);
+      setSaveSuccess(true);
+    }, 5000)
+
+    if (newEntry) {
+
+    }
+
+  };
+
+  const handleDelete = (event: any) => {
+    const fieldCount = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm.elements.length;
+
+    let count = 1;
+    const dataToDelete: any = {};
+    while (count < fieldCount) {
+      const field = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm[count].labels[0].htmlFor;
+      const value = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm[count].value;
+      dataToDelete[field] = value;
+      count += 1;
+    }
+    console.log(dataToDelete);
   };
 
   useEffect(() => {
@@ -37,7 +60,6 @@ const FieldView = ({ activeEntry, activeItem }: FieldViewProps) => {
   }, []);
 
   const handleChange = (event: any) => {
-    console.log(event.target);
     // @ts-ignore
     const field = event.target.name;
     // @ts-ignore
@@ -48,7 +70,6 @@ const FieldView = ({ activeEntry, activeItem }: FieldViewProps) => {
     setActiveEntryValues(copy);
   }
 
-  console.log(activeEntry);
   const entryDataArr = Object.entries(activeEntry).map(([field, value], index) => (
     <div className='fieldViewSect' key={`${field}-${index}`}>
       <label className='fieldViewLabel' htmlFor={field}>{field}</label>
@@ -56,37 +77,51 @@ const FieldView = ({ activeEntry, activeItem }: FieldViewProps) => {
     </div>
   ));
 
-  console.log(entryDataArr);
   let loader;
 
   if (loading) {
     loader = <div className='saveFieldBtnLoader'></div>;
   } else if (saveFail) {
     loader = (
-      <svg className='saveFieldFailSVG' xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
-        <path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>
-      </svg>
+      <div>
+        <svg className='saveFieldFailSVG' xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+          <path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>
+        </svg>
+      </div>
     );
   } else if (saveSuccess) {
     loader = (
-      <svg className='saveFieldSuccessSVG' xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
-        <path d="M0 11c2.761.575 6.312 1.688 9 3.438 3.157-4.23 8.828-8.187 15-11.438-5.861 5.775-10.711 12.328-14 18.917-2.651-3.766-5.547-7.271-10-10.917z"/>
-      </svg>
+      <div className={newEntry ? 'loader' : ''}>   
+        <svg className={`saveFieldSuccessSVG ${newEntry ? 'entryFieldSuccessSVG' : ''}`} xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24">
+          <path d="M0 11c2.761.575 6.312 1.688 9 3.438 3.157-4.23 8.828-8.187 15-11.438-5.861 5.775-10.711 12.328-14 18.917-2.651-3.766-5.547-7.271-10-10.917z"/>
+        </svg>
+      </div>    
+      
     );
   }
 
   return (
     <div className='fieldViewContainer'>
       <div className='fieldViewHeader'>
+      <div className='deleteContainer'>
         <div className='fieldViewDetails'>
-          <p className='fieldViewName'>{Object.keys(activeEntry)[0]}</p>
+          <p className='fieldViewName'>{activeEntryValues[Object.keys(activeEntryValues)[0]]}</p>
           <p className='fieldViewCollection'>{activeItem}</p>
         </div>
-        <div className='saveFieldBtnContainer'>
-          {loader}            
-          <button onClick={handleSave} type='submit' form='fieldViewForm' className='saveFieldBtn'>Save</button>
+        {!newEntry &&
+          (<div className='deleteEntrySVG' onClick={handleDelete}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill='#bd5555'>
+              <path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/>
+            </svg>
+          </div>)
+        }
+      </div>
+        <div className='saveFieldBtnContainer'>     
+          {loader} 
+         {((!saveSuccess && newEntry) || (!newEntry)) &&
+             (<button onClick={handleSave} type='submit' form='fieldViewForm' className='saveFieldBtn'>{newEntry ? 'Add Entry' : 'Save'}</button>)
+         }
         </div>
-        
       </div>
       <form id='fieldViewForm' className='fieldViewForm'>
         {entryDataArr}

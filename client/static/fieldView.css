@@ -30,6 +30,17 @@
   opacity: 0.6;
 }
 
+.deleteContainer {
+  width: fit-content;
+  display: flex;
+}
+
+.deleteEntrySVG {
+  cursor: pointer;
+  margin-left: 1rem;
+  margin-top: .5rem;
+}
+
 .fieldViewCollection {
   font-size: 0.7rem;
   color: #819494;
@@ -52,7 +63,7 @@
   border-radius: 50%;
   width: 1rem;
   height: 1rem;
-  animation: spin 1s linear infinite;
+  animation: spin .8s linear infinite;
   margin-right: 1rem;
 }
 
@@ -64,6 +75,18 @@
 .saveFieldSuccessSVG {
   fill: #297373;
   margin-right: 1rem;
+}
+
+.entryFieldSuccessSVG {
+  margin-right: 1rem;
+}
+
+.loader::after {
+  content: "entry added!";
+  color: #297373;
+  font-size: .8rem;
+  margin-right: 2rem;
+  margin-bottom: .5rem;
 }
 
 .saveFieldFailSVG {
@@ -79,8 +102,8 @@
   height: 2rem;
   border-radius: 5px;
   background-color: #2e2d2e;
-  border: 1px solid #8a128a;
-  color: #8a128a;
+  border: 1px solid #ad814b;
+  color: #ad814b;
 }
 
 .saveFieldBtn:focus {
