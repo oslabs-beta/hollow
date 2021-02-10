@@ -1,5 +1,5 @@
 // Placeholder, will swap out
-import db from '../../server/secret.ts';
+import { dbPool as db, runQuery } from '../../server/secret.ts';
 
 export const getAll = async (ctx: any) => {
   const table = ctx.state.collectionName;
@@ -8,7 +8,7 @@ export const getAll = async (ctx: any) => {
 
   try {
     await db.connect();
-    const result = await db.queryObject(text);
+    const result = await runQuery(text);
     ctx.response.status = 200;
     ctx.response.body = {
       success: true,
@@ -39,7 +39,7 @@ export const getOne = async (ctx: any) => {
 
   try {
     await db.connect();
-    const result = await db.queryObject(text, ctx.params.id);
+    const result = await runQuery(text, ctx.params.id);
 
     ctx.response.status = 200;
     ctx.response.body = {
@@ -60,8 +60,8 @@ export const create = async (ctx: any) => {
   const text = `INSERT INTO ${table} (name) VALUES ($1) RETURNING *;`;
 
   try {
-    await db.connect();
-    const result = await db.queryObject(text, name);
+    // await db.connect();
+    const result = await runQuery(text, name);
     ctx.response.status = 200;
     ctx.response.body = {
       success: true,
@@ -88,18 +88,22 @@ export const update = async (ctx: any) => {
     return;
   } else {
     const { value } = await ctx.request.body({ type: 'json' });
-    const { name } = await value;
-    // const entries = Object.entries(await value);
-    // console.log('keys: ', entries);
-    // let paramKeys = Object.keys(await value);
-    // let paramVals = Object.values(await value);
-    // const arrLength = entries.length;
-    // for(let i = 1; i < arrLength; i++){
-    //set += `${paramKeys[i]}`
-    // };
-    // const set = "SET "
-    // const where = "WHERE ",
-    // const returning = "RETURNING *;"
+    // const { name } = await value;
+    const entries = Object.entries(await value);
+    console.log('keys: ', entries);
+    const paramKeys: string[] = Object.keys(await value);
+    const paramVals: string[] = Object.values(await value);
+    let set = 'SET ';
+    const arrLength = entries.length;
+    for (let i = 0; i < arrLength; i++) {
+      set += `${paramKeys[i]} = $${i + 1} `;
+    }
+    let fieldArray = '';
+
+    paramVals.forEach((val) => (fieldArray += val));
+    console.log({ fieldArray });
+    const last = entries.length + 1;
+    const next = `UPDATE ${table} ${set} WHERE id = $${last} RETURNING *;`;
 
     if (!ctx.request.hasBody) {
       ctx.response.status = 400;
@@ -110,11 +114,7 @@ export const update = async (ctx: any) => {
     } else {
       try {
         await db.connect();
-        const fieldArr = [name, ctx.params.id];
-        const result = await db.queryObject({
-          text: `UPDATE ${table} SET name = $1 WHERE id = $2 RETURNING *;`,
-          fields: fieldArr,
-        });
+        const result = await runQuery(next, fieldArray);
         ctx.response.status = 200;
         ctx.response.body = {
           success: true,
@@ -138,7 +138,7 @@ export const deleteOne = async (ctx: any) => {
   const text = `DELETE FROM ${table} WHERE id = $1;`;
   try {
     await db.connect();
-    const result = await db.queryObject(text, ctx.params.id);
+    const result = await runQuery(text, ctx.params.id);
     ctx.response.status = 200;
     ctx.response.body = {
       success: true,
