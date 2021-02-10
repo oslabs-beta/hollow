@@ -18,7 +18,7 @@ routerController.deleteRouter = async (ctx: any, next: Function) => {
     await Deno.remove(`./api/routes/${ctx.params.name}.ts`);
   }
   catch(err) {}
-
+  
   return await next();
 };
 

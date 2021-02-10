@@ -8,4 +8,8 @@ import React from 'https://dev.jspm.io/react@16.13.1';
 export interface AppState {
   activeItem: string;
   view: string;
+  collections: string[];
+  collectionHeaders: string[];
+  collectionEntries: string[][];
+  activeEntry: object;
 }
