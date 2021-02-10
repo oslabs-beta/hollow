@@ -3,6 +3,7 @@ import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist
 
 import Header from './header/Header.tsx';
 import Sidebar from './sidebar/Sidebar.tsx';
+import ContentBuilder from './dashboard/contentBuilder/ContentBuilder.tsx';
 import ActiveCollection from "./dashboard/activeCollection/ActiveCollection.tsx";
 import FieldView from './dashboard/fieldView/FieldView.tsx';
 
@@ -30,6 +31,10 @@ const App = () => {
   const [collectionEntries, setCollectionEntries] = useState([[]]);
   const [activeEntry, setActiveEntry] = useState({});
 
+  // will need to get current collections from api - these are dummy values for testing
+  const currentCollections = collections;
+  const currentTools = ['Content-Builder', 'Plugins'];
+
   // On mount:
   // make a request to api to get all table names (collections) - update state with results
   // make a request to api to get active table entries - update state with results
@@ -44,17 +49,19 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`/api/tables/${activeItem}`)
-      .then(data => data.json())
-      .then(data => {
-        // map headers for active collection
-        const headers = data.data.columns.map((header: any) => header.column_name)
-        // map entries for active collection
-        const entries = data.data.rows.map((entry:any) => Object.values(entry).map(value => value));
-        setCollectionHeaders(headers);
-        setCollectionEntries(entries);
-      })
-      .catch(error => console.log('error', error));
+    if (currentTools.indexOf(activeItem) === -1) { // ensures active item is not a tool
+      fetch(`/api/tables/${activeItem}`)
+        .then(data => data.json())
+        .then(data => {
+          // map headers for active collection
+          const headers = data.data.columns.map((header: any) => header.column_name)
+          // map entries for active collection
+          const entries = data.data.rows.map((entry:any) => Object.values(entry).map(value => value));
+          setCollectionHeaders(headers);
+          setCollectionEntries(entries);
+        })
+        .catch(error => console.log('error', error));
+      }
   }, [activeItem]);
 
   /**
@@ -114,10 +121,6 @@ const App = () => {
     }
   };
 
-    // will need to get current collections from api - these are dummy values for testing
-    const currentCollections = collections;
-    const currentTools = ['Content-Builder', 'Plugins'];
-
     // stores component to render - based on view in state
     let activeView;
     
@@ -133,8 +136,7 @@ const App = () => {
       );
     } else if (view === 'content-builder') {
       // need to create content builder compononent before assinging to activeView
-      // activeView = <ContentBuilder />
-      activeView = <div></div>;
+      activeView = <ContentBuilder />
     } else if (view === 'plugins') {
       // need to create plugins compononent before assinging to activeView - or not. dont really have a use for it atm
       // activeView = <Plugins />
