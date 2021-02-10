@@ -1,4 +1,4 @@
-import { dbPool as db, runQuery} from '../secret.ts';
+import { runQuery} from '../secret.ts';
 
 const tableController: any = {};
 
@@ -138,7 +138,7 @@ tableController.deleteTableByName = async (ctx: any, next: Function) => {
   const text = `DROP TABLE ${ctx.params.name}`;
 
   try {
-    await db.queryObject(text);
+    await runQuery(text);
 
     return await next();
   }
