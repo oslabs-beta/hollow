@@ -1,4 +1,4 @@
-  /**
+/**
  *  @description CSS rules for Header component
  */
 
@@ -22,11 +22,9 @@
 .headerTextRight {
     color: grey;
     text-align: right;
-    display: none;
 }
 
 .headerTextLeft {
     color: grey;
     text-align: justify;
-    display: none;
 }
