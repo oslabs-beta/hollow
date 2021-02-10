@@ -1,5 +1,5 @@
 // Placeholder, will swap out
-import { dbPool as db, runQuery } from '../../server/secret.ts';
+import { runQuery } from '../../server/secret.ts';
 
 export const getAll = async (ctx: any) => {
   const table = ctx.state.collectionName;
@@ -7,7 +7,6 @@ export const getAll = async (ctx: any) => {
   const text = `SELECT * FROM ${table} ORDER BY id ASC;`;
 
   try {
-    await db.connect();
     const result = await runQuery(text);
     ctx.response.status = 200;
     ctx.response.body = {
@@ -38,7 +37,6 @@ export const getOne = async (ctx: any) => {
   // EXECUTE foo('foo','bar','baz');
 
   try {
-    await db.connect();
     const result = await runQuery(text, ctx.params.id);
 
     ctx.response.status = 200;
@@ -48,20 +46,41 @@ export const getOne = async (ctx: any) => {
     };
   } catch (err) {
     console.log('err: ', err);
-  } finally {
-    await db.end();
   }
 };
 
 export const create = async (ctx: any) => {
   const table = ctx.state.collectionName;
   const { value } = await ctx.request.body({ type: 'json' });
-  const { name } = await value;
-  const text = `INSERT INTO ${table} (name) VALUES ($1) RETURNING *;`;
+  // const text = `INSERT INTO ${table} (name) VALUES ($1) RETURNING *;`;
+
+  const entries = Object.entries(await value);
+  console.log('keys: ', entries);
+  const requestKeys: string[] = Object.keys(await value);
+  const requestVals: string[] = Object.values(await value);
+  let insert = '';
+  // let values = [];
+  const arrLength = entries.length;
+  for (let i = 0; i < arrLength; i++) {
+    if (i === arrLength - 1) insert += `${requestKeys[i]}`;
+    else insert += `${requestKeys[i]}, `;
+  }
+  const fieldArray = requestVals.map((val) => val);
+  console.log({ fieldArray });
+  let values = '';
+  for (let i = 0; i < arrLength; i++) {
+    if (i === arrLength - 1) {
+      values += `$${i + 1} `;
+    } else {
+      values += `$${i + 1}, `;
+    }
+  }
+
+  const next = `INSERT INTO ${table} (${insert}) VALUES(${values}) RETURNING *;`;
 
   try {
     // await db.connect();
-    const result = await runQuery(text, name);
+    const result = await runQuery(next, requestVals);
     ctx.response.status = 200;
     ctx.response.body = {
       success: true,
@@ -69,8 +88,6 @@ export const create = async (ctx: any) => {
     };
   } catch (err) {
     console.log('err: ', err);
-  } finally {
-    await db.end();
   }
 };
 
@@ -90,21 +107,23 @@ export const update = async (ctx: any) => {
     const { value } = await ctx.request.body({ type: 'json' });
     // const { name } = await value;
     const entries = Object.entries(await value);
-    console.log('keys: ', entries);
-    const paramKeys: string[] = Object.keys(await value);
+    console.log('entries: ', entries);
+    const requestKeys: string[] = Object.keys(await value);
     const paramVals: string[] = Object.values(await value);
     let set = 'SET ';
     const arrLength = entries.length;
     for (let i = 0; i < arrLength; i++) {
-      set += `${paramKeys[i]} = $${i + 1} `;
+      if (i === arrLength - 1) {
+        set += `${requestKeys[i]} = $${i + 1} `;
+      } else {
+        set += `${requestKeys[i]} = $${i + 1}, `;
+      }
     }
-    let fieldArray = '';
-
-    paramVals.forEach((val) => (fieldArray += val));
-    console.log({ fieldArray });
+    console.log('ctx.params.id: ', ctx.params.id);
     const last = entries.length + 1;
     const next = `UPDATE ${table} ${set} WHERE id = $${last} RETURNING *;`;
-
+    paramVals.push(ctx.params.id);
+    console.log({ paramVals });
     if (!ctx.request.hasBody) {
       ctx.response.status = 400;
       ctx.response.body = {
@@ -113,8 +132,7 @@ export const update = async (ctx: any) => {
       };
     } else {
       try {
-        await db.connect();
-        const result = await runQuery(next, fieldArray);
+        const result = await runQuery(next, paramVals);
         ctx.response.status = 200;
         ctx.response.body = {
           success: true,
@@ -126,8 +144,6 @@ export const update = async (ctx: any) => {
           success: false,
           message: err.toString(),
         };
-      } finally {
-        await db.end();
       }
     }
   }
@@ -137,7 +153,6 @@ export const deleteOne = async (ctx: any) => {
   const table = ctx.state.collectionName;
   const text = `DELETE FROM ${table} WHERE id = $1;`;
   try {
-    await db.connect();
     const result = await runQuery(text, ctx.params.id);
     ctx.response.status = 200;
     ctx.response.body = {
@@ -146,7 +161,5 @@ export const deleteOne = async (ctx: any) => {
     };
   } catch (err) {
     console.log('err: ', err);
-  } finally {
-    await db.end();
   }
 };
