@@ -6,14 +6,6 @@ import Sidebar from './sidebar/Sidebar.tsx';
 import ActiveCollection from "./dashboard/activeCollection/ActiveCollection.tsx";
 import FieldView from './dashboard/fieldView/FieldView.tsx';
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [elemName: string]: any;
-    }
-  }
-}
-
 /**
  * @description holds state of app & renders app
  * @state activeItem - stores name of currently selected collection
@@ -33,6 +25,7 @@ const App = () => {
   // On mount:
   // make a request to api to get all table names (collections) - update state with results
   // make a request to api to get active table entries - update state with results
+  // set activeItem as first colelction in response
   useEffect(() => {
     fetch('/api/tables')
       .then(data => data.json())
@@ -43,11 +36,13 @@ const App = () => {
       .catch(error => console.log('error', error));
   }, []);
 
+  // get all entries for activeItem when activeItem is changed
   useEffect(() => {
     fetch(`/api/tables/${activeItem}`)
       .then(data => data.json())
       .then(data => {
         // map headers for active collection
+        console.log('in active item effect');
         const headers = data.data.columns.map((header: any) => header.column_name)
         // map entries for active collection
         const entries = data.data.rows.map((entry:any) => Object.values(entry).map(value => value));
@@ -66,13 +61,15 @@ const App = () => {
     // @ts-ignore
     if (event.target.id === 'field') active = 'field';
     // @ts-ignore
+    else if (event.target.id === 'addNewEntryBtn') active = 'addField';
+    // @ts-ignore
     else active = event.target.innerText;
     // Sets correct view based on which item was clicked
     switch(active) {
-      case 'field':
+      case 'field': {
         // @ts-ignore
         const valueCount = event.target.parentNode.cells.length;
-        let count = 1;
+        let count = 0;
         const entryData: any = {};
         while (count < valueCount) {
           // @ts-ignore
@@ -82,39 +79,51 @@ const App = () => {
           entryData[field] = value;
           count += 1;
         }
+        
         setView('field');
         setActiveEntry(entryData);
         break;
-      case 'Settings':
+      }
+      case 'addField': {
+        const entryData: any = {};
+        let count: number = 0;
+        while (count < collectionHeaders.length) {
+          const field = collectionHeaders[count];
+          entryData[field] = '';
+          count += 1;
+        }
+        setView('addField');
+        setActiveEntry(entryData);
+        break;
+      }
+      case 'Settings': {
         if (view !== 'settings') {
           setActiveItem(active);
           setView('settings');
         }
         break;
-      case 'Content-Builder':
+      }
+      case 'Content-Builder': {
         if (view !== 'content-builder') {
           setActiveItem(active);
           setView('content-builder');
         }
         break;
-      case 'Plugins':
+      }
+      case 'Plugins': {
         if (view !== 'plugins') {
           setActiveItem(active);
           setView('plugins');
         }
         break;
-
+      }
       // default will catch on collection clicks
-      // make a request to api to get all table names (collections) - update state with results
-      // make a request to api to get active table entries - update state with results
-      // set correct view if needed
       default:
         setView('collection');
         setActiveItem(active);
     }
   };
 
-    // will need to get current collections from api - these are dummy values for testing
     const currentCollections = collections;
     const currentTools = ['Content-Builder', 'Plugins'];
 
@@ -132,19 +141,21 @@ const App = () => {
         />
       );
     } else if (view === 'content-builder') {
-      // need to create content builder compononent before assinging to activeView
-      // activeView = <ContentBuilder />
-      activeView = <div></div>;
+        // need to create content builder compononent before assinging to activeView
+        // activeView = <ContentBuilder />
+        activeView = <div></div>;
     } else if (view === 'plugins') {
-      // need to create plugins compononent before assinging to activeView - or not. dont really have a use for it atm
-      // activeView = <Plugins />
-      activeView = <div></div>;
+        // need to create plugins compononent before assinging to activeView - or not. dont really have a use for it atm
+        // activeView = <Plugins />
+        activeView = <div></div>;
     } else if (view === 'settings') {
-      // need to create settings compononent before assinging to activeView
-      // activeView = <Settings />
-      activeView = <div></div>;
+        // need to create settings compononent before assinging to activeView
+        // activeView = <Settings />
+        activeView = <div></div>;
     } else if (view === 'field') {
-      activeView = <FieldView activeEntry={activeEntry} activeItem={activeItem} />
+        activeView = <FieldView activeEntry={activeEntry} activeItem={activeItem} newEntry={false} />;
+    } else if (view === 'addField') {
+        activeView = <FieldView activeEntry={activeEntry} activeItem={activeItem} newEntry={true} />;
     }
 
   return (

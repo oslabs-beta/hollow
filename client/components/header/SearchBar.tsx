@@ -1,11 +1,22 @@
-// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/master/react/v16.13.1/react.d.ts"
-import React from 'https://dev.jspm.io/react@16.13.1';
-
-const SearchBar: React.FC = () => {
-    return ( 
-        <div className='headerContainer'>
-            <button>Search</button>
+import { h } from 'https://unpkg.com/preact@10.5.12?module';
+// on submit, prevent default
+const SearchBar = () => {
+    return( 
+        <div> 
+            Hello
         </div>
+    // <form action="/" method="get">
+    //     <label htmlFor="headerSearch">
+    //         <span className="headerVisuallyHidden">Search Database</span>
+    //     </label>
+    //     <input
+    //         type="text"
+    //         id="headerSearch"
+    //         placeholder="Search Database"
+    //         name="s" 
+    //     />
+    //     <button type="submit">Search</button>
+    // </form>
     )
 }
 

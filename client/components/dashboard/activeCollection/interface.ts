@@ -2,6 +2,14 @@
  * @description typescript models for ActiveComponent
  */
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      [elemName: string]: any;
+    }
+  }
+}
+
 export interface ActiveCollectionProps {
   activeCollection: string;
   collectionHeaders: string[];
@@ -22,4 +30,8 @@ export interface EntryProps  {
 export interface FieldProps {
   fieldName: string;
   activeCollection: string;
+}
+
+export interface AddEntryProps {
+  
 }
