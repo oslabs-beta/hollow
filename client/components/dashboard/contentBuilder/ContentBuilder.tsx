@@ -4,8 +4,9 @@ import { FieldRowProps, FormMessageProps } from './interface.ts';
 
 /**
  * @description Renders Content-Builder panel to create collections
+ * @param refreshCollections Re-renders sidebar to include newly added collection
  */
-const ContentBuilder = () => {
+const ContentBuilder = ({ refreshCollections }: { refreshCollections: any }) => {
   const [displayName, setDisplayName] = useState('');
   const [fields, setFields] = useState([{ columnName: '', dataType: 'text' }]);
   const [messages, setMessages] = useState([]);
@@ -61,6 +62,7 @@ const ContentBuilder = () => {
           setDisplayName('');
           setFields([{ columnName: '', dataType: 'text' }]);
           setMessages(['Table created.']);
+          refreshCollections();
         } else {
           setMessages(['Error: Could not create table. Please try again.']);
         }

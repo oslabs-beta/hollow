@@ -55,7 +55,6 @@ tableController.getTableByName = async (ctx: any, next: Function) => {
 }
 
 tableController.createTable = async (ctx: any, next: Function) => {
-  console.log('inside create table');
   if (!ctx.request.hasBody) {
     ctx.response.status = 400;
     ctx.response.body = {
@@ -98,7 +97,7 @@ tableController.createTable = async (ctx: any, next: Function) => {
       }
     }
   }
-  console.log('here');
+
   let columnInfo = '';
   columns.forEach(({ columnName, dataType }: { columnName: string, dataType: string }, index: number) => {
     columnInfo += `${columnName} `;
@@ -118,7 +117,7 @@ tableController.createTable = async (ctx: any, next: Function) => {
   });
   
   const text = `CREATE TABLE ${collectionName} (id SERIAL PRIMARY KEY, ${columnInfo})`;
-  console.log(text);
+
   try {
     const result = await runQuery(text);
 
