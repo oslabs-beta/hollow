@@ -3,6 +3,7 @@ import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist
 
 import Header from './header/Header.tsx';
 import Sidebar from './sidebar/Sidebar.tsx';
+import ContentBuilder from './dashboard/contentBuilder/ContentBuilder.tsx';
 import ActiveCollection from "./dashboard/activeCollection/ActiveCollection.tsx";
 import FieldView from './dashboard/fieldView/FieldView.tsx';
 
@@ -22,34 +23,54 @@ const App = () => {
   const [collectionEntries, setCollectionEntries] = useState([[]]);
   const [activeEntry, setActiveEntry] = useState({});
 
+  // will need to get current collections from api - these are dummy values for testing
+  const currentCollections = collections;
+  const currentTools = ['Content-Builder', 'Plugins'];
+
+  const refreshCollections = () => {
+    fetch('/api/tables')
+      .then(data => data.json())
+      .then((data) => {
+        setCollections(data.data);
+      })
+      .catch(error => console.log('error', error));
+  }
+
   // On mount:
   // make a request to api to get all table names (collections) - update state with results
   // make a request to api to get active table entries - update state with results
   // set activeItem as first colelction in response
   useEffect(() => {
     fetch('/api/tables')
-      .then(data => data.json())
-      .then((data) => {
-        setCollections(collections.concat(data.data));
+    .then(data => data.json())
+    .then((data) => {
+      setCollections(collections.concat(data.data));
+
+      // If active item is a tool, do not set active item to a collection
+      if (currentTools.indexOf(activeItem) === -1) {
         setActiveItem(data.data[0]);
-      })
-      .catch(error => console.log('error', error));
+      }
+    })
+    .catch(error => console.log('error', error));
   }, []);
 
   // get all entries for activeItem when activeItem is changed
   useEffect(() => {
-    fetch(`/api/tables/${activeItem}`)
-      .then(data => data.json())
-      .then(data => {
-        // map headers for active collection
-        console.log('in active item effect');
-        const headers = data.data.columns.map((header: any) => header.column_name)
-        // map entries for active collection
-        const entries = data.data.rows.map((entry:any) => Object.values(entry).map(value => value));
-        setCollectionHeaders(headers);
-        setCollectionEntries(entries);
-      })
-      .catch(error => console.log('error', error));
+    // If active item is a tool, do not fetch table
+    if (currentTools.indexOf(activeItem) === -1) {
+      fetch(`/api/tables/${activeItem}`)
+        .then(data => data.json())
+        .then(data => {
+          // map headers for active collection
+          console.log('in active item effect');
+          const headers = data.data.columns.map((header: any) => header.column_name)
+          // map entries for active collection
+          const entries = data.data.rows.map((entry:any) => Object.values(entry).map(value => value));
+          setCollectionHeaders(headers);
+          setCollectionEntries(entries);
+        })
+        .catch(error => console.log('error', error));
+    }
   }, [activeItem]);
 
   /**
@@ -124,9 +145,6 @@ const App = () => {
     }
   };
 
-    const currentCollections = collections;
-    const currentTools = ['Content-Builder', 'Plugins'];
-
     // stores component to render - based on view in state
     let activeView;
     
@@ -141,9 +159,7 @@ const App = () => {
         />
       );
     } else if (view === 'content-builder') {
-        // need to create content builder compononent before assinging to activeView
-        // activeView = <ContentBuilder />
-        activeView = <div></div>;
+      activeView = <ContentBuilder refreshCollections={refreshCollections} />
     } else if (view === 'plugins') {
         // need to create plugins compononent before assinging to activeView - or not. dont really have a use for it atm
         // activeView = <Plugins />

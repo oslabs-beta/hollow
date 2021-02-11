@@ -1,0 +1,15 @@
+/**
+ * @description typescript models for Content-Builder
+ */
+
+export interface FieldRowProps {
+  index: number;
+  columnName: string;
+  dataType: string;
+  handleFieldChange: any;
+  deleteRow: any;
+}
+
+export interface FormMessageProps {
+  messages: string[];
+}
