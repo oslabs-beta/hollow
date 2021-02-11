@@ -217,15 +217,16 @@ tableController.updateRow = async (ctx: any) => {
   const table = ctx.params.name;
   // console.log('ctx state: ', ctx.state);
   // console.log('ctx.request', ctx.request);
-  // console.log('ctx.request.body', ctx.request.body);
-  if (ctx.response.status === 400) {
-    ctx.response.body = {
-      success: false,
-      message: ctx.response.body.message,
-    };
-    ctx.response.status = 404;
-    return;
-  } else {
+  console.log('ctx.request.body', ctx.request.body);
+  // if (ctx.response.status === 400) {
+  //   ctx.response.body = {
+  //     success: false,
+  //     message: ctx.response.body.message,
+  //   };
+  //   ctx.response.status = 404;
+  //   return;
+  // } else
+   
     const { value } = await ctx.request.body({ type: 'json' });
     // const { name } = await value;
     const entries = Object.entries(await value);
@@ -268,7 +269,7 @@ tableController.updateRow = async (ctx: any) => {
         };
       }
     }
-  }
+  
 };
 
 tableController.deleteRow = async (ctx: any) => {

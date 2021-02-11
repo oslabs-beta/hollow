@@ -11,7 +11,6 @@ const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
 
   // TODO:
   // add handlers to check for correct data type on edit of field values
-  // make request to update and handle loading state correctly
 
   const handleSave = (event: any) => {
     event.preventDefault();
@@ -28,41 +27,65 @@ const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
       const value = event.target.form[count].value;
       data[inputName] = value;
       count += 1;
-    }
-
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setSaveSuccess(true);
-    // }, 5000)
+    };
 
     if (newEntry) {
-      fetch('', {
+      fetch(`/api/tables/${activeItem}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       })
+      .then(res => res.json())
       .then(res => {
-        console.log('response', res.json())
+        if (res.success) {
+          setLoading(false);
+          setSaveSuccess(true);
+        } else {
+          setLoading(false);
+          setSaveFail(true);
+        }
       })
       .catch(error => console.log(error))
     } else {
-
+      const value = activeEntryValues[Object.keys(activeEntryValues)[0]];
+      fetch(`/api/tables/${activeItem}/${value}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          setLoading(false);
+          setSaveSuccess(true);
+        } else {
+          setLoading(false);
+          setSaveFail(true);
+        }
+      })
+      .catch(error => console.log(error))
     }
 
   };
 
   const handleDelete = (event: any) => {
-    const fieldCount = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm.elements.length;
+    // const fieldCount = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm.elements.length;
 
-    let count = 1;
-    const dataToDelete: any = {};
-    while (count < fieldCount) {
-      const field = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm[count].labels[0].htmlFor;
-      const value = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm[count].value;
-      dataToDelete[field] = value;
-      count += 1;
-    }
-    console.log(dataToDelete);
+    // let count = 1;
+    // const dataToDelete: any = {};
+    // while (count < fieldCount) {
+    //   const field = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm[count].labels[0].htmlFor;
+    //   const value = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm[count].value;
+    //   dataToDelete[field] = value;
+    //   count += 1;
+    // }
+    const value = activeEntryValues[Object.keys(activeEntryValues)[0]];
+    fetch(`/api/tables/${activeItem}/${value}`, { method: 'DELETE' })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => console.log(error));
   };
 
   useEffect(() => {
