@@ -96,7 +96,7 @@ const App = () => {
       setActiveItem(collections[0]);
       setScroll(true);
       // @ts-ignore
-      const toScroll = document.querySelector('collectionItems');
+      // const toScroll = document.querySelector('collectionItems');
       toScroll.scrollType = '0';
     }
   }, [collections]);
