@@ -26,7 +26,7 @@ tableController.getAllTables = async (ctx: any, next: Function) => {
 };
 
 tableController.getTableByName = async (ctx: any, next: Function) => {
-  const rowText = `SELECT * FROM ${ctx.params.name}`;
+  const rowText = `SELECT * FROM ${ctx.params.name} ORDER BY id ASC`;
 
   const columnText = `
     SELECT column_name, data_type 

@@ -55,7 +55,7 @@ const Entry = ({ values, index, fieldNames, handleClick, activeCollection, entry
  * @description Renders all details for active collection; Gives option to add new entry, delete entry & edit values of entry
  * @param activeCollection - currently selected collection from sidebar
  */
-const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeaders, handleClick }: ActiveCollectionProps) => {
+const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeaders, handleClick, refreshCollections }: ActiveCollectionProps) => {
   const [activePage, setActivePage] = useState('1');
   const [activeResultsPerPage, setActiveResultsPerPage] = useState('10');
 
@@ -94,6 +94,16 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
     const text = event.target.innerText;
     setActivePage('1');
     setActiveResultsPerPage(text);
+  };
+
+  const handleDelete = (event: any) => {
+    fetch(`/api/tables/${activeCollection}`, { method: 'DELETE' })
+    .then(res => res.json())
+    .then(res => {
+      if (res.success) {
+        refreshCollections();
+      }
+    }).catch(err => console.log(err));
   };
 
   // maps each field name
@@ -158,11 +168,18 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
   return (
     <div className='activeCollectionContainer'>
       <div className='activeCollectionHeader'>
+        <div className='deleteContainer'>
         <div className='activeCollectionDetails'>
           <p className='activeCollectionName'>{activeCollection}</p>
           <p className='activeCollectionCount'>{entriesCount} entries found</p>
         </div>
-        <button className='addEntryBtn' id='addNewEntryBtn' onClick={handleClick} >Add New {activeCollection}</button>
+        <div className='deleteEntrySVG' onClick={handleDelete} >
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill='#bd5555'>
+              <path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/>
+            </svg>
+        </div>
+      </div>
+      <button className='addEntryBtn' id='addNewEntryBtn' onClick={handleClick} >Add New {activeCollection}</button>
       </div>
       <div className='activeTableContainer'>
         <table className='activeCollectionTable'>
