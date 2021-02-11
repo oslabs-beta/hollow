@@ -274,9 +274,9 @@ tableController.updateRow = async (ctx: any) => {
 
 tableController.deleteRow = async (ctx: any) => {
   const table = ctx.params.name;
-  const text = `DELETE FROM ${table} WHERE id = $1;`;
+  const text = `DELETE FROM ${table} WHERE id = ${ctx.params.id};`;
   try {
-    const result = await runQuery(text, ctx.params.id);
+    const result = await runQuery(text);
     ctx.response.status = 200;
     ctx.response.body = {
       success: true,
