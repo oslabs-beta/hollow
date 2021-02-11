@@ -37,4 +37,9 @@ router.delete('/api/tables/:name', tableController.deleteTableByName, routerCont
   };
 });
 
+router.get('/api/tables/:name/:id', tableController.getRow);
+router.post('/api/tables/:name', tableController.createRow);
+router.put('/api/tables/:name/:id', tableController.updatetRow);
+router.delete('/api/tables/:name/:id', tableController.deleteRow);
+
 export default router;
