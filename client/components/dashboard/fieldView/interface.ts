@@ -6,4 +6,5 @@
   activeEntry: object;
   activeItem: string;
   newEntry: boolean;
+  collectionEntries: string[][];
  }

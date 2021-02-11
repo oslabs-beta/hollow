@@ -3,11 +3,12 @@ import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist
 
 import { FieldViewProps } from './interface.ts';
 
-const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
+const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: FieldViewProps) => {
   const [saveFail, setSaveFail] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeEntryValues, setActiveEntryValues] = useState({});
+  const [newId, setNewId] = useState(0);
 
   // TODO:
   // add handlers to check for correct data type on edit of field values
@@ -90,6 +91,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
 
   useEffect(() => {
     setActiveEntryValues(activeEntry);
+    if (newEntry) setNewId(Number(collectionEntries[collectionEntries.length - 1][0]) + 1);
   }, []);
 
   const handleChange = (event: any) => {
@@ -103,12 +105,20 @@ const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
     setActiveEntryValues(copy);
   }
 
-  const entryDataArr = Object.entries(activeEntry).map(([field, value], index) => (
-    <div className='fieldViewSect' key={`${field}-${index}`}>
-      <label className='fieldViewLabel' htmlFor={field}>{field}</label>
-      <input className='fieldViewInput' type='text' id={field} name={field} value={activeEntryValues[field]} onChange={(e: any) => handleChange(e)} />
-    </div>
-  ));
+  const entryDataArr = Object.entries(activeEntry).map(([field, value], index) => {
+    if (index === 0) return (
+      <div className='fieldViewSect' key={`${field}-${index}`}>
+        <label className='fieldViewLabel' htmlFor={field}>{field}</label>
+        <input className='fieldViewInput' style={{ color: 'black' }} type='text' id={field} name={field} value={newEntry ? newId : activeEntryValues[field]} onChange={(e: any) => handleChange(e)}  disabled/>
+      </div>
+    );
+    return (
+      <div className='fieldViewSect' key={`${field}-${index}`}>
+        <label className='fieldViewLabel' htmlFor={field}>{field}</label>
+        <input className='fieldViewInput' type='text' id={field} name={field} value={activeEntryValues[field]} onChange={(e: any) => handleChange(e)} />
+      </div>
+    );
+  });
 
   let loader;
 
@@ -138,7 +148,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
       <div className='fieldViewHeader'>
       <div className='deleteContainer'>
         <div className='fieldViewDetails'>
-          <p className='fieldViewName'>{activeEntryValues[Object.keys(activeEntryValues)[0]]}</p>
+          <p className='fieldViewName'>{newEntry ? newId : activeEntryValues[Object.keys(activeEntryValues)[0]]}</p>
           <p className='fieldViewCollection'>{activeItem}</p>
         </div>
         {!newEntry &&
