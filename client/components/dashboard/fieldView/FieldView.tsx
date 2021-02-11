@@ -20,7 +20,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
     //@ts-ignore
     const inputCount = event.target.form.childElementCount;
     const data: any = {};
-    let count = 1;
+    let count = 2;
     while (count <= inputCount) {
       //@ts-ignore
       const inputName = event.target.form[count].labels[0].innerText;
@@ -30,12 +30,22 @@ const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
       count += 1;
     }
 
-    setTimeout(() => {
-      setLoading(false);
-      setSaveSuccess(true);
-    }, 5000)
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setSaveSuccess(true);
+    // }, 5000)
 
     if (newEntry) {
+      fetch('', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => {
+        console.log('response', res.json())
+      })
+      .catch(error => console.log(error))
+    } else {
 
     }
 
