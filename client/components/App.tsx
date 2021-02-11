@@ -22,18 +22,33 @@ const App = () => {
   const [collectionHeaders, setCollectionHeaders] = useState([]);
   const [collectionEntries, setCollectionEntries] = useState([[]]);
   const [activeEntry, setActiveEntry] = useState({});
+  const [scroll, setScroll] = useState(false);
 
   // will need to get current collections from api - these are dummy values for testing
   const currentCollections = collections;
   const currentTools = ['Content-Builder', 'Plugins'];
 
-  const refreshCollections = () => {
-    fetch('/api/tables')
-      .then(data => data.json())
-      .then((data) => {
-        setCollections(data.data);
-      })
-      .catch(error => console.log('error', error));
+  const refreshCollections = async () => {
+
+   try {
+    const response = await fetch('/api/tables');
+    const data = await response.json();
+
+    await setCollections(data.data);
+
+   } catch (err) {
+     console.log('err', err);
+   };
+      // .then(data => data.json())
+      // .then((data) => {
+      //   setCollections(data.data);
+      // })
+      // .then(() => {
+      //   if (!collections.some(activeItem)) {
+      //     setActiveItem(collections[0]);
+      //   }
+      // })
+      // .catch(error => console.log('error', error));
   }
 
   // On mount:
@@ -71,7 +86,26 @@ const App = () => {
         })
         .catch(error => console.log('error', error));
     }
+
   }, [activeItem]);
+
+
+  useEffect(() => {
+    if (activeItem !== '' && !collections.includes(activeItem)) {
+      console.log(collections);
+      setActiveItem(collections[0]);
+      setScroll(true);
+      // @ts-ignore
+      const toScroll = document.querySelector('collectionItems');
+      toScroll.scrollType = '0';
+    }
+  }, [collections]);
+
+
+  const handleActiveChange = (item: string) => {
+    setActiveItem(item);
+    setView('collection');
+  };
 
   /**
    * @description sets state to active item (collection or tool) on click of sidebar item
@@ -156,10 +190,11 @@ const App = () => {
           collectionHeaders={collectionHeaders}
           collectionEntries={collectionEntries}
           handleClick={handleClick}
+          refreshCollections={refreshCollections}
         />
       );
     } else if (view === 'content-builder') {
-      activeView = <ContentBuilder refreshCollections={refreshCollections} />
+      activeView = <ContentBuilder refreshCollections={refreshCollections} handleActiveChange={handleActiveChange} />
     } else if (view === 'plugins') {
         // need to create plugins compononent before assinging to activeView - or not. dont really have a use for it atm
         // activeView = <Plugins />
@@ -181,7 +216,8 @@ const App = () => {
         activeItem={activeItem}
         currentCollections={currentCollections} 
         currentTools={currentTools} 
-        handleClick={handleClick}  
+        handleClick={handleClick}
+        scrollTop={scroll}  
       />
       {activeView}
     </div>

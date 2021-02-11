@@ -1,12 +1,12 @@
 import { h } from 'https://unpkg.com/preact@10.5.12?module';
 import { useState } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
-import { FieldRowProps, FormMessageProps } from './interface.ts';
+import { ContentBuilderProps, FieldRowProps, FormMessageProps } from './interface.ts';
 
 /**
  * @description Renders Content-Builder panel to create collections
  * @param refreshCollections Re-renders sidebar to include newly added collection
  */
-const ContentBuilder = ({ refreshCollections }: { refreshCollections: any }) => {
+const ContentBuilder = ({ refreshCollections, handleActiveChange }: ContentBuilderProps) => {
   const [displayName, setDisplayName] = useState('');
   const [fields, setFields] = useState([{ columnName: '', dataType: 'text' }]);
   const [messages, setMessages] = useState([]);
@@ -63,6 +63,7 @@ const ContentBuilder = ({ refreshCollections }: { refreshCollections: any }) => 
           setFields([{ columnName: '', dataType: 'text' }]);
           setMessages(['Table created.']);
           refreshCollections();
+          handleActiveChange(collectionName);
         } else {
           setMessages(['Error: Could not create table. Please try again.']);
         }

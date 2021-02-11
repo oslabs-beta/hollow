@@ -15,6 +15,7 @@ export interface ActiveCollectionProps {
   collectionHeaders: string[];
   collectionEntries: string[][];
   handleClick: (event: any) => void;
+  refreshCollections: () => void;
 }
 
 export interface EntryProps  {

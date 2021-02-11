@@ -13,3 +13,8 @@ export interface FieldRowProps {
 export interface FormMessageProps {
   messages: string[];
 }
+
+export interface ContentBuilderProps {
+  handleActiveChange: (activeItem: string) => void;
+  refreshCollections: () => void; 
+}
