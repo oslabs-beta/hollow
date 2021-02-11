@@ -26,7 +26,7 @@ tableController.getAllTables = async (ctx: any, next: Function) => {
 };
 
 tableController.getTableByName = async (ctx: any, next: Function) => {
-  const rowText = `SELECT * FROM ${ctx.params.name}`;
+  const rowText = `SELECT * FROM ${ctx.params.name} ORDER BY id ASC`;
 
   const columnText = `
     SELECT column_name, data_type 
@@ -274,9 +274,9 @@ tableController.updateRow = async (ctx: any) => {
 
 tableController.deleteRow = async (ctx: any) => {
   const table = ctx.params.name;
-  const text = `DELETE FROM ${table} WHERE id = $1;`;
+  const text = `DELETE FROM ${table} WHERE id = ${ctx.params.id};`;
   try {
-    const result = await runQuery(text, ctx.params.id);
+    const result = await runQuery(text);
     ctx.response.status = 200;
     ctx.response.body = {
       success: true,

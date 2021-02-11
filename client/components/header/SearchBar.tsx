@@ -5,16 +5,20 @@ import { h } from 'https://unpkg.com/preact@10.5.12?module';
 const SearchBar = () => {
     return( 
     <form action="/" method="get">
-        <label htmlFor="headerSearch">
+        <label htmlFor="headerSearchBar">
             <span className="headerVisuallyHidden">Search Database</span>
+            
         </label>
         <input
             type="text"
-            id="headerSearch"
-            placeholder="Search Database"
+            id="headerSearchBar"
+            placeholder="Search Database..."
             name="s" 
         />
-        <button className = 'headerSearchButton' type="submit">Search</button>
+        <button className = 'headerSearchButton' type="submit">
+            <svg className="headerSearchPhoto" xmlns="http://www.w3.org/2000/svg" width="14.5" height="14.5" viewBox="0 0 24 24"><path d="M23.809 21.646l-6.205-6.205c1.167-1.605 1.857-3.579 1.857-5.711 0-5.365-4.365-9.73-9.731-9.73-5.365 0-9.73 4.365-9.73 9.73 0 5.366 4.365 9.73 9.73 9.73 2.034 0 3.923-.627 5.487-1.698l6.238 6.238 2.354-2.354zm-20.955-11.916c0-3.792 3.085-6.877 6.877-6.877s6.877 3.085 6.877 6.877-3.085 6.877-6.877 6.877c-3.793 0-6.877-3.085-6.877-6.877z"/>
+            </svg>
+        </button>
     </form>
     )
 }

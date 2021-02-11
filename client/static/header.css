@@ -37,3 +37,32 @@
     white-space: nowrap;
     width: 1px;
 }
+
+.headerSearchButton {
+    background: #2e2d2e;
+    border: none;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+#headerSearchBar {
+    color: #297373;
+    background: #2e2d2e;
+    padding: .15rem;
+    margin-left: 2.5rem;
+    text-align: left;
+    border: none;
+    margin-right: .4rem;
+    cursor: auto;
+}
+
+.headerSearchPhoto {
+    background: #2e2d2e;
+    fill: #297373;
+}
+
+#headerSearchBar:focus, .headerSearchButton:focus {
+    border: none;
+    background: #2e2d2e;
+    outline: 0;
+}

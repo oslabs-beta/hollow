@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <div className='headerContainer'> 
       <SearchBar />
-      <h1 className='headerTextRight'>Hello Right!</h1> 
+      <h1 className='headerTextRight'></h1> 
     </div>
   )
 };
