@@ -169,9 +169,9 @@ const App = () => {
         // activeView = <Settings />
         activeView = <div></div>;
     } else if (view === 'field') {
-        activeView = <FieldView activeEntry={activeEntry} activeItem={activeItem} newEntry={false} />;
+        activeView = <FieldView activeEntry={activeEntry} activeItem={activeItem} newEntry={false} collectionEntries={collectionEntries} />;
     } else if (view === 'addField') {
-        activeView = <FieldView activeEntry={activeEntry} activeItem={activeItem} newEntry={true} />;
+        activeView = <FieldView activeEntry={activeEntry} activeItem={activeItem} newEntry={true} collectionEntries={collectionEntries} />;
     }
 
   return (
