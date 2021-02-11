@@ -28,6 +28,7 @@
 .content-table > div:first-child {
   text-transform: lowercase;
   font-size: 14px;
+  color: #297373;
 }
 
 .content-builder input[type="text"],

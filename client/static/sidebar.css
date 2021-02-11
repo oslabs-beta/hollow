@@ -45,14 +45,26 @@
   padding-left: 1rem;
 }
 
+.collectionItems {
+  display: flex;
+  flex-direction: column;
+  max-height: 15rem;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.collectionItems::-webkit-scrollbar {
+  width: 0;
+}
+
 .sidebarItem {
   color: #819494;
   list-style-type: none;
   width: 14rem;
   padding-left: 0rem;
-  overflow: hidden;
   padding-top: .5rem;
 }
+
 
 .sidebarItem:hover {
   background-color: #343636;

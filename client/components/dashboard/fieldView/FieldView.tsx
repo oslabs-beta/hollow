@@ -3,15 +3,15 @@ import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist
 
 import { FieldViewProps } from './interface.ts';
 
-const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
+const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: FieldViewProps) => {
   const [saveFail, setSaveFail] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeEntryValues, setActiveEntryValues] = useState({});
+  const [newId, setNewId] = useState(0);
 
   // TODO:
   // add handlers to check for correct data type on edit of field values
-  // make request to update and handle loading state correctly
 
   const handleSave = (event: any) => {
     event.preventDefault();
@@ -20,7 +20,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
     //@ts-ignore
     const inputCount = event.target.form.childElementCount;
     const data: any = {};
-    let count = 1;
+    let count = 2;
     while (count <= inputCount) {
       //@ts-ignore
       const inputName = event.target.form[count].labels[0].innerText;
@@ -28,35 +28,70 @@ const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
       const value = event.target.form[count].value;
       data[inputName] = value;
       count += 1;
-    }
-
-    setTimeout(() => {
-      setLoading(false);
-      setSaveSuccess(true);
-    }, 5000)
+    };
 
     if (newEntry) {
-
+      fetch(`/api/tables/${activeItem}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          setLoading(false);
+          setSaveSuccess(true);
+        } else {
+          setLoading(false);
+          setSaveFail(true);
+        }
+      })
+      .catch(error => console.log(error))
+    } else {
+      const value = activeEntryValues[Object.keys(activeEntryValues)[0]];
+      fetch(`/api/tables/${activeItem}/${value}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(res => {
+        if (res.success) {
+          setLoading(false);
+          setSaveSuccess(true);
+        } else {
+          setLoading(false);
+          setSaveFail(true);
+        }
+      })
+      .catch(error => console.log(error))
     }
 
   };
 
   const handleDelete = (event: any) => {
-    const fieldCount = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm.elements.length;
+    // const fieldCount = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm.elements.length;
 
-    let count = 1;
-    const dataToDelete: any = {};
-    while (count < fieldCount) {
-      const field = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm[count].labels[0].htmlFor;
-      const value = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm[count].value;
-      dataToDelete[field] = value;
-      count += 1;
-    }
-    console.log(dataToDelete);
+    // let count = 1;
+    // const dataToDelete: any = {};
+    // while (count < fieldCount) {
+    //   const field = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm[count].labels[0].htmlFor;
+    //   const value = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm[count].value;
+    //   dataToDelete[field] = value;
+    //   count += 1;
+    // }
+    const value = activeEntryValues[Object.keys(activeEntryValues)[0]];
+    fetch(`/api/tables/${activeItem}/${value}`, { method: 'DELETE' })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => console.log(error));
   };
 
   useEffect(() => {
     setActiveEntryValues(activeEntry);
+    if (newEntry) setNewId(Number(collectionEntries[collectionEntries.length - 1][0]) + 1);
   }, []);
 
   const handleChange = (event: any) => {
@@ -70,12 +105,20 @@ const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
     setActiveEntryValues(copy);
   }
 
-  const entryDataArr = Object.entries(activeEntry).map(([field, value], index) => (
-    <div className='fieldViewSect' key={`${field}-${index}`}>
-      <label className='fieldViewLabel' htmlFor={field}>{field}</label>
-      <input className='fieldViewInput' type='text' id={field} name={field} value={activeEntryValues[field]} onChange={(e: any) => handleChange(e)} />
-    </div>
-  ));
+  const entryDataArr = Object.entries(activeEntry).map(([field, value], index) => {
+    if (index === 0) return (
+      <div className='fieldViewSect' key={`${field}-${index}`}>
+        <label className='fieldViewLabel' htmlFor={field}>{field}</label>
+        <input className='fieldViewInput' style={{ color: 'black' }} type='text' id={field} name={field} value={newEntry ? newId : activeEntryValues[field]} onChange={(e: any) => handleChange(e)}  disabled/>
+      </div>
+    );
+    return (
+      <div className='fieldViewSect' key={`${field}-${index}`}>
+        <label className='fieldViewLabel' htmlFor={field}>{field}</label>
+        <input className='fieldViewInput' type='text' id={field} name={field} value={activeEntryValues[field]} onChange={(e: any) => handleChange(e)} />
+      </div>
+    );
+  });
 
   let loader;
 
@@ -105,7 +148,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry }: FieldViewProps) => {
       <div className='fieldViewHeader'>
       <div className='deleteContainer'>
         <div className='fieldViewDetails'>
-          <p className='fieldViewName'>{activeEntryValues[Object.keys(activeEntryValues)[0]]}</p>
+          <p className='fieldViewName'>{newEntry ? newId : activeEntryValues[Object.keys(activeEntryValues)[0]]}</p>
           <p className='fieldViewCollection'>{activeItem}</p>
         </div>
         {!newEntry &&
