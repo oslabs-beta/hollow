@@ -60,8 +60,10 @@ const Sidebar = ({ currentCollections, currentTools, handleClick, activeItem }: 
       <div className='sidebarLogo'>
         hollow
       </div>
-      <ListHeader type='Collections'/>
-        {collections}
+      <ListHeader type='Collections' />
+        <div className='collectionItems'>
+          {collections}
+        </div>
       <ListHeader type='Tools' />
         {tools}
       <div className='sidebarSettings' onClick={(e: any) => handleClick(e)}>
