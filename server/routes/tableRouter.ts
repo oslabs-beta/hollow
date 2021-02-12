@@ -37,9 +37,35 @@ router.delete('/api/tables/:name', tableController.deleteTableByName, routerCont
   };
 });
 
-router.get('/api/tables/:name/:id', tableController.getRow);
-router.post('/api/tables/:name', tableController.createRow);
-router.put('/api/tables/:name/:id', tableController.updateRow);
-router.delete('/api/tables/:name/:id', tableController.deleteRow);
+router.get('/api/tables/:name/:id', tableController.getRow, (ctx: any) => {
+  ctx.response.status = 200;
+  ctx.response.body = {
+    success: true,
+    data: ctx.state.row
+  };
+});
+
+router.post('/api/tables/:name', tableController.createRow, (ctx: any) => {
+  ctx.response.status = 200;
+  ctx.response.body = {
+    success: true,
+    data: ctx.state.row
+  };
+});
+
+router.put('/api/tables/:name/:id', tableController.updateRow, (ctx: any) => {
+  ctx.response.status = 200;
+  ctx.response.body = {
+    success: true,
+    data: ctx.state.row
+  };
+});
+
+router.delete('/api/tables/:name/:id', tableController.deleteRow, (ctx: any) => {
+  ctx.response.status = 200;
+  ctx.response.body = {
+    success: true
+  };
+});
 
 export default router;
