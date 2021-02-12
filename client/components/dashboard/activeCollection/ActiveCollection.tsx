@@ -1,13 +1,16 @@
 import { h, Fragment } from 'https://unpkg.com/preact@10.5.12?module';
-import { useState } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
+import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
+
+import FieldView from '../fieldView/FieldView.tsx';
 
 import { ActiveCollectionProps, EntryProps, FieldProps } from './interface.ts';
+import { reset } from "https://deno.land/std@0.84.0/fmt/colors.ts";
 
 /**
  * @description Renders Field names for active collection (table headers)
  * @param fieldName - individual field name from active collection
  */
-const Field = ({ fieldName, activeCollection }: FieldProps) => {
+const Field = ({ fieldName, activeCollection, index }: FieldProps) => {
   return (
     <>
       <th 
@@ -32,14 +35,14 @@ const Entry = ({ values, index, fieldNames, handleClick, activeCollection, entry
   return (
     <>
       {index % 2 === 0
-        ? (<tr onClick={(e: any) => handleClick(e)} className='activeCollectionEntry backgroundA'>
+        ? (<tr onClick={handleClick} data-idx={index} className='activeCollectionEntry backgroundA'>
             {/* <td id='field'>
               <input type='checkbox' id={`${activeCollection}-${entryCount}`} />
               &nbsp;
             </td> */}
             {row}
           </tr>)
-        : (<tr onClick={(e: any) => handleClick(e)} className='activeCollectionEntry backgroundB'>
+        : (<tr onClick={handleClick} data-idx={index} className='activeCollectionEntry backgroundB'>
           {/* <td id='field'>
             <input type='checkbox' id={`${activeCollection}-${entryCount}`} />
             &nbsp;
@@ -55,9 +58,52 @@ const Entry = ({ values, index, fieldNames, handleClick, activeCollection, entry
  * @description Renders all details for active collection; Gives option to add new entry, delete entry & edit values of entry
  * @param activeCollection - currently selected collection from sidebar
  */
-const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeaders, handleClick, refreshCollections }: ActiveCollectionProps) => {
+const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollectionProps) => {
   const [activePage, setActivePage] = useState('1');
   const [activeResultsPerPage, setActiveResultsPerPage] = useState('10');
+
+  // shelby
+  const [resultsView, setResultsView] = useState(true);
+  const [headers, setHeaders] = useState([]);
+  const [entries, setEntries] = useState([]);
+  const [activeEntry, setActiveEntry] = useState({});
+  const [newEntry, setNewEntry] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/tables/${activeCollection}`)
+      .then(data => data.json())
+      .then(res => {
+        const headers = res.data.columns.map((header: any) => header.column_name);
+        const entries = res.data.rows;
+
+        setActivePage('1');
+        setResultsView(true);
+        setHeaders(headers);
+        setEntries(entries);
+      })
+      .catch(error => console.log('error', error));
+  }, [activeCollection]);
+
+  // Change for new entry
+  const createEntry = (e: any) => {
+    const entry: any = {};
+    headers.forEach((header: string) => {
+      entry[header] = '';
+    });
+
+    setActiveEntry(entry);
+    setNewEntry(true);
+    setResultsView(false);
+  };
+
+  const updateEntry = (e: any) => {
+    const entryIdx = (Number(activeResultsPerPage) * (Number(activePage) - 1)) + Number(e.currentTarget.dataset.idx);
+    const targetEntry = entries[entryIdx];
+    setActiveEntry(targetEntry);
+    setNewEntry(false);
+    setResultsView(false);
+  };
+  // end shelby
 
   // TODO:
   // Fix up styling / responsiveness
@@ -76,7 +122,7 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
         setActivePage(leftNum);
         break;
       case '»':
-        const pageCount = Math.ceil(collectionEntries.length / Number(activeResultsPerPage));
+        const pageCount = Math.ceil(entries.length / Number(activeResultsPerPage));
         if (Number(activePage) === pageCount) break;
         const rightNum = String(Number(activePage) + 1);
         setActivePage(rightNum);
@@ -107,10 +153,10 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
   };
 
   // maps each field name
-  const fields = collectionHeaders.map(field => <Field activeCollection={activeCollection} fieldName={field} />)
+  const fields = headers.map((field: any, index: number) => <Field activeCollection={activeCollection} fieldName={field} index={index} />)
 
-  // sets entriesCount based on length of collectionEntries prop
-  const entriesCount = collectionEntries.length;
+  // sets entriesCount based on length of entries
+  const entriesCount = entries.length;
   let entriesPerPage;
   // creates object with each page as a key, and each value an array of entries
   // size of array and amount of pages is based on selected results per page
@@ -119,13 +165,13 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
     const resultsPerPage: number = Number(activeResultsPerPage);
     let count: number = 0;
     let page: number = 1;
-    collectionEntries.forEach(entry => {
+    entries.forEach((entry: any) => {
       if (count === resultsPerPage) {
         page += 1;
         count = 0;
       }
       if (!pagesCache[page]) pagesCache[page.toString()] = [];
-      pagesCache[page.toString()].push(entry);
+      pagesCache[page.toString()].push(Object.values(entry));
       count += 1;
   });
   let keyCount = 0;
@@ -139,8 +185,8 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
         key={`${activeCollection}-Entry-${index}`}
         values={entry}
         index={index}
-        fieldNames={collectionHeaders}
-        handleClick={handleClick}
+        fieldNames={headers}
+        handleClick={updateEntry}
         activeCollection={activeCollection}
         entryCount={keyCount}
       />
@@ -164,7 +210,8 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
       </a>
     );
   });
-    
+
+  if (resultsView) {
   return (
     <div className='activeCollectionContainer'>
       <div className='activeCollectionHeader'>
@@ -179,7 +226,7 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
             </svg>
         </div>
       </div>
-      <button className='addEntryBtn' id='addNewEntryBtn' onClick={handleClick} >Add New {activeCollection}</button>
+      <button className='addEntryBtn' id='addNewEntryBtn' onClick={createEntry} >Add New {activeCollection}</button>
       </div>
       <div className='activeTableContainer'>
         <table className='activeCollectionTable'>
@@ -213,6 +260,15 @@ const ActiveCollection = ({ activeCollection, collectionEntries, collectionHeade
       }
     </div>
   );
+  } else {
+    // return <div></div>
+    return <FieldView
+      activeEntry={activeEntry}
+      activeItem={activeCollection}
+      newEntry={newEntry}
+      collectionEntries={entries}
+    />;
+  }
 };
 
 export default ActiveCollection;

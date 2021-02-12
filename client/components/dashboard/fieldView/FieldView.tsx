@@ -8,7 +8,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeEntryValues, setActiveEntryValues] = useState({});
-  const [newId, setNewId] = useState(0);
+  const [newId, setNewId] = useState(999999);
 
   // TODO:
   // add handlers to check for correct data type on edit of field values
@@ -106,13 +106,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
   }
 
   const entryDataArr = Object.entries(activeEntry).map(([field, value], index) => {
-    if (index === 0) return (
-      <div className='fieldViewSect' key={`${field}-${index}`}>
-        <label className='fieldViewLabel' htmlFor={field}>{field}</label>
-        <input className='fieldViewInput' style={{ color: 'black' }} type='text' id={field} name={field} value={newEntry ? newId : activeEntryValues[field]} onChange={(e: any) => handleChange(e)}  disabled/>
-      </div>
-    );
-    return (
+    if (index > 0) return (
       <div className='fieldViewSect' key={`${field}-${index}`}>
         <label className='fieldViewLabel' htmlFor={field}>{field}</label>
         <input className='fieldViewInput' type='text' id={field} name={field} value={activeEntryValues[field]} onChange={(e: any) => handleChange(e)} />
@@ -148,7 +142,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
       <div className='fieldViewHeader'>
       <div className='deleteContainer'>
         <div className='fieldViewDetails'>
-          <p className='fieldViewName'>{newEntry ? newId : activeEntryValues[Object.keys(activeEntryValues)[0]]}</p>
+          <p className='fieldViewName'>{newEntry ? 'Create New Entry' : activeEntryValues[Object.keys(activeEntryValues)[0]]}</p>
           <p className='fieldViewCollection'>{activeItem}</p>
         </div>
         {!newEntry &&
