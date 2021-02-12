@@ -17,11 +17,7 @@ tableController.getAllTables = async (ctx: any, next: Function) => {
     ctx.state.tables = tables;
     return await next();
   } catch (err) {
-    ctx.response.status = 500;
-    ctx.response.body = {
-      success: false,
-      message: err.toString(),
-    };
+    throw err;
   }
 };
 
@@ -44,22 +40,13 @@ tableController.getTableByName = async (ctx: any, next: Function) => {
     ctx.state.columns = columnResult.rows;
     return await next();
   } catch (err) {
-    ctx.response.status = 500;
-    ctx.response.body = {
-      success: false,
-      message: err.toString(),
-    };
+    throw err;
   }
 };
 
 tableController.createTable = async (ctx: any, next: Function) => {
   if (!ctx.request.hasBody) {
-    ctx.response.status = 400;
-    ctx.response.body = {
-      success: false,
-      message: 'No data',
-    };
-    return;
+    throw new Error('No data');
   }
 
   const { value } = await ctx.request.body({ type: 'json' });
@@ -67,11 +54,7 @@ tableController.createTable = async (ctx: any, next: Function) => {
 
   // Check collection name for invalid characters or no collection name
   if (/[^a-z0-9-]/.test(collectionName) || !collectionName.length) {
-    ctx.response.status = 400;
-    return ctx.response.body = {
-      success: false,
-      message: 'Invalid data'
-    }
+    throw new Error('Invalid data');
   }
 
   // Data validation
@@ -88,11 +71,7 @@ tableController.createTable = async (ctx: any, next: Function) => {
     // Check for invalid data types
     if (/[^a-zA-Z0-9_]/.test(columnName) ||
     ['text', 'number', 'boolean'].indexOf(dataType) === -1) {
-      ctx.response.status = 400;
-      return ctx.response.body = {
-        success: false,
-        message: 'Invalid data'
-      }
+      throw new Error('Invalid data.');
     }
   }
 
@@ -122,11 +101,7 @@ tableController.createTable = async (ctx: any, next: Function) => {
     ctx.state.collectionName = collectionName;
     return await next();
   } catch (err) {
-    ctx.response.status = 500;
-    ctx.response.body = {
-      success: false,
-      message: err.toString(),
-    };
+    throw err;
   }
 };
 
@@ -138,11 +113,7 @@ tableController.deleteTableByName = async (ctx: any, next: Function) => {
 
     return await next();
   } catch (err) {
-    ctx.response.status = 500;
-    ctx.response.body = {
-      success: false,
-      message: err.toString(),
-     };
+    throw err;
   }
 };
 
@@ -155,7 +126,7 @@ tableController.getRow = async (ctx: any, next: any) => {
     ctx.state.row = result.rows[0];
     return await next();
   } catch (err) {
-    console.log('err: ', err);
+    throw err;
   }
 };
 
@@ -187,7 +158,7 @@ tableController.createRow = async (ctx: any, next: any) => {
     ctx.state.row = result.rows[0];
     return await next();
   } catch (err) {
-    console.log('err: ', err);
+    throw err;
   }
 };
 
@@ -222,11 +193,7 @@ tableController.updateRow = async (ctx: any, next: any) => {
     ctx.state.row = result.rows[0];
     return await next();
   } catch (err) {
-    ctx.response.status = 500;
-    ctx.response.body = {
-      success: false,
-      message: err.toString(),
-    };
+    throw err;
   }
 };
 
@@ -238,7 +205,7 @@ tableController.deleteRow = async (ctx: any, next: any) => {
     const result = await runQuery(text);
     return await next();
   } catch (err) {
-    console.log('err: ', err);
+    throw err;
   }
 };
 
