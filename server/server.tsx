@@ -1,4 +1,4 @@
-import { Application, Router } from '../deps.ts';
+import { Application, Router, isHttpError, Status } from 'https://deno.land/x/oak@v6.5.0/mod.ts';
 import tableRouter from './routes/tableRouter.ts';
 
 import { h } from 'https://unpkg.com/preact@10.5.12?module';
@@ -25,8 +25,8 @@ router.get('/', async (ctx) => {
     ctx.response.body = html;
 });
 
- // @ts-ignore
- const { files } = await Deno.emit('./client/index.tsx', {
+// @ts-ignore
+const { files } = await Deno.emit('./client/index.tsx', {
   bundle: 'esm',
   compilerOptions: {
     jsx: 'react',
@@ -41,6 +41,19 @@ router.get('/bundle.js', (ctx) => {
 });
 
 const app = new Application();
+
+// Error handling
+app.use(async (ctx: any, next: any) => {
+  try {
+    await next();
+  } catch (err) {
+    ctx.response.body = {
+      success: false,
+      message: 'Something went wrong.'
+    };
+    console.log(err);
+  }
+});
 
 app.use(router.routes());
 app.use(router.allowedMethods());
