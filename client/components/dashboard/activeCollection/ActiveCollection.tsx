@@ -62,7 +62,6 @@ const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollec
   const [activePage, setActivePage] = useState('1');
   const [activeResultsPerPage, setActiveResultsPerPage] = useState('10');
 
-  // shelby
   const [resultsView, setResultsView] = useState(true);
   const [headers, setHeaders] = useState([]);
   const [entries, setEntries] = useState([]);
@@ -103,7 +102,6 @@ const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollec
     setNewEntry(false);
     setResultsView(false);
   };
-  // end shelby
 
   // TODO:
   // Fix up styling / responsiveness
