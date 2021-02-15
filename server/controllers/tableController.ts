@@ -69,30 +69,37 @@ tableController.createTable = async (ctx: any, next: Function) => {
 
     // Check name for invalid characters
     // Check for invalid data types
-    if (/[^a-zA-Z0-9_]/.test(columnName) ||
-    ['text', 'number', 'boolean'].indexOf(dataType) === -1) {
+    if (
+      /[^a-zA-Z0-9_]/.test(columnName) ||
+      ['text', 'number', 'boolean'].indexOf(dataType) === -1
+    ) {
       throw new Error('Invalid data.');
     }
   }
 
   let columnInfo = '';
-  columns.forEach(({ columnName, dataType }: { columnName: string, dataType: string }, index: number) => {
-    columnInfo += `${columnName} `;
-    switch(dataType) {
-      case 'text':
-        columnInfo += 'VARCHAR';
-        break;
-      case 'number':
-        columnInfo += 'INTEGER';
-        break;
-      case 'boolean':
-        columnInfo += 'BOOLEAN';
-        break;
-    }
+  columns.forEach(
+    (
+      { columnName, dataType }: { columnName: string; dataType: string },
+      index: number
+    ) => {
+      columnInfo += `${columnName} `;
+      switch (dataType) {
+        case 'text':
+          columnInfo += 'VARCHAR';
+          break;
+        case 'number':
+          columnInfo += 'INTEGER';
+          break;
+        case 'boolean':
+          columnInfo += 'BOOLEAN';
+          break;
+      }
 
-    if (index !== columns.length - 1) columnInfo += ', ';
-  });
-  
+      if (index !== columns.length - 1) columnInfo += ', ';
+    }
+  );
+
   const text = `CREATE TABLE ${collectionName} (id SERIAL PRIMARY KEY, ${columnInfo})`;
 
   try {
