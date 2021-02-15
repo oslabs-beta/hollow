@@ -2,5 +2,110 @@
  *  @description CSS rules for Content-Builder component
  */
 
+:root {
+  --accent-color: #297373;
+  --table-gap: 6px;
+  --border-radius: 2px;
+}
 
- 
+.content-builder {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 1rem;
+  color: #979696;
+}
+
+.content-builder h2 {
+  margin-bottom: 14px;
+}
+
+.content-builder label {
+  display: block;
+  margin-bottom: var(--table-gap);
+}
+
+.content-builder label,
+.content-table > div:first-child {
+  text-transform: lowercase;
+  font-size: 14px;
+  color: #297373;
+}
+
+.content-builder input[type="text"],
+.content-builder input[type="submit"],
+.content-builder select,
+.content-builder button {
+  height: 30px;
+  font-family: inherit;
+  border-radius: var(--border-radius);
+  border: none;
+  outline: none;
+}
+
+.content-builder input[type="text"],
+.content-builder select {
+  background-color: #585858;
+  border: none;
+}
+
+.content-builder input[type="submit"],
+.content-builder button {
+  background-color: var(--accent-color);
+  color: #fff;
+  padding-left: 6px;
+  padding-right: 6px;
+  cursor: pointer;
+}
+
+.button-col button {
+  background-color: #1d1b1d;
+}
+
+.content-builder input[type="text"] {
+  padding-left: 6px;
+}
+
+.content-table {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--table-gap);
+  margin-top: 20px;
+  margin-bottom: calc(var(--table-gap) * 2);
+}
+
+.content-table > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  column-gap: var(--table-gap);
+}
+
+.content-table .name-col {
+  flex-grow: 2;
+}
+
+.content-table .type-col {
+  width: 100px;
+}
+
+.content-table .button-col {
+  width: 100px;
+}
+
+.content-table input[type="text"],
+.content-table select {
+  width: 100%;
+}
+
+.content-builder .button-group > * {
+  margin-right: var(--table-gap);
+}
+
+div.form-error {
+  margin-top: calc(var(--table-gap) * 2);
+  font-size: 12px;
+}
+
+.form-error ul {
+  list-style-type: none;
+}

@@ -35,7 +35,7 @@ const ListHeader = ({ type }: HeaderType) => {
  * @prop currentCollections - array of all current collections
  * @prop currentTools - array of all current tools
  */
-const Sidebar = ({ currentCollections, currentTools, handleClick, activeItem }: SidebarProps) => {
+const Sidebar = ({ currentCollections, currentTools, handleClick, activeItem, scrollTop }: SidebarProps) => {
   // TODO:
   // build settings component
   // build content-builder component
@@ -60,8 +60,11 @@ const Sidebar = ({ currentCollections, currentTools, handleClick, activeItem }: 
       <div className='sidebarLogo'>
         hollow
       </div>
-      <ListHeader type='Collections'/>
-        {collections}
+      <ListHeader type='Collections' />
+      {/* @ts-ignore */}
+        <div className='collectionItems'>
+          {collections}
+        </div>
       <ListHeader type='Tools' />
         {tools}
       <div className='sidebarSettings' onClick={(e: any) => handleClick(e)}>
