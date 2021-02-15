@@ -2,7 +2,7 @@ import { runQuery } from '../../server/secret.ts';
 
 export const getAll = async (ctx: any) => {
   const table = ctx.state.collectionName;
-  console.log(ctx.params.name);
+
   const text = `SELECT * FROM ${table} ORDER BY id ASC;`;
 
   try {
@@ -24,8 +24,6 @@ export const getAll = async (ctx: any) => {
 export const getOne = async (ctx: any) => {
   const table = ctx.state.collectionName;
   const text = `SELECT * FROM ${table} WHERE id = $1;`;
-  console.log('ctx params: ', ctx.params);
-  console.log(ctx.params.id);
 
   try {
     const result = await runQuery(text, ctx.params.id);
@@ -56,7 +54,7 @@ export const create = async (ctx: any) => {
     else insert += `${requestKeys[i]}, `;
   }
   const fieldArray = requestVals.map((val) => val);
-  console.log({ fieldArray });
+
   let values = '';
   for (let i = 0; i < arrLength; i++) {
     if (i === arrLength - 1) {
