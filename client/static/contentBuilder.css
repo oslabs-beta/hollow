@@ -130,16 +130,22 @@ div.form-error {
 
 .contentBuilderSidebarTool {
   color: #819494;
-  width: 14rem;
-  padding-left: 0rem;
+  width: 100%;
+  height: 2.5rem;
   padding-top: .5rem;
   display: flex;
   cursor: pointer;
-  margin-left: 2rem;
+  
+}
+
+.contentBuilderSidebarTool:hover {
+  background-color: #343636;
+  cursor: pointer;
 }
 
 .contentBuilderAddCollectionPlus {
   margin-right: .5rem;
+  margin-left: 2rem;
 }
 
 .contentBuilderSidebarToolActive {
