@@ -108,7 +108,7 @@ const App = () => {
     
     // set view for collection component
     if (view === 'collection') {
-      activeView = <ActiveCollection 
+      activeView = <ActiveCollection
         activeCollection={activeItem}
         refreshCollections={refreshCollections}
       />
@@ -116,6 +116,7 @@ const App = () => {
       activeView = <ContentBuilder
         refreshCollections={refreshCollections}
         handleActiveChange={handleActiveChange}
+        currentCollections={currentCollections}
       />
     } else if (view === 'settings') {
         // need to create settings compononent before assinging to activeView
@@ -124,7 +125,7 @@ const App = () => {
     }
 
   return (
-    <div>
+    <div className='app'>
       <Header />
       <Sidebar
         activeItem={activeItem}

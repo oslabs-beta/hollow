@@ -12,7 +12,6 @@ declare global {
 
 export interface ActiveCollectionProps {
   activeCollection: string;
-  // handleClick: (event: any) => void;
   refreshCollections: () => void;
 }
 

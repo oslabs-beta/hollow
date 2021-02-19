@@ -51,6 +51,7 @@
   max-height: 15rem;
   overflow-y: auto;
   scrollbar-width: none;
+  width: 100%;
 }
 
 .collectionItems::-webkit-scrollbar {
@@ -60,9 +61,10 @@
 .sidebarItem {
   color: #819494;
   list-style-type: none;
-  width: 14rem;
+  width: 100%;
   padding-left: 0rem;
   padding-top: .5rem;
+  height: 2.5rem;
 }
 
 
