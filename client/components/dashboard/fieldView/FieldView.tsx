@@ -16,7 +16,7 @@ const FieldView = ({
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeEntryValues, setActiveEntryValues] = useState({});
-  const [newId, setNewId] = useState(999999);
+  const [newId, setNewId] = useState(0);
 
   // TODO:
   // add handlers to check for correct data type on edit of field values
@@ -24,7 +24,7 @@ const FieldView = ({
   const handleSave = (event: any) => {
     event.preventDefault();
     setLoading(true);
-
+    
     //@ts-ignore
     const inputCount = event.target.form.childElementCount;
     const data: any = {};
@@ -113,26 +113,20 @@ const FieldView = ({
     setActiveEntryValues(copy);
   };
 
-  const entryDataArr = Object.entries(activeEntry).map(
-    ([field, value], index) => {
-      if (index > 0)
-        return (
-          <div className="fieldViewSect" key={`${field}-${index}`}>
-            <label className="fieldViewLabel" htmlFor={field}>
-              {field}
-            </label>
-            <input
-              className="fieldViewInput"
-              type="text"
-              id={field}
-              name={field}
-              value={activeEntryValues[field]}
-              onChange={(e: any) => handleChange(e)}
-            />
-          </div>
-        );
-    }
-  );
+  const entryDataArr = Object.entries(activeEntry).map(([field, value], index) => {
+    if (index === 0) return (
+      <div className='fieldViewSect' key={`${field}-${index}`}>
+        <label className='fieldViewLabel' htmlFor={field}>{field}</label>
+        <input className='fieldViewInput' style={{ color: 'black' }} type='text' id={field} name={field} value={newEntry ? newId : activeEntryValues[field]} onChange={(e: any) => handleChange(e)}  disabled/>
+      </div>
+    );
+    return (
+      <div className='fieldViewSect' key={`${field}-${index}`}>
+        <label className='fieldViewLabel' htmlFor={field}>{field}</label>
+        <input className='fieldViewInput' type='text' id={field} name={field} value={activeEntryValues[field]} onChange={(e: any) => handleChange(e)} />
+      </div>
+    );
+  });
 
   let loader;
 
@@ -171,30 +165,12 @@ const FieldView = ({
   }
 
   return (
-    <div className="fieldViewContainer">
-      <div className="fieldViewHeader">
-        <div className="deleteContainer">
-          <div className="fieldViewDetails">
-            <p className="fieldViewName">
-              {newEntry
-                ? 'Create New Entry'
-                : activeEntryValues[Object.keys(activeEntryValues)[0]]}
-            </p>
-            <p className="fieldViewCollection">{activeItem}</p>
-          </div>
-          {!newEntry && (
-            <div className="deleteEntrySVG" onClick={handleDelete}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="#bd5555"
-              >
-                <path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z" />
-              </svg>
-            </div>
-          )}
+    <div className='fieldViewContainer'>
+      <div className='fieldViewHeader'>
+      <div className='deleteContainer'>
+        <div className='fieldViewDetails'>
+          <p className='fieldViewName'>{newEntry ? newId : activeEntryValues[Object.keys(activeEntryValues)[0]]}</p>
+          <p className='fieldViewCollection'>{activeItem}</p>
         </div>
         <div className="saveFieldBtnContainer">
           {loader}

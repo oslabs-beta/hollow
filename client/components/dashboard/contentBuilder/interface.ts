@@ -16,5 +16,6 @@ export interface FormMessageProps {
 
 export interface ContentBuilderProps {
   handleActiveChange: (activeItem: string) => void;
-  refreshCollections: () => void; 
+  refreshCollections: () => void;
+  currentCollections: string[];
 }

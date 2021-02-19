@@ -1,188 +1,96 @@
 import { h } from 'https://unpkg.com/preact@10.5.12?module';
-import { useState } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
+import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
 import { ContentBuilderProps, FieldRowProps, FormMessageProps } from './interface.ts';
+import * as helpers from './sidebarHelpers.tsx';
+import ActiveConfigView from './ActiveConfigView.tsx';
 
 /**
  * @description Renders Content-Builder panel to create collections
  * @param refreshCollections Re-renders sidebar to include newly added collection
  */
-const ContentBuilder = ({ refreshCollections, handleActiveChange }: ContentBuilderProps) => {
-  const [displayName, setDisplayName] = useState('');
-  const [fields, setFields] = useState([{ columnName: '', dataType: 'text' }]);
-  const [messages, setMessages] = useState([]);
 
-  const handleFieldChange = (e: any) => {
-    const updatedFields = [...fields];
-    updatedFields[e.target.dataset.idx][e.target.className] = e.target.value;
-    setFields(updatedFields);
+ const ContentBuilder = ({ refreshCollections, handleActiveChange, currentCollections }: ContentBuilderProps) => {
+  const [activeConfig, setActiveConfig] = useState('beers');
+  const [activeConfigFields, setActiveConfigFields] = useState([[]]);
+  const [fieldEditActive, setFieldEditActive] = useState(false);
+  const [fieldEditData, setFieldEditData] = useState({});
+
+  const handleCollectionConfig = (event: any) => {
+    setActiveConfig(event.target.innerText);
+  };
+
+  const handleFieldClick = (event: any) => {
+    if (fieldEditActive) {
+      setFieldEditActive(false);
+      setFieldEditData({});
+    } else {
+      setFieldEditActive(true);
+      console.log(event.target);
+      const data: any = {};
+      const name = event.target.parentElement.children[0].textContent;
+      const type = event.target.parentElement.children[1].textContent;
+      data.column_name = name;
+      data.data_type = type;
+      setFieldEditData(data);
+    }
   }
 
-  const validateData = (collectionName: string) => {
-    const messageArr = [];
+  useEffect(() => {
+    if (activeConfig !== 'Add New Collection') {
+      fetch(`/api/tables/${activeConfig}`)
+      .then(data => data.json())
+      .then(res => {
+        console.log(res);
+        const activeFields = res.data.columns.map((field: any) => {
+          return [field.column_name, field.data_type];
+        })
+
+        setActiveConfigFields(activeFields);
+
+      })
+      .catch(error => console.log('error', error));
+    }
     
-    // Ensure user has entered valid display name
-    if (!collectionName.length) {
-      messageArr.push('Collection name must contain at least one letter.');
-    }
+  }, [activeConfig]);
 
-    // Ensure user has created at least one field
-    // Ensure column names are valid
-    if (!fields.some((field: any) => field.columnName.length)) {
-      messageArr.push('Create at least one data field and try again.');
-    } else if (fields.some((field: any) => /[^a-zA-Z0-9_]/.test(field.columnName))) {
-      messageArr.push('Column names can only contain letters, numbers, and underscores.')
-    }
+  const refreshConfigView = () => {
+    const copy = activeConfig;
+    setActiveConfig('');
+    setActiveConfig(copy);
+  };
 
-    return messageArr;
-  }
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-
-    const collectionName = displayName.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim().replace(/ +/g, '-');
-    const errors = validateData(collectionName);
-
-    if (errors.length) {
-      setMessages(errors);
-      return;
-    }
-
-    fetch('/api/tables', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        collectionName,
-        columns: fields
-      })
-    })
-      .then(response => {
-        if (response.ok) {
-          setDisplayName('');
-          setFields([{ columnName: '', dataType: 'text' }]);
-          setMessages(['Table created.']);
-          refreshCollections();
-          handleActiveChange(collectionName);
-        } else {
-          setMessages(['Error: Could not create table. Please try again.']);
-        }
-      })
-      .catch(err => console.log(err));
-  }
-
-  const addRow = (e: any) => {
-    const fieldsCopy = fields.slice();
-    fieldsCopy.push({ columnName: '', dataType: 'text' });
-    setFields(fieldsCopy);
-  }
-
-  const deleteRow = (e: any) => {
-    if (fields.length > 1) {
-      const fieldsCopy = fields.slice();
-      fieldsCopy.splice(e.target.dataset.idx, 1);
-      setFields(fieldsCopy);
-    }
-  }
-
-  const fieldRows = fields.map((field: {columnName: string, dataType: string}, index: number) => (<FieldRow
-    index={index}
-    columnName={field.columnName}
-    dataType={field.dataType}
-    handleFieldChange={handleFieldChange}
-    deleteRow={deleteRow}
-  />));
+  // maps each collection to List item and renders below
+  const collections = currentCollections.map((collection, i) => {
+    let active = false;
+    if (collection === activeConfig) active = true;
+    return (<helpers.ListItem type={collection} handleCollectionConfig={handleCollectionConfig} active={active} handleFieldClick={handleFieldClick} />);
+  });
 
   return (
-    <div className="activeCollectionContainer content-builder">
-      <h2>Content Builder</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="displayName">Collection Name</label>
-          <input
-            type="text"
-            name="displayName"
-            value={displayName}
-            onChange={(e: any) => {setDisplayName(e.target.value)}}
-          />
+
+    <div className='contentBuilderContainer'>
+      <div className='contentBuilderSidebar'>
+        {collections}
+        <div onClick={(e: any) => handleCollectionConfig(e)} className={`contentBuilderSidebarTool ${activeConfig === 'Add New Collection' ? 'contentBuilderSidebarToolActive' : 'inactive'}`}>
+          <p className='contentBuilderAddCollectionPlus '>+</p>
+          <p>Add New Collection</p>
         </div>
-        <div className="content-table">
-          <div>
-            <div className="name-col">Field Name</div>
-            <div className="type-col">Field Type</div>
-            <div className="button-col"></div>
-          </div>
-          {fieldRows}
-        </div>
-        <div className="button-group">
-          <button type="button" onClick={addRow}>Add New Row</button>
-          <input type="submit" value="Add Collection" />
-        </div>
-        {messages.length ? <FormMessage messages={messages} /> : ''}
-      </form>
+
+      </div>
+      <ActiveConfigView 
+        type={activeConfig} 
+        handleFieldClick={handleFieldClick} 
+        fieldEditActive={fieldEditActive} 
+        refreshConfigView={refreshConfigView} 
+        refreshCollections={refreshCollections} 
+        handleActiveChange={handleActiveChange} 
+        activeConfigFields={activeConfigFields}
+        fieldEditData={fieldEditData}
+      />
     </div>
   );
 }
 
-/**
- * @description Renders single data row on Content Builder table
- * @param index - Index of data row
- * @param columnName - Name of column, if user has inputted string
- * @param dataType - Type of data (string, number, boolean)
- * @param handleFieldChange - Function that updates the current fields in state
- * @param deleteRow - Deletes the data row
- */
-const FieldRow = ({ index, columnName, dataType, handleFieldChange, deleteRow }: FieldRowProps) => {
-  return (
-    <div key={`row-${index}`}>
-      <div className="name-col">
-        <input
-          data-idx={index}
-          className="columnName"
-          type="text"
-          value={columnName}
-          onChange={handleFieldChange}
-        />
-      </div>
-      <div className="type-col">
-        <select
-          data-idx={index}
-          className="dataType"
-          value={dataType}
-          onChange={handleFieldChange}
-        >
-          <option value="text">Text</option>
-          <option value="number">Number</option>
-          <option value="boolean">Boolean</option>
-        </select>
-      </div>
-      <div className="button-col">
-        <button
-          data-idx={index}
-          type="button"
-          onClick={deleteRow}
-        >
-          Delete Row
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/**
- * @description Renders error messages or table submission confimration
- * @param messages - array of messages to display
- */
-const FormMessage = ({messages}: FormMessageProps) => {
-  const errDescriptions = messages.map(message => <li>{message}</li>);
-
-  return (
-    <div className="form-error">
-      <ul>
-        {errDescriptions}
-      </ul>
-    </div>
-  )
-}
 
 export default ContentBuilder;
