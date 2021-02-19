@@ -1,10 +1,13 @@
 import { h, Fragment } from 'https://unpkg.com/preact@10.5.12?module';
-import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
+import {
+  useState,
+  useEffect,
+} from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
 
 import FieldView from '../fieldView/FieldView.tsx';
 
 import { ActiveCollectionProps, EntryProps, FieldProps } from './interface.ts';
-import { reset } from "https://deno.land/std@0.84.0/fmt/colors.ts";
+import { reset } from 'https://deno.land/std@0.84.0/fmt/colors.ts';
 
 /**
  * @description Renders Field names for active collection (table headers)
@@ -13,10 +16,10 @@ import { reset } from "https://deno.land/std@0.84.0/fmt/colors.ts";
 const Field = ({ fieldName, activeCollection, index }: FieldProps) => {
   return (
     <>
-      <th 
+      <th
         key={`${activeCollection}-${fieldName}`}
-        scope='col'
-        className='activeCollectionFieldName'
+        scope="col"
+        className="activeCollectionFieldName"
       >
         {fieldName}
       </th>
@@ -30,26 +33,50 @@ const Field = ({ fieldName, activeCollection, index }: FieldProps) => {
  * @param index - index determines background color of table row
  * @param fieldNames - field name for each value; used to give each value a unique key
  */
-const Entry = ({ values, index, fieldNames, handleClick, activeCollection, entryCount }: EntryProps) => {
-  const row = values.map((value, i) => <td id='field' className={fieldNames[i]} key={`${fieldNames[index]}-${value}-${index}`}>{value}</td>)
+const Entry = ({
+  values,
+  index,
+  fieldNames,
+  handleClick,
+  activeCollection,
+  entryCount,
+}: EntryProps) => {
+  const row = values.map((value, i) => (
+    <td
+      id="field"
+      className={fieldNames[i]}
+      key={`${fieldNames[index]}-${value}-${index}`}
+    >
+      {value}
+    </td>
+  ));
   return (
     <>
-      {index % 2 === 0
-        ? (<tr onClick={handleClick} data-idx={index} className='activeCollectionEntry backgroundA'>
-            {/* <td id='field'>
+      {index % 2 === 0 ? (
+        <tr
+          onClick={handleClick}
+          data-idx={index}
+          className="activeCollectionEntry backgroundA"
+        >
+          {/* <td id='field'>
               <input type='checkbox' id={`${activeCollection}-${entryCount}`} />
               &nbsp;
             </td> */}
-            {row}
-          </tr>)
-        : (<tr onClick={handleClick} data-idx={index} className='activeCollectionEntry backgroundB'>
+          {row}
+        </tr>
+      ) : (
+        <tr
+          onClick={handleClick}
+          data-idx={index}
+          className="activeCollectionEntry backgroundB"
+        >
           {/* <td id='field'>
             <input type='checkbox' id={`${activeCollection}-${entryCount}`} />
             &nbsp;
           </td> */}
-            {row}
-          </tr>)
-      }
+          {row}
+        </tr>
+      )}
     </>
   );
 };
@@ -58,7 +85,10 @@ const Entry = ({ values, index, fieldNames, handleClick, activeCollection, entry
  * @description Renders all details for active collection; Gives option to add new entry, delete entry & edit values of entry
  * @param activeCollection - currently selected collection from sidebar
  */
-const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollectionProps) => {
+const ActiveCollection = ({
+  activeCollection,
+  refreshCollections,
+}: ActiveCollectionProps) => {
   const [activePage, setActivePage] = useState('1');
   const [activeResultsPerPage, setActiveResultsPerPage] = useState('10');
 
@@ -70,9 +100,11 @@ const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollec
 
   useEffect(() => {
     fetch(`/api/tables/${activeCollection}`)
-      .then(data => data.json())
-      .then(res => {
-        const headers = res.data.columns.map((header: any) => header.column_name);
+      .then((data) => data.json())
+      .then((res) => {
+        const headers = res.data.columns.map(
+          (header: any) => header.column_name
+        );
         const entries = res.data.rows;
 
         setActivePage('1');
@@ -80,7 +112,7 @@ const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollec
         setHeaders(headers);
         setEntries(entries);
       })
-      .catch(error => console.log('error', error));
+      .catch((error) => console.log('error', error));
   }, [activeCollection]);
 
   // Change for new entry
@@ -94,15 +126,27 @@ const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollec
     setNewEntry(true);
     setResultsView(false);
   };
+  const createColumn = (e: any) => {
+    const column: any = {};
+    headers.forEach((header: string) => {
+      column[header] = '';
+    });
 
-  const updateEntry = (e: any) => {
-    const entryIdx = (Number(activeResultsPerPage) * (Number(activePage) - 1)) + Number(e.currentTarget.dataset.idx);
-    const targetEntry = entries[entryIdx];
-    setActiveEntry(targetEntry);
+    setActiveEntry(column);
     setNewEntry(false);
     setResultsView(false);
   };
 
+  const updateEntry = (e: any) => {
+    const entryIdx =
+      Number(activeResultsPerPage) * (Number(activePage) - 1) +
+      Number(e.currentTarget.dataset.idx);
+    const targetEntry = entries[entryIdx];
+
+    setActiveEntry(targetEntry);
+    setNewEntry(false);
+    setResultsView(false);
+  };
   // TODO:
   // Fix up styling / responsiveness
   // add delete button to end of each row - handleClick and delete entry from db
@@ -113,14 +157,16 @@ const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollec
     // @ts-ignore
     const text = event.target.innerText;
 
-    switch(text) {
+    switch (text) {
       case '«':
         if (activePage === '1') break;
         const leftNum = String(Number(activePage) - 1);
         setActivePage(leftNum);
         break;
       case '»':
-        const pageCount = Math.ceil(entries.length / Number(activeResultsPerPage));
+        const pageCount = Math.ceil(
+          entries.length / Number(activeResultsPerPage)
+        );
         if (Number(activePage) === pageCount) break;
         const rightNum = String(Number(activePage) + 1);
         setActivePage(rightNum);
@@ -129,9 +175,8 @@ const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollec
         setActivePage(text);
         break;
     }
-    
   };
-  
+
   // handles click of results per page
   const handleResultsPerPageClick = (event: any) => {
     //@ts-ignore
@@ -142,16 +187,23 @@ const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollec
 
   const handleDelete = (event: any) => {
     fetch(`/api/tables/${activeCollection}`, { method: 'DELETE' })
-    .then(res => res.json())
-    .then(res => {
-      if (res.success) {
-        refreshCollections();
-      }
-    }).catch(err => console.log(err));
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success) {
+          refreshCollections();
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   // maps each field name
-  const fields = headers.map((field: any, index: number) => <Field activeCollection={activeCollection} fieldName={field} index={index} />)
+  const fields = headers.map((field: any, index: number) => (
+    <Field
+      activeCollection={activeCollection}
+      fieldName={field}
+      index={index}
+    />
+  ));
 
   // sets entriesCount based on length of entries
   const entriesCount = entries.length;
@@ -171,36 +223,37 @@ const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollec
       if (!pagesCache[page]) pagesCache[page.toString()] = [];
       pagesCache[page.toString()].push(Object.values(entry));
       count += 1;
-  });
-  let keyCount = 0;
+    });
+    let keyCount = 0;
 
-
-  // maps each entry based on selected page and selected page
-  entriesPerPage = pagesCache[activePage].map((entry:Array<string>, index: number) => {
-    keyCount += 1;
-    return (
-      <Entry
-        key={`${activeCollection}-Entry-${index}`}
-        values={entry}
-        index={index}
-        fieldNames={headers}
-        handleClick={updateEntry}
-        activeCollection={activeCollection}
-        entryCount={keyCount}
-      />
+    // maps each entry based on selected page and selected page
+    entriesPerPage = pagesCache[activePage].map(
+      (entry: Array<string>, index: number) => {
+        keyCount += 1;
+        return (
+          <Entry
+            key={`${activeCollection}-Entry-${index}`}
+            values={entry}
+            index={index}
+            fieldNames={headers}
+            handleClick={updateEntry}
+            activeCollection={activeCollection}
+            entryCount={keyCount}
+          />
+        );
+      }
     );
-  });
-
- } else entriesPerPage = [];
-  
+  } else entriesPerPage = [];
 
   // maps page numbers based on results per page and amount of entries
-  const pagination = Object.keys(pagesCache).map(page => {
+  const pagination = Object.keys(pagesCache).map((page) => {
     let paginationClass;
-    page.toString() === activePage ? paginationClass = 'collectionCurrentPage' : paginationClass = 'collectionStalePage';
+    page.toString() === activePage
+      ? (paginationClass = 'collectionCurrentPage')
+      : (paginationClass = 'collectionStalePage');
     return (
-      <a 
-        className={paginationClass} 
+      <a
+        className={paginationClass}
         onClick={(e: any) => handlePageClick(e)}
         href="#"
       >
@@ -210,62 +263,123 @@ const ActiveCollection = ({ activeCollection, refreshCollections }: ActiveCollec
   });
 
   if (resultsView) {
-  return (
-    <div className='activeCollectionContainer'>
-      <div className='activeCollectionHeader'>
-        <div className='deleteContainer'>
-        <div className='activeCollectionDetails'>
-          <p className='activeCollectionName'>{activeCollection}</p>
-          <p className='activeCollectionCount'>{entriesCount} entries found</p>
+    return (
+      <div className="activeCollectionContainer">
+        <div className="activeCollectionHeader">
+          <div className="deleteContainer">
+            <div className="activeCollectionDetails">
+              <p className="activeCollectionName">{activeCollection}</p>
+              <p className="activeCollectionCount">
+                {entriesCount} entries found
+              </p>
+            </div>
+            <div className="deleteEntrySVG" onClick={handleDelete}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="#bd5555"
+              >
+                <path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z" />
+              </svg>
+            </div>
+          </div>
+          <button
+            className="addEntryBtn"
+            id="addNewEntryBtn"
+            onClick={createEntry}
+          >
+            Add New {activeCollection}
+          </button>
+          <button
+            className="addEntryBtn"
+            id="addNewEntryBtn"
+            onClick={createColumn}
+          >
+            Add New Column
+          </button>
         </div>
-        <div className='deleteEntrySVG' onClick={handleDelete} >
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill='#bd5555'>
-              <path d="M3 6v18h18v-18h-18zm5 14c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm5 0c0 .552-.448 1-1 1s-1-.448-1-1v-10c0-.552.448-1 1-1s1 .448 1 1v10zm4-18v2h-20v-2h5.711c.9 0 1.631-1.099 1.631-2h5.315c0 .901.73 2 1.631 2h5.712z"/>
-            </svg>
+        <div className="activeTableContainer">
+          <table className="activeCollectionTable">
+            <thead>
+              <tr>
+                {/* <th scope='col' className='activeCollectionFieldName'>check</th> */}
+                {fields}
+              </tr>
+            </thead>
+            <tbody>{entriesPerPage}</tbody>
+          </table>
         </div>
-      </div>
-      <button className='addEntryBtn' id='addNewEntryBtn' onClick={createEntry} >Add New {activeCollection}</button>
-      </div>
-      <div className='activeTableContainer'>
-        <table className='activeCollectionTable'>
-          <thead>
-            <tr>
-              {/* <th scope='col' className='activeCollectionFieldName'>check</th> */}
-              {fields}
-            </tr>
-          </thead>
-          <tbody>
-            {entriesPerPage}
-          </tbody>
-        </table>
-      </div>
-      {pagination.length  
-        ? (<div className='paginationContainer'>
+        {pagination.length ? (
+          <div className="paginationContainer">
             <div className="pagination">
-              <a className='collectionsPaginationLeft' onClick={(e: any) => handlePageClick(e)} href="#" >&laquo;</a>
-                {pagination}
-              <a className='collectionsPaginationRight' onClick={(e: any) => handlePageClick(e)} href="#">&raquo;</a>            
+              <a
+                className="collectionsPaginationLeft"
+                onClick={(e: any) => handlePageClick(e)}
+                href="#"
+              >
+                &laquo;
+              </a>
+              {pagination}
+              <a
+                className="collectionsPaginationRight"
+                onClick={(e: any) => handlePageClick(e)}
+                href="#"
+              >
+                &raquo;
+              </a>
             </div>
-            <div className='resultsPerPage'>
-              <p onClick={(e: any) => handleResultsPerPageClick(e)} className={activeResultsPerPage === '10' ? 'activeResultsPerPage' : 'staleResultsPerPage'}>10</p>
-              <p className='resultsSlash'>/</p>
-              <p onClick={(e: any) => handleResultsPerPageClick(e)} className={activeResultsPerPage === '20' ? 'activeResultsPerPage' : 'staleResultsPerPage'}>20</p>
-              <p className='resultsSlash'>/</p>
-              <p onClick={(e: any) => handleResultsPerPageClick(e)} className={activeResultsPerPage === '50' ? 'activeResultsPerPage' : 'staleResultsPerPage'}>50</p>
+            <div className="resultsPerPage">
+              <p
+                onClick={(e: any) => handleResultsPerPageClick(e)}
+                className={
+                  activeResultsPerPage === '10'
+                    ? 'activeResultsPerPage'
+                    : 'staleResultsPerPage'
+                }
+              >
+                10
+              </p>
+              <p className="resultsSlash">/</p>
+              <p
+                onClick={(e: any) => handleResultsPerPageClick(e)}
+                className={
+                  activeResultsPerPage === '20'
+                    ? 'activeResultsPerPage'
+                    : 'staleResultsPerPage'
+                }
+              >
+                20
+              </p>
+              <p className="resultsSlash">/</p>
+              <p
+                onClick={(e: any) => handleResultsPerPageClick(e)}
+                className={
+                  activeResultsPerPage === '50'
+                    ? 'activeResultsPerPage'
+                    : 'staleResultsPerPage'
+                }
+              >
+                50
+              </p>
             </div>
-          </div>)
-        : <div></div>
-      }
-    </div>
-  );
+          </div>
+        ) : (
+          <div></div>
+        )}
+      </div>
+    );
   } else {
     // return <div></div>
-    return <FieldView
-      activeEntry={activeEntry}
-      activeItem={activeCollection}
-      newEntry={newEntry}
-      collectionEntries={entries}
-    />;
+    return (
+      <FieldView
+        activeEntry={activeEntry}
+        activeItem={activeCollection}
+        newEntry={newEntry}
+        collectionEntries={entries}
+      />
+    );
   }
 };
 
