@@ -3,10 +3,11 @@ import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist
 
 interface FieldEditProps {
   activeConfigFields: string[][];
-  fieldEditData: object;
+  fieldEditData: any;
+  activeConfig: string;
 }
 
-const FieldEdit = ({ activeConfigFields, fieldEditData }: FieldEditProps) => {
+const FieldEdit = ({ activeConfigFields, fieldEditData, activeConfig }: FieldEditProps) => {
 
   const [configFields, setConfigFields] = useState({});
   const [saveFail, setSaveFail] = useState(false);
@@ -35,20 +36,41 @@ const FieldEdit = ({ activeConfigFields, fieldEditData }: FieldEditProps) => {
     data.column_name = event.target.form[1].value;
     data.data_type = event.target.form[2].value;
     console.log(data);
-    setTimeout(() => {
-      setLoading(false);
-      setSaveSuccess(true);
-    }, 5000)
+    fetch(`/api/tables/${activeConfig}/${fieldEditData.column_name}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(res => {
+      console.log(res);
+      if (res.success) {
+        setLoading(false);
+        setSaveSuccess(true);
+      } else {
+        setLoading(false);
+        setSaveFail(true);
+      }
+    })
+    .catch(err => console.error(err));
   };
 
   const handleDelete = (fieldEditData: any) => {
     console.log(fieldEditData);
+    fetch(`/api/tables/${activeConfig}/${fieldEditData.column_name}`, {
+      method: 'DELETE'
+    })
+    .then(res => res.json())
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => console.error(err));
   }
 
   const labels = ['Field Name', 'Data Type'];
   const reads = ['column_name', 'data_type'];
   const fields = Object.entries(fieldEditData).map((field, index) => {
-    let selected = '';
+    let selected: any = '';
     if (index === 1) selected = field[1]; 
     return index === 0
       ? (

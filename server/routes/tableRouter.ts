@@ -103,7 +103,7 @@ router.put(
   }
 );
 
-router.put('/api/tables/:name/:id', tableController.updateRow, (ctx: any) => {
+router.put('/api/tables/update/:name/:id', tableController.updateRow, (ctx: any) => {
   ctx.response.status = 200;
   ctx.response.body = {
     success: true,
@@ -112,7 +112,7 @@ router.put('/api/tables/:name/:id', tableController.updateRow, (ctx: any) => {
 });
 
 router.delete(
-  '/api/tables/:name/:id',
+  '/api/tables/row/:name/:id',
   tableController.deleteRow,
   (ctx: any) => {
     ctx.response.status = 200;
