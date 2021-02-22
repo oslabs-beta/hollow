@@ -1,5 +1,5 @@
 import { h } from 'https://unpkg.com/preact@10.5.12?module';
-import SearchBar from  './searchBar.tsx'
+import SearchBar from  './SearchBar.tsx'
 
 const Header = () => {
   return (

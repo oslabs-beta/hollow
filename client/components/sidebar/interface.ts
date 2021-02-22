@@ -18,5 +18,4 @@ export interface SidebarProps {
   currentCollections: Array<string>;
   currentTools: Array<string>;
   handleClick: (event: any) => void;
-  scrollTop: boolean;
 }

@@ -35,7 +35,7 @@ const ListHeader = ({ type }: HeaderType) => {
  * @prop currentCollections - array of all current collections
  * @prop currentTools - array of all current tools
  */
-const Sidebar = ({ currentCollections, currentTools, handleClick, activeItem, scrollTop }: SidebarProps) => {
+const Sidebar = ({ currentCollections, currentTools, handleClick, activeItem }: SidebarProps) => {
   // TODO:
   // build settings component
   // build content-builder component

@@ -10,6 +10,7 @@ import ActiveConfigView from './ActiveConfigView.tsx';
  */
 
  const ContentBuilder = ({ refreshCollections, handleActiveChange, currentCollections }: ContentBuilderProps) => {
+  //  
   const [activeConfig, setActiveConfig] = useState('beers');
   const [activeConfigFields, setActiveConfigFields] = useState([[]]);
   const [fieldEditActive, setFieldEditActive] = useState(false);
@@ -70,7 +71,14 @@ import ActiveConfigView from './ActiveConfigView.tsx';
   const collections = currentCollections.map((collection, i) => {
     let active = false;
     if (collection === activeConfig) active = true;
-    return (<helpers.ListItem type={collection} handleCollectionConfig={handleCollectionConfig} active={active} handleFieldClick={handleFieldClick} />);
+    return (
+    <helpers.ListItem 
+      type={collection} 
+      handleCollectionConfig={handleCollectionConfig} 
+      active={active} 
+      handleFieldClick={handleFieldClick} 
+    />
+    );
   });
 
   return (
@@ -78,11 +86,13 @@ import ActiveConfigView from './ActiveConfigView.tsx';
     <div className='contentBuilderContainer'>
       <div className='contentBuilderSidebar'>
         {collections}
-        <div onClick={(e: any) => handleCollectionConfig(e)} className={`contentBuilderSidebarTool ${activeConfig === 'Add New Collection' ? 'contentBuilderSidebarToolActive' : 'inactive'}`}>
+        <div 
+          onClick={(e: any) => handleCollectionConfig(e)} 
+          className={`contentBuilderSidebarTool ${activeConfig === 'Add New Collection' ? 'contentBuilderSidebarToolActive' : 'inactive'}`}
+        >
           <p className='contentBuilderAddCollectionPlus '>+</p>
           <p>Add New Collection</p>
         </div>
-
       </div>
       <ActiveConfigView 
         type={activeConfig} 
