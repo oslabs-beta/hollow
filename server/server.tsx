@@ -5,7 +5,7 @@ import { h } from 'https://unpkg.com/preact@10.5.12?module';
 import { render } from 'https://unpkg.com/preact-render-to-string@5.1.12?module';
 import App from '../client/components/App.tsx';
 
-const PORT = 8000;
+const PORT = 3000;
 const router = new Router();
 
 router.get('/', async (ctx) => {
