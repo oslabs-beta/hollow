@@ -14,9 +14,10 @@ interface ActiveConfigProps {
   handleFieldClick: (event: any) => void;
   fieldEditActive: boolean;
   fieldEditData: object;
+  activeConfig: string;
 }
 
-const ActiveConfigView = ({ type, refreshCollections, handleActiveChange, activeConfigFields, refreshConfigView, handleFieldClick, fieldEditActive, fieldEditData }: ActiveConfigProps) => {
+const ActiveConfigView = ({ type, refreshCollections, handleActiveChange, activeConfigFields, refreshConfigView, handleFieldClick, fieldEditActive, fieldEditData, activeConfig }: ActiveConfigProps) => {
 
 
   const [fieldPopupActive, setFieldPopupActive] = useState(false);
@@ -33,8 +34,10 @@ const ActiveConfigView = ({ type, refreshCollections, handleActiveChange, active
   }
 
   const handleFieldPopupSuccess = () => {
-    refreshConfigView();
-    setFieldPopupActive(false);
+    setTimeout(() => {
+      refreshConfigView();
+      setFieldPopupActive(false);
+    }, 4000)
   }
 
 
@@ -44,7 +47,7 @@ const ActiveConfigView = ({ type, refreshCollections, handleActiveChange, active
       {type === 'Add New Collection'
         ? <AddNewCollection handleActiveChange={handleActiveChange} refreshCollections={refreshCollections} />
        : fieldEditActive
-            ? <FieldEdit activeConfigFields={activeConfigFields} fieldEditData={fieldEditData} />
+            ? <FieldEdit activeConfigFields={activeConfigFields} fieldEditData={fieldEditData} activeConfig={activeConfig} />
             : (
               <div>
           <div className='activeCollectionHeader'>
@@ -75,7 +78,7 @@ const ActiveConfigView = ({ type, refreshCollections, handleActiveChange, active
             </tbody>
           </table>
           {fieldPopupActive &&
-            <FieldPopup handleFieldPopupSuccess={handleFieldPopupSuccess} />
+            <FieldPopup handleFieldPopupSuccess={handleFieldPopupSuccess} activeConfig={activeConfig} />
           }
           </div>
         </div>

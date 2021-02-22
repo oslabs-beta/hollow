@@ -1,5 +1,5 @@
 /**
- * @description typescript models for Content-Builder
+ * @description typescript interfaces for Content-Builder
  */
 
 export interface FieldRowProps {

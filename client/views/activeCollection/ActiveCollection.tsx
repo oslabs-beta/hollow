@@ -292,13 +292,6 @@ const ActiveCollection = ({
           >
             Add New {activeCollection}
           </button>
-          <button
-            className="addEntryBtn"
-            id="addNewEntryBtn"
-            onClick={createColumn}
-          >
-            Add New Column
-          </button>
         </div>
         <div className="activeTableContainer">
           <table className="activeCollectionTable">

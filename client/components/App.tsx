@@ -3,21 +3,21 @@ import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist
 
 import Header from './header/Header.tsx';
 import Sidebar from './sidebar/Sidebar.tsx';
-import ContentBuilder from './dashboard/contentBuilder/ContentBuilder.tsx';
-import ActiveCollection from "./dashboard/activeCollection/ActiveCollection.tsx";
+import ContentBuilder from '../views/contentBuilder/ContentBuilder.tsx';
+import ActiveCollection from "../views/activeCollection/ActiveCollection.tsx";
 
 /**
- * @description holds state of app & renders app
- * @state activeItem - stores name of currently selected collection
- * @state view - stores current view (collection, content-builder, settings)
- * @state collections - stores current collections currently stored in db
- * @state collectionEntries - stores array of arrays - each array holds values for a given entry 
+ * @description Top level component. Handles clicks of sidebar items
+ * and renders correct view.
  */
 const App = () => {
+  // holds name of currently selected collection
   const [activeItem, setActiveItem] = useState('');
+  // holds current view (collection, content-builder, settings)
   const [view, setView] = useState('collection');
+  // holds current collections currently stored in db
   const [collections, setCollections] = useState([]);
-  const [scroll, setScroll] = useState(false);
+
 
   // will need to get current collections from api - these are dummy values for testing
   const currentCollections = collections;
@@ -49,16 +49,13 @@ const App = () => {
       if (currentTools.indexOf(activeItem) === -1) {
         setActiveItem(data.data[0]);
       }
-    });
+    });    
   }, []);
 
   useEffect(() => {
     if (activeItem !== '' && !collections.includes(activeItem)) {
       setActiveItem(collections[0]);
-      setScroll(true);
       // @ts-ignore
-      // const toScroll = document.querySelector('collectionItems');
-      toScroll.scrollType = '0';
     }
   }, [collections]);
 
@@ -100,6 +97,7 @@ const App = () => {
       default:
         setView('collection');
         setActiveItem(active);
+        refreshCollections();
     }
   };
 
@@ -131,8 +129,7 @@ const App = () => {
         activeItem={activeItem}
         currentCollections={currentCollections} 
         currentTools={currentTools} 
-        handleClick={handleClick}
-        scrollTop={scroll}  
+        handleClick={handleClick} 
       />
       {activeView}
     </div>

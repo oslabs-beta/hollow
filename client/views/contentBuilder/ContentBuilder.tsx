@@ -10,22 +10,29 @@ import ActiveConfigView from './ActiveConfigView.tsx';
  */
 
  const ContentBuilder = ({ refreshCollections, handleActiveChange, currentCollections }: ContentBuilderProps) => {
+  //  
   const [activeConfig, setActiveConfig] = useState('beers');
   const [activeConfigFields, setActiveConfigFields] = useState([[]]);
   const [fieldEditActive, setFieldEditActive] = useState(false);
   const [fieldEditData, setFieldEditData] = useState({});
 
   const handleCollectionConfig = (event: any) => {
-    setActiveConfig(event.target.innerText);
+    console.log(event.target.classList[0]);
+    let text;
+    if (event.target.innerText === '+ Add New Collection') text = 'Add New Collection';
+    else if (event.target.classList[0] === 'contentBuilderSidebarTool') text = 'Add New Collection';
+    else text = event.target.innerText;
+    setActiveConfig(text);
   };
 
   const handleFieldClick = (event: any) => {
+    console.log(event.target);
     if (fieldEditActive) {
       setFieldEditActive(false);
       setFieldEditData({});
-    } else {
-      setFieldEditActive(true);
+    } else if (event.target.nodeName === 'TD') {
       console.log(event.target);
+      setFieldEditActive(true);
       const data: any = {};
       const name = event.target.parentElement.children[0].textContent;
       const type = event.target.parentElement.children[1].textContent;
@@ -64,7 +71,14 @@ import ActiveConfigView from './ActiveConfigView.tsx';
   const collections = currentCollections.map((collection, i) => {
     let active = false;
     if (collection === activeConfig) active = true;
-    return (<helpers.ListItem type={collection} handleCollectionConfig={handleCollectionConfig} active={active} handleFieldClick={handleFieldClick} />);
+    return (
+    <helpers.ListItem 
+      type={collection} 
+      handleCollectionConfig={handleCollectionConfig} 
+      active={active} 
+      handleFieldClick={handleFieldClick} 
+    />
+    );
   });
 
   return (
@@ -72,11 +86,13 @@ import ActiveConfigView from './ActiveConfigView.tsx';
     <div className='contentBuilderContainer'>
       <div className='contentBuilderSidebar'>
         {collections}
-        <div onClick={(e: any) => handleCollectionConfig(e)} className={`contentBuilderSidebarTool ${activeConfig === 'Add New Collection' ? 'contentBuilderSidebarToolActive' : 'inactive'}`}>
+        <div 
+          onClick={(e: any) => handleCollectionConfig(e)} 
+          className={`contentBuilderSidebarTool ${activeConfig === 'Add New Collection' ? 'contentBuilderSidebarToolActive' : 'inactive'}`}
+        >
           <p className='contentBuilderAddCollectionPlus '>+</p>
           <p>Add New Collection</p>
         </div>
-
       </div>
       <ActiveConfigView 
         type={activeConfig} 
@@ -87,6 +103,7 @@ import ActiveConfigView from './ActiveConfigView.tsx';
         handleActiveChange={handleActiveChange} 
         activeConfigFields={activeConfigFields}
         fieldEditData={fieldEditData}
+        activeConfig={activeConfig}
       />
     </div>
   );
