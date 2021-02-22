@@ -16,11 +16,11 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
   const handleSave = (event: any) => {
     event.preventDefault();
     setLoading(true);
-
+    
     //@ts-ignore
     const inputCount = event.target.form.childElementCount;
     const data: any = {};
-    let count = 2;
+    let count = 1;
     while (count <= inputCount) {
       //@ts-ignore
       const inputName = event.target.form[count].labels[0].innerText;
@@ -49,7 +49,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
       .catch(error => console.log(error))
     } else {
       const value = activeEntryValues[Object.keys(activeEntryValues)[0]];
-      fetch(`/api/tables/${activeItem}/${value}`, {
+      fetch(`/api/tables/update/${activeItem}/${value}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -71,7 +71,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
 
   const handleDelete = (event: any) => {
     // const fieldCount = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm.elements.length;
-
+ 
     // let count = 1;
     // const dataToDelete: any = {};
     // while (count < fieldCount) {
@@ -81,7 +81,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
     //   count += 1;
     // }
     const value = activeEntryValues[Object.keys(activeEntryValues)[0]];
-    fetch(`/api/tables/${activeItem}/${value}`, { method: 'DELETE' })
+    fetch(`/api/tables/row/${activeItem}/${value}`, { method: 'DELETE' })
       .then(res => res.json())
       .then(res => {
         console.log(res);
@@ -91,7 +91,9 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
 
   useEffect(() => {
     setActiveEntryValues(activeEntry);
-    if (newEntry) setNewId(Number(collectionEntries[collectionEntries.length - 1][0]) + 1);
+    console.log(collectionEntries);
+    // @ts-ignore
+    if (newEntry) setNewId(Number(collectionEntries[collectionEntries.length - 1].id) + 1);
   }, []);
 
   const handleChange = (event: any) => {

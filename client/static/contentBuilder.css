@@ -109,3 +109,228 @@ div.form-error {
 .form-error ul {
   list-style-type: none;
 }
+
+/* Inner Sidebar */
+
+.contentBuilderSidebar {
+  width: 15rem;
+  border-right: 1px solid #39393A;
+  height: 100%;
+  padding-top: 3rem;
+}
+
+.contentBuilderContainer {
+  position: fixed;
+  top: 2.5rem;
+  left: 14rem;
+  max-width: calc(100% - 14rem);
+  font-family: 'Poppins', sans-serif;
+  height: 100%;
+}
+
+.contentBuilderSidebarTool {
+  color: #819494;
+  width: 100%;
+  height: 2.5rem;
+  padding-top: .5rem;
+  display: flex;
+  cursor: pointer;
+  
+}
+
+.contentBuilderSidebarTool:hover {
+  background-color: #343636;
+  cursor: pointer;
+}
+
+.contentBuilderAddCollectionPlus {
+  margin-right: .5rem;
+  margin-left: 2rem;
+}
+
+.contentBuilderSidebarToolActive {
+  color: #297373;
+}
+
+.activeConfigContainer {
+  position: fixed;
+  top: 3.5rem;
+  left: 29rem;
+  max-width: calc(100% - 28rem);
+  font-family: 'Poppins', sans-serif;
+  height: 100%;
+}
+
+/* New Field Popup */
+
+.fieldPopupContainer {
+  position: fixed;
+  left: 50%;
+  top: 30%;
+  z-index: 2;
+  background-color: #212021;
+  height: 20rem;
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 3px;
+  box-shadow: 3px 3px 3px #212021;
+}
+
+.newFieldPopupLabel {
+  margin-top: 1rem;
+  color: #297373;
+  font-size: .8rem;
+}
+
+.newFieldPopupInput, .dataType {
+  height: 1.7rem;
+  width: 10rem;
+  margin-right: 5rem;
+  margin-top: .5rem;
+  border-radius: 3px;
+  background-color: #819494;
+  opacity: 0.5;
+  border: none;
+  text-indent: .4rem;
+}
+
+.addFieldPopupHeader {
+  color: #819494;
+  margin-top: 1rem;
+  opacity: 0.6;
+}
+
+.fieldPopupForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldPopupBtnContainer {
+  display: flex;
+  align-self: flex-end;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.fieldPopupCancel {
+  font-size: .8rem;
+  color: #8a128a;
+  margin-right: 1rem;
+  margin-top: .5rem;
+}
+
+.fieldPopupCancel:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.fieldPopupBtn {
+  cursor: pointer;
+  width: fit-content;
+  padding: .5rem;
+  height: 2rem;
+  border-radius: 5px;
+  background-color: #212021;
+  border: 1px solid #ad814b;
+  color: #ad814b;
+}
+
+
+.fieldPopupBtn:hover {
+  border: 1px solid #819494;
+  color: #819494;
+}
+
+.fieldPopupBtn:focus {
+  outline: 0;
+}
+
+.popupLoader {
+  margin-top: .4rem;
+}
+
+.addSuccessSVG {
+  fill: #297373;
+  margin-right: 1rem;
+  margin-top: .4rem;
+}
+
+
+/* Field Edit */
+
+.fieldEditContainer {
+  position: fixed;
+  top: 3.5rem;
+  left: 30rem;
+  width: calc(100% - 30rem);
+  font-family: 'Poppins', sans-serif;
+}
+
+.fieldEditHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 1.5rem;
+  padding-top: 1rem;
+}
+
+.fieldEditDetails {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+}
+
+.fieldEditName {
+  font-size: 1.5rem;
+  color: #819494;
+  opacity: 0.6;
+}
+
+.fieldEditCollection {
+  font-size: 0.7rem;
+  color: #819494;
+  opacity: 0.3;
+  margin-top: -0.3rem;
+  margin-left: 0.2rem;
+}
+
+.fieldEditBtnContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  height: fit-content;
+}
+
+.fieldEditBtn {
+  cursor: pointer;
+  margin-right: 2rem;
+  width: 5rem;
+  padding: .5rem;
+  height: 2rem;
+  border-radius: 5px;
+  background-color: #2e2d2e;
+  border: 1px solid #ad814b;
+  color: #ad814b;
+}
+
+.fieldEditBtn:focus {
+  outline: 0;
+}
+
+.fieldEditBtn:hover {
+  border: 1px solid #819494;
+  color: #819494;
+}
+
+.fieldEditForm {
+  margin-left: 3rem;
+}
+
+.fieldEditDeleteContainer {
+  display: flex;
+
+}

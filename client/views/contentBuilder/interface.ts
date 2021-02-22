@@ -1,5 +1,5 @@
 /**
- * @description typescript models for Content-Builder
+ * @description typescript interfaces for Content-Builder
  */
 
 export interface FieldRowProps {
@@ -16,5 +16,6 @@ export interface FormMessageProps {
 
 export interface ContentBuilderProps {
   handleActiveChange: (activeItem: string) => void;
-  refreshCollections: () => void; 
+  refreshCollections: () => void;
+  currentCollections: string[];
 }

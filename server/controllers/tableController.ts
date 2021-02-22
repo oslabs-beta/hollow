@@ -17,11 +17,7 @@ tableController.getAllTables = async (ctx: any, next: Function) => {
     ctx.state.tables = tables;
     return await next();
   } catch (err) {
-    ctx.response.status = 500;
-    ctx.response.body = {
-      success: false,
-      message: err.toString(),
-    };
+    throw err;
   }
 };
 
@@ -44,22 +40,13 @@ tableController.getTableByName = async (ctx: any, next: Function) => {
     ctx.state.columns = columnResult.rows;
     return await next();
   } catch (err) {
-    ctx.response.status = 500;
-    ctx.response.body = {
-      success: false,
-      message: err.toString(),
-    };
+    throw err;
   }
 };
 
 tableController.createTable = async (ctx: any, next: Function) => {
   if (!ctx.request.hasBody) {
-    ctx.response.status = 400;
-    ctx.response.body = {
-      success: false,
-      message: 'No data',
-    };
-    return;
+    throw new Error('No data');
   }
 
   const { value } = await ctx.request.body({ type: 'json' });
@@ -67,11 +54,7 @@ tableController.createTable = async (ctx: any, next: Function) => {
 
   // Check collection name for invalid characters or no collection name
   if (/[^a-z0-9-]/.test(collectionName) || !collectionName.length) {
-    ctx.response.status = 400;
-    return ctx.response.body = {
-      success: false,
-      message: 'Invalid data'
-    }
+    throw new Error('Invalid data');
   }
 
   // Data validation
@@ -86,34 +69,37 @@ tableController.createTable = async (ctx: any, next: Function) => {
 
     // Check name for invalid characters
     // Check for invalid data types
-    if (/[^a-zA-Z0-9_]/.test(columnName) ||
-    ['text', 'number', 'boolean'].indexOf(dataType) === -1) {
-      ctx.response.status = 400;
-      return ctx.response.body = {
-        success: false,
-        message: 'Invalid data'
-      }
+    if (
+      /[^a-zA-Z0-9_]/.test(columnName) ||
+      ['text', 'number', 'boolean'].indexOf(dataType) === -1
+    ) {
+      throw new Error('Invalid data.');
     }
   }
 
   let columnInfo = '';
-  columns.forEach(({ columnName, dataType }: { columnName: string, dataType: string }, index: number) => {
-    columnInfo += `${columnName} `;
-    switch(dataType) {
-      case 'text':
-        columnInfo += 'VARCHAR';
-        break;
-      case 'number':
-        columnInfo += 'INTEGER';
-        break;
-      case 'boolean':
-        columnInfo += 'BOOLEAN';
-        break;
-    }
+  columns.forEach(
+    (
+      { columnName, dataType }: { columnName: string; dataType: string },
+      index: number
+    ) => {
+      columnInfo += `${columnName} `;
+      switch (dataType) {
+        case 'text':
+          columnInfo += 'VARCHAR';
+          break;
+        case 'number':
+          columnInfo += 'INTEGER';
+          break;
+        case 'boolean':
+          columnInfo += 'BOOLEAN';
+          break;
+      }
 
-    if (index !== columns.length - 1) columnInfo += ', ';
-  });
-  
+      if (index !== columns.length - 1) columnInfo += ', ';
+    }
+  );
+
   const text = `CREATE TABLE ${collectionName} (id SERIAL PRIMARY KEY, ${columnInfo})`;
 
   try {
@@ -122,11 +108,7 @@ tableController.createTable = async (ctx: any, next: Function) => {
     ctx.state.collectionName = collectionName;
     return await next();
   } catch (err) {
-    ctx.response.status = 500;
-    ctx.response.body = {
-      success: false,
-      message: err.toString(),
-    };
+    throw err;
   }
 };
 
@@ -138,152 +120,192 @@ tableController.deleteTableByName = async (ctx: any, next: Function) => {
 
     return await next();
   } catch (err) {
-    ctx.response.status = 500;
-    ctx.response.body = {
-      success: false,
-      message: err.toString(),
-     };
+    throw err;
   }
 };
 
-tableController.getRow = async (ctx: any) => {
-  const table = ctx.params.name;
-  const text = `SELECT * FROM ${table} WHERE id = $1;`;
-  console.log('ctx params: ', ctx.params);
-  console.log(ctx.params.id);
-  //   PREPARE errthing AS SELECT * FROM  table
-  //   `PREPARE foo(text,text,text) AS
-  //     SELECT  *
-  //     FROM    foobar
-  //     WHERE   foo = $1
-  //        AND  bar = $2
-  //         OR  baz = $3`  ;
-  // EXECUTE foo('foo','bar','baz');
-
-  try {
-    const result = await runQuery(text, ctx.params.id);
-
-    ctx.response.status = 200;
-    ctx.response.body = {
-      success: true,
-      data: result.rows[0],
-    };
-  } catch (err) {
-    console.log('err: ', err);
-  }
-};
-
-tableController.createRow = async (ctx: any) => {
+tableController.renameTable = async (ctx: any, next: any) => {
   const table = ctx.params.name;
   const { value } = await ctx.request.body({ type: 'json' });
+  const newName: string = Object.values(await value).toString();
+  const text = `ALTER TABLE IF EXISTS ${table} RENAME TO ${newName};`;
 
-  const entries = Object.entries(await value);
-
-  const requestKeys: string[] = Object.keys(await value);
-  const requestVals: string[] = Object.values(await value);
-  let insert = '';
-
-  const arrLength = entries.length;
-  for (let i = 0; i < arrLength; i++) {
-    if (i === arrLength - 1) insert += `${requestKeys[i]}`;
-    else insert += `${requestKeys[i]}, `;
-  }
-  const fieldArray = requestVals.map((val) => val);
-  console.log({ fieldArray });
-  let values = '';
-  for (let i = 0; i < arrLength; i++) {
-    if (i === arrLength - 1) {
-      values += `$${i + 1} `;
-    } else {
-      values += `$${i + 1}, `;
-    }
-  }
-
-  const next = `INSERT INTO ${table} (${insert}) VALUES(${values}) RETURNING *;`;
-
-  try {
-    const result = await runQuery(next, requestVals);
-    ctx.response.status = 200;
-    ctx.response.body = {
-      success: true,
-      data: result.rows,
-    };
-  } catch (err) {
-    console.log('err: ', err);
-  }
-};
-
-tableController.updateRow = async (ctx: any) => {
-  const table = ctx.params.name;
-  // console.log('ctx state: ', ctx.state);
-  // console.log('ctx.request', ctx.request);
-  console.log('ctx.request.body', ctx.request.body);
-  // if (ctx.response.status === 400) {
-  //   ctx.response.body = {
-  //     success: false,
-  //     message: ctx.response.body.message,
-  //   };
-  //   ctx.response.status = 404;
-  //   return;
-  // } else
-   
-    const { value } = await ctx.request.body({ type: 'json' });
-    // const { name } = await value;
-    const entries = Object.entries(await value);
-    console.log('entries: ', entries);
-    const requestKeys: string[] = Object.keys(await value);
-    const paramVals: string[] = Object.values(await value);
-    let set = 'SET ';
-    const arrLength = entries.length;
-    for (let i = 0; i < arrLength; i++) {
-      if (i === arrLength - 1) {
-        set += `${requestKeys[i]} = $${i + 1} `;
-      } else {
-        set += `${requestKeys[i]} = $${i + 1}, `;
-      }
-    }
-    console.log('ctx.params.id: ', ctx.params.id);
-    const last = entries.length + 1;
-    const next = `UPDATE ${table} ${set} WHERE id = $${last} RETURNING *;`;
-    paramVals.push(ctx.params.id);
-    console.log({ paramVals });
-    if (!ctx.request.hasBody) {
-      ctx.response.status = 400;
-      ctx.response.body = {
-        success: false,
-        msg: 'No data included',
-      };
-    } else {
-      try {
-        const result = await runQuery(next, paramVals);
-        ctx.response.status = 200;
-        ctx.response.body = {
-          success: true,
-          data: result.rows,
-        };
-      } catch (err) {
-        ctx.response.status = 500;
-        ctx.response.body = {
-          success: false,
-          message: err.toString(),
-        };
-      }
-    }
-  
-};
-
-tableController.deleteRow = async (ctx: any) => {
-  const table = ctx.params.name;
-  const text = `DELETE FROM ${table} WHERE id = ${ctx.params.id};`;
   try {
     const result = await runQuery(text);
-    ctx.response.status = 200;
-    ctx.response.body = {
-      success: true,
-      data: result.rows,
-    };
+    console.log({ result });
+    ctx.state.collectionName = table;
+    return await next();
   } catch (err) {
-    console.log('err: ', err);
+    throw err;
+  }
+};
+
+tableController.addColumn = async (ctx: any, next: any) => {
+  const table = ctx.params.name;
+  const { value } = await ctx.request.body({ type: 'json' });
+  const { data_type, column_name } = await value;
+  const text = `ALTER TABLE ${table} ADD COLUMN ${column_name} ${data_type};`;
+  //query if more than one column is added at a time
+  //const dataType: any = Object.keys(await value).toString();
+  //const newColumn: string = Object.values(await value).toString();
+  //let newCol: string = 'ADD COLUMN ';
+  //for(let i = 0; i < newColumn.length; i++){
+  // i === newColumn.length-1 ? newCol += `${newColumn[i]} ${dataType[i]}`: newCol += `${newColumn[i]} ${dataType[i]}, `;
+  // }
+  //const text: string = `ALTER TABLE ${table} ${newCol};`
+
+  try {
+    const result = await runQuery(text);
+    ctx.state.row = result.rows[0];
+    return await next();
+  } catch (err) {
+    throw err;
+  }
+};
+
+tableController.deleteColumn = async (ctx: any, next: any) => {
+  const table = ctx.params.name;
+  const columnName = ctx.params.fieldName;
+
+  //query if more than one column is deleted at a time
+  //const delColumnsArray: string = Object.values(await value)
+  //let queryString: string = 'DROP COLUMN IF EXISTS';
+  //for(let i = 0; i < delColumnsArray.length; i++){
+  // i === delColumnsArray.length-1 ? queryString += `${delColumnsArray[i]}`: queryString += `${delColumnsArray[i]}, `;
+  // }
+  //const text: string = `ALTER TABLE ${table} ${queryString};`
+  const text = `ALTER TABLE ${table} DROP COLUMN IF EXISTS ${columnName};`;
+
+  try {
+    const result = await runQuery(text);
+    ctx.state.row = result.rows[0];
+    return await next();
+  } catch (err) {
+    throw err;
+  }
+};
+
+tableController.renameColumn = async (ctx: any, next: any) => {
+  const table = ctx.params.name;
+  const { value } = await ctx.request.body();
+  const { column_name, data_type } = await value;
+  
+  const text = `ALTER TABLE ${table} RENAME COLUMN ${ctx.params.fieldName} TO ${column_name};`;
+  const typeText = `ALTER TABLE ${table}
+  ALTER COLUMN ${column_name} TYPE ${data_type} USING ${column_name}::${data_type};`;
+  //query rename more than one column at a time
+  //const oldColumn: [] = Object.values(await value)
+  //const newColumn: [] = Object.values(await value);
+  //let text = '';
+  // for(let i = 0; i < newColumn.length; i++){
+  //   text += `ALTER TABLE ${table} RENAME COLUMN ${oldColumn[i]} TO ${newColumn[i]}; `;
+  //
+  try {
+    if(ctx.params.fieldName !== column_name){
+      await runQuery(text);
+    }
+    await runQuery(typeText);
+    return await next();
+  } catch (err) {
+    throw err;
+  }
+};
+
+tableController.getRow = async (ctx: any, next: any) => {
+  const table = ctx.params.name;
+  // testing text search
+  const text = `SELECT title FROM breweries WHERE to_tsvector(name) @@ to_tsquery('keith');`;
+
+  // const text = `SELECT * FROM ${table} WHERE id = ${ctx.params.id};`;
+
+  try {
+    const result = await runQuery(text);
+
+    ctx.state.row = result.rows[0];
+    return await next();
+  } catch (err) {
+    throw err;
+  }
+};
+
+tableController.createRow = async (ctx: any, next: any) => {
+  const table = ctx.params.name;
+
+  const { value } = await ctx.request.body({ type: 'json' });
+  const entries = Object.entries(await value);
+
+  const bodyKeys: string[] = Object.keys(await value);
+  const bodyVals: string[] = Object.values(await value);
+
+  let insert = '';
+  for (let i = 0; i < entries.length; i++) {
+    insert += bodyKeys[i];
+    if (i < entries.length - 1) insert += ', ';
+  }
+
+  let values = '';
+  for (let i = 0; i < entries.length; i++) {
+    values += `$${i + 1}`;
+    if (i < entries.length - 1) values += ', ';
+  }
+
+  const text = `INSERT INTO ${table} (${insert}) VALUES (${values}) RETURNING *;`;
+  console.log({ text });
+  console.log({ bodyVals });
+  console.log({ entries });
+  try {
+    const result = await runQuery(text, bodyVals);
+    ctx.state.row = result.rows[0];
+    return await next();
+  } catch (err) {
+    throw err;
+  }
+};
+
+tableController.updateRow = async (ctx: any, next: any) => {
+  if (!ctx.request.hasBody) {
+    ctx.response.status = 400;
+    ctx.response.body = {
+      success: false,
+      msg: 'No data included',
+    };
+    return;
+  }
+
+  const table = ctx.params.name;
+
+  const { value } = await ctx.request.body({ type: 'json' });
+  const entries = Object.entries(await value);
+  console.log({entries})
+  const bodyKeys: string[] = Object.keys(await value);
+  const bodyVals: string[] = Object.values(await value);
+
+  let set = '';
+  for (let i = 0; i < entries.length; i++) {
+    set += `${bodyKeys[i]} = $${i + 1}`;
+    if (i < entries.length - 1) set += ', ';
+  }
+
+  const text = `UPDATE ${table} SET ${set} WHERE id = ${ctx.params.id} RETURNING *;`;
+  console.log({text})
+  try {
+    const result = await runQuery(text, bodyVals);
+    ctx.state.row = result.rows[0];
+    return await next();
+  } catch (err) {
+    throw err;
+  }
+};
+
+tableController.deleteRow = async (ctx: any, next: any) => {
+  const table = ctx.params.name;
+  const text = `DELETE FROM ${table} WHERE id = ${ctx.params.id};`;
+
+  try {
+    const result = await runQuery(text);
+    return await next();
+  } catch (err) {
+    throw err;
   }
 };
 

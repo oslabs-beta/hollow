@@ -14,4 +14,9 @@
 
 body {
   background-color: #2e2d2e;
+  height: 100%;
+}
+
+.app {
+  min-height: 100%;
 }

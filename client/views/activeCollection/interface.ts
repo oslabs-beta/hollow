@@ -12,9 +12,6 @@ declare global {
 
 export interface ActiveCollectionProps {
   activeCollection: string;
-  collectionHeaders: string[];
-  collectionEntries: string[][];
-  handleClick: (event: any) => void;
   refreshCollections: () => void;
 }
 
@@ -29,6 +26,7 @@ export interface EntryProps  {
 }
 
 export interface FieldProps {
+  index: number;
   fieldName: string;
   activeCollection: string;
 }
