@@ -11,7 +11,7 @@ import ActiveConfigView from './ActiveConfigView.tsx';
 
  const ContentBuilder = ({ refreshCollections, handleActiveChange, currentCollections }: ContentBuilderProps) => {
   //  
-  const [activeConfig, setActiveConfig] = useState('beers');
+  const [activeConfig, setActiveConfig] = useState(currentCollections[0]);
   const [activeConfigFields, setActiveConfigFields] = useState([[]]);
   const [fieldEditActive, setFieldEditActive] = useState(false);
   const [fieldEditData, setFieldEditData] = useState({});
@@ -43,11 +43,12 @@ import ActiveConfigView from './ActiveConfigView.tsx';
   }
 
   useEffect(() => {
+    if (!currentCollections.length) return;
     if (activeConfig !== 'Add New Collection') {
       fetch(`/api/tables/${activeConfig}`)
       .then(data => data.json())
       .then(res => {
-        console.log(res);
+        console.log('content builder res: ', res);
         const activeFields = res.data.columns.map((field: any) => {
           return [field.column_name, field.data_type];
         })
@@ -61,8 +62,7 @@ import ActiveConfigView from './ActiveConfigView.tsx';
   }, [activeConfig]);
 
   const refreshConfigView = () => {
-    const copy = activeConfig;
-    setActiveConfig('');
+    const copy = activeConfig.slice();
     setActiveConfig(copy);
   };
 

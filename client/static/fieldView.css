@@ -155,7 +155,7 @@
 }
 
 .fieldViewErrorMsg {
-  color: red;
-  font-size: 0.8rem;
-  margin-top: 0.5rem;
+  color: #bd5555;
+  font-size: 0.6rem;
+  margin-top: 0.4rem;
 }
