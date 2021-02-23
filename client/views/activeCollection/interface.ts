@@ -13,6 +13,8 @@ declare global {
 export interface ActiveCollectionProps {
   activeCollection: string;
   refreshCollections: () => void;
+  resultsView: boolean;
+  handleResultsView: (open: boolean) => void;
 }
 
 export interface EntryProps  {
