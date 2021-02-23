@@ -1,5 +1,6 @@
 import { runQuery } from '../../server/secret.ts';
 
+//grab all columns and data from selected table in order of ascending id
 export const getAll = async (ctx: any) => {
   const table = ctx.state.collectionName;
 
@@ -20,7 +21,7 @@ export const getAll = async (ctx: any) => {
     };
   }
 };
-
+//return one row from a selected table based on the rows id number
 export const getOne = async (ctx: any) => {
   const table = ctx.state.collectionName;
   const text = `SELECT * FROM ${table} WHERE id = $1;`;
