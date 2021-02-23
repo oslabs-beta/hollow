@@ -16,6 +16,7 @@ router.post(
   '/api/tables',
   tableController.createTable,
   routerController.createRouter,
+  routerController.registerRoutes,
   (ctx) => {
     ctx.response.status = 200;
     ctx.response.body = {
@@ -39,6 +40,7 @@ router.delete(
   '/api/tables/:name',
   tableController.deleteTableByName,
   routerController.deleteRouter,
+  routerController.deregisterRoutes,
   (ctx) => {
     ctx.response.status = 200;
     ctx.response.body = {

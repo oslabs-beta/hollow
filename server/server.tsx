@@ -1,12 +1,20 @@
 import { Application, Router, isHttpError, Status } from 'https://deno.land/x/oak@v6.5.0/mod.ts';
 import tableRouter from './routes/tableRouter.ts';
+import defaultController from './controllers/defaultController.ts';
+import { runQuery } from './secret.ts';
 
 import { h } from 'https://unpkg.com/preact@10.5.12?module';
 import { render } from 'https://unpkg.com/preact-render-to-string@5.1.12?module';
 import App from '../client/components/App.tsx';
 
 const PORT = 3000;
+const app = new Application();
+
+const controller = new AbortController();
+const { signal } = controller;
+
 const router = new Router();
+let apiRouter = new Router({ prefix: '/api' });
 
 router.get('/', async (ctx) => {
   const app = render(<App />);
@@ -40,12 +48,10 @@ router.get('/bundle.js', (ctx) => {
   ctx.response.body = files['deno:///bundle.js'];
 });
 
-const app = new Application();
-
 // Error handling
 app.use(async (ctx: any, next: any) => {
   try {
-    await next();
+    return await next();
   } catch (err) {
     ctx.response.body = {
       success: false,
@@ -55,8 +61,39 @@ app.use(async (ctx: any, next: any) => {
   }
 });
 
+app.use(async (ctx: any, next: any) => {
+  ctx.state.apiRouter = apiRouter;
+  ctx.state.signal = signal;
+  return await next();
+});
+
+// Initialie api router
+const result = await runQuery(`
+  SELECT table_name
+  FROM information_schema.tables
+  WHERE table_schema = 'public'
+  AND table_name != 'pg_stat_statements'
+`);
+const tables = result.rows.map((tableArr: any) => tableArr.table_name);
+
+tables.forEach((collectionName: string) => {
+  apiRouter.use(`/${collectionName}`, async (ctx: any, next: any) => {
+    ctx.state.collectionName = collectionName;
+    return await next();
+  });
+
+  apiRouter.get(`/${collectionName}`, defaultController.getAll);
+  apiRouter.get(`/${collectionName}/:id`, defaultController.getOne);
+  apiRouter.post(`/${collectionName}`, defaultController.create);
+  apiRouter.put(`/${collectionName}/:id`, defaultController.update);
+  apiRouter.delete(`/${collectionName}/:id`, defaultController.delete);
+});
+
 app.use(router.routes());
 app.use(router.allowedMethods());
+
+app.use(apiRouter.routes());
+app.use(apiRouter.allowedMethods());
 
 app.use(tableRouter.routes());
 app.use(tableRouter.allowedMethods());
@@ -73,4 +110,16 @@ app.use(async (ctx, next) => {
 app.addEventListener('listen', () => {
   console.log(`Listening on port ${PORT}.`);
 });
-await app.listen({ port: PORT });
+
+// globalThis.addEventListener('restart', async () => {
+//   const newApp = new Application();
+//   // initialize app
+
+//   controller.abort();
+//   await listenPromise;
+//   console.log('server closed');
+
+//   // init();
+// });
+
+const listenPromise = app.listen({ port: PORT, signal });
