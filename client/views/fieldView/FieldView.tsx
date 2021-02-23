@@ -7,16 +7,17 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
   const [saveFail, setSaveFail] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [activeEntryValues, setActiveEntryValues] = useState({});
+  const [activeEntryValues, setActiveEntryValues] = useState(activeEntry);
   const [newId, setNewId] = useState(0);
-
+  const [changed, setChanged] = useState(0);
+  
   // TODO:
   // add handlers to check for correct data type on edit of field values
 
   const handleSave = (event: any) => {
     event.preventDefault();
     setLoading(true);
-    
+  
     //@ts-ignore
     const inputCount = event.target.form.childElementCount;
     const data: any = {};
@@ -66,12 +67,11 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
       })
       .catch(error => console.log(error))
     }
-
   };
 
   const handleDelete = (event: any) => {
     // const fieldCount = event.target.parentNode.parentNode.offsetParent.children.fieldViewForm.elements.length;
- 
+
     // let count = 1;
     // const dataToDelete: any = {};
     // while (count < fieldCount) {
@@ -80,7 +80,7 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
     //   dataToDelete[field] = value;
     //   count += 1;
     // }
-    const value = activeEntryValues[Object.keys(activeEntryValues)[0]];
+    const value = activeEntryValues[Object.keys(activeEntryValues)[0][0]];
     fetch(`/api/tables/row/${activeItem}/${value}`, { method: 'DELETE' })
       .then(res => res.json())
       .then(res => {
@@ -91,7 +91,6 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
 
   useEffect(() => {
     setActiveEntryValues(activeEntry);
-    console.log(collectionEntries);
     // @ts-ignore
     if (newEntry) setNewId(Number(collectionEntries[collectionEntries.length - 1].id) + 1);
   }, []);
@@ -102,25 +101,44 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
     // @ts-ignore
     const value = event.target.value;
 
+    const dataType = activeEntryValues[field][1]
     const copy = activeEntryValues;
-    copy[field] = value;
-    setActiveEntryValues(copy);
+    copy[field] = [value, copy[field][1]];
+    if (dataType === 'integer' && isNaN(Number(value))) {
+      const dup = Object.assign(activeEntryValues);
+      dup[field][0] = value;
+      dup[field][2] = `Value should be of type ${dataType}`;
+      console.log(dup);
+      setActiveEntryValues(dup);
+    } else {
+      setActiveEntryValues(copy);
+    }
+    const newCount = changed + 1;
+    setChanged(newCount);
   }
 
-  const entryDataArr = Object.entries(activeEntry).map(([field, value], index) => {
-    if (index === 0) return (
-      <div className='fieldViewSect' key={`${field}-${index}`}>
-        <label className='fieldViewLabel' htmlFor={field}>{field}</label>
-        <input className='fieldViewInput' style={{ color: 'black' }} type='text' id={field} name={field} value={newEntry ? newId : activeEntryValues[field]} onChange={(e: any) => handleChange(e)}  disabled/>
-      </div>
-    );
-    return (
-      <div className='fieldViewSect' key={`${field}-${index}`}>
-        <label className='fieldViewLabel' htmlFor={field}>{field}</label>
-        <input className='fieldViewInput' type='text' id={field} name={field} value={activeEntryValues[field]} onChange={(e: any) => handleChange(e)} />
-      </div>
-    );
-  });
+  let entryDataArr;
+
+  useEffect(() => {
+    console.log('activeEntryValues', activeEntryValues);
+    entryDataArr = Object.entries(activeEntry).map(([field, value], index) => {
+      if (index === 0) return (
+        <div className='fieldViewSect' key={`${field}-${index}`}>
+          <label className='fieldViewLabel' htmlFor={field}>{field}</label>
+          <input className='fieldViewInput' style={{ color: 'black' }} type='text' id={field} name={field} value={newEntry ? newId : activeEntryValues[field][0]} onChange={(e: any) => handleChange(e)}  disabled/>
+        </div>
+      );
+      return (
+        <div className='fieldViewSect' key={`${field}-${index}`}>
+          <label className='fieldViewLabel' htmlFor={field}>{field}</label>
+          <input className='fieldViewInput' type='text' id={field} name={field} value={activeEntryValues[field][0]} onChange={(e: any) => handleChange(e)} />
+          {activeEntryValues[field][2].length > 0
+            && <p className='fieldViewErrorMsg'>{activeEntryValues[field][2]}</p>
+          }
+        </div>
+      );
+    });
+  }, [changed]);
 
   let loader;
 
@@ -144,6 +162,26 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
       
     );
   }
+
+  entryDataArr = Object.entries(activeEntry).map(([field, value], index) => {
+    console.log('value in entryArray map', value);
+    console.log('active entry values', activeEntryValues[field]);
+    if (index === 0) return (
+      <div className='fieldViewSect' key={`${field}-${index}`}>
+        <label className='fieldViewLabel' htmlFor={field}>{field}</label>
+        <input className='fieldViewInput' style={{ color: 'black' }} type='text' id={field} name={field} value={newEntry ? newId : activeEntryValues[field][0]} onChange={(e: any) => handleChange(e)}  disabled/>
+      </div>
+    );
+    return (
+      <div className='fieldViewSect' key={`${field}-${index}`}>
+        <label className='fieldViewLabel' htmlFor={field}>{field}</label>
+        <input className='fieldViewInput' type='text' id={field} name={field} value={activeEntryValues[field][0]} onChange={(e: any) => handleChange(e)} />
+        {activeEntryValues[field][2].length > 0
+          && <p className='fieldViewErrorMsg'>{activeEntryValues[field][2]}</p>
+        }
+      </div>
+    );
+  });
 
   return (
     <div className='fieldViewContainer'>

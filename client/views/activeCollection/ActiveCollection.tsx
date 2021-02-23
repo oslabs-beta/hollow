@@ -7,7 +7,7 @@ import {
 import FieldView from '../fieldView/FieldView.tsx';
 
 import { ActiveCollectionProps, EntryProps, FieldProps } from './interface.ts';
-import { reset } from 'https://deno.land/std@0.84.0/fmt/colors.ts';
+// import { reset } from 'https://deno.land/std@0.84.0/fmt/colors.ts';
 
 /**
  * @description Renders Field names for active collection (table headers)
@@ -41,7 +41,7 @@ const Entry = ({
   activeCollection,
   entryCount,
 }: EntryProps) => {
-  const row = values.map((value, i) => (
+  const row = values.map((value: any, i: number) => (
     <td
       id="field"
       className={fieldNames[i]}
@@ -93,7 +93,7 @@ const ActiveCollection = ({
   const [activeResultsPerPage, setActiveResultsPerPage] = useState('10');
 
   const [resultsView, setResultsView] = useState(true);
-  const [headers, setHeaders] = useState([]);
+  const [headers, setHeaders] = useState([[]]);
   const [entries, setEntries] = useState([]);
   const [activeEntry, setActiveEntry] = useState({});
   const [newEntry, setNewEntry] = useState(false);
@@ -102,8 +102,9 @@ const ActiveCollection = ({
     fetch(`/api/tables/${activeCollection}`)
       .then((data) => data.json())
       .then((res) => {
+        console.log(res.data.columns)
         const headers = res.data.columns.map(
-          (header: any) => header.column_name
+          (header: any) => [header.column_name, header.data_type]
         );
         const entries = res.data.rows;
 
@@ -118,24 +119,24 @@ const ActiveCollection = ({
   // Change for new entry
   const createEntry = (e: any) => {
     const entry: any = {};
-    headers.forEach((header: string) => {
-      entry[header] = '';
+    headers.forEach((header: Array<string>) => {
+      entry[header[0]] = ['', header[1], ''];
     });
-
+    console.log('entry', entry);
     setActiveEntry(entry);
     setNewEntry(true);
     setResultsView(false);
   };
-  const createColumn = (e: any) => {
-    const column: any = {};
-    headers.forEach((header: string) => {
-      column[header] = '';
-    });
+  // const createColumn = (e: any) => {
+  //   const column: any = {};
+  //   headers.forEach((header: string) => {
+  //     column[header] = '';
+  //   });
 
-    setActiveEntry(column);
-    setNewEntry(false);
-    setResultsView(false);
-  };
+  //   setActiveEntry(column);
+  //   setNewEntry(false);
+  //   setResultsView(false);
+  // };
 
   const updateEntry = (e: any) => {
     const entryIdx =
@@ -200,7 +201,7 @@ const ActiveCollection = ({
   const fields = headers.map((field: any, index: number) => (
     <Field
       activeCollection={activeCollection}
-      fieldName={field}
+      fieldName={field[0]}
       index={index}
     />
   ));
