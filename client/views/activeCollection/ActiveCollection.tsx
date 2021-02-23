@@ -42,14 +42,15 @@ const Entry = ({
   entryCount,
 }: EntryProps) => {
   const row = values.map((value: any, i: number) => (
-    <td
-      id="field"
-      className={fieldNames[i]}
-      key={`${fieldNames[index]}-${value}-${index}`}
-    >
-      {value}
-    </td>
-  ));
+      <td
+        id="field"
+        className={fieldNames[i]}
+        key={`${fieldNames[index]}-${value}-${index}`}
+      >
+        {value === null ? 'null' : value.toString()}
+      </td>
+    ));
+  
   return (
     <>
       {index % 2 === 0 ? (
@@ -88,28 +89,29 @@ const Entry = ({
 const ActiveCollection = ({
   activeCollection,
   refreshCollections,
+  resultsView,
+  handleResultsView
 }: ActiveCollectionProps) => {
   const [activePage, setActivePage] = useState('1');
   const [activeResultsPerPage, setActiveResultsPerPage] = useState('10');
-
-  const [resultsView, setResultsView] = useState(true);
   const [headers, setHeaders] = useState([[]]);
   const [entries, setEntries] = useState([]);
   const [activeEntry, setActiveEntry] = useState({});
   const [newEntry, setNewEntry] = useState(false);
 
   useEffect(() => {
+    if (activeCollection === undefined) return;
     fetch(`/api/tables/${activeCollection}`)
       .then((data) => data.json())
       .then((res) => {
-        console.log(res.data.columns)
+        // console.log('res.data.columns: ', res.data.rows)
         const headers = res.data.columns.map(
           (header: any) => [header.column_name, header.data_type]
         );
         const entries = res.data.rows;
 
         setActivePage('1');
-        setResultsView(true);
+        handleResultsView(true);
         setHeaders(headers);
         setEntries(entries);
       })
@@ -122,10 +124,9 @@ const ActiveCollection = ({
     headers.forEach((header: Array<string>) => {
       entry[header[0]] = ['', header[1], ''];
     });
-    console.log('entry', entry);
     setActiveEntry(entry);
     setNewEntry(true);
-    setResultsView(false);
+    handleResultsView(false);
   };
   // const createColumn = (e: any) => {
   //   const column: any = {};
@@ -139,14 +140,24 @@ const ActiveCollection = ({
   // };
 
   const updateEntry = (e: any) => {
-    const entryIdx =
-      Number(activeResultsPerPage) * (Number(activePage) - 1) +
-      Number(e.currentTarget.dataset.idx);
-    const targetEntry = entries[entryIdx];
+    // const entryIdx =
+    //   Number(activeResultsPerPage) * (Number(activePage) - 1) +
+    //   Number(e.currentTarget.dataset.idx);
+    // const targetEntry = entries[entryIdx];
 
-    setActiveEntry(targetEntry);
+    console.log(e.target);
+    const data: any = {};
+    const length = e.target.parentNode.children.length;
+    let count = 0;
+    while (count < length) {
+      const value = e.target.parentNode.children[count].textContent;
+      data[headers[count][0]] = [value, headers[count][1], ''];
+      count += 1;
+    }
+
+    setActiveEntry(data);
     setNewEntry(false);
-    setResultsView(false);
+    handleResultsView(false);
   };
   // TODO:
   // Fix up styling / responsiveness
@@ -206,13 +217,30 @@ const ActiveCollection = ({
     />
   ));
 
+  useEffect(() => {
+    fetch(`/api/tables/${activeCollection}`)
+    .then((data) => data.json())
+    .then((res) => {
+      // console.log('res.data.columns: ', res.data.rows)
+      const headers = res.data.columns.map(
+        (header: any) => [header.column_name, header.data_type]
+      );
+      const entries = res.data.rows;
+
+      setActivePage('1');
+      setHeaders(headers);
+      setEntries(entries);
+    })
+    .catch((error) => console.log('error', error));
+  }, [resultsView]);
+
   // sets entriesCount based on length of entries
   const entriesCount = entries.length;
   let entriesPerPage;
   // creates object with each page as a key, and each value an array of entries
   // size of array and amount of pages is based on selected results per page
   const pagesCache: any = {};
-  if (entriesCount) {
+  if (entries.length) {
     const resultsPerPage: number = Number(activeResultsPerPage);
     let count: number = 0;
     let page: number = 1;
@@ -271,7 +299,7 @@ const ActiveCollection = ({
             <div className="activeCollectionDetails">
               <p className="activeCollectionName">{activeCollection}</p>
               <p className="activeCollectionCount">
-                {entriesCount} entries found
+                {entries.length} entries found
               </p>
             </div>
             <div className="deleteEntrySVG" onClick={handleDelete}>
@@ -298,7 +326,6 @@ const ActiveCollection = ({
           <table className="activeCollectionTable">
             <thead>
               <tr>
-                {/* <th scope='col' className='activeCollectionFieldName'>check</th> */}
                 {fields}
               </tr>
             </thead>
@@ -365,7 +392,6 @@ const ActiveCollection = ({
       </div>
     );
   } else {
-    // return <div></div>
     return (
       <FieldView
         activeEntry={activeEntry}

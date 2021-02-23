@@ -61,9 +61,9 @@ export const FieldRow = ({ index, columnName, dataType, handleFieldChange, delet
           value={dataType}
           onChange={handleFieldChange}
         >
-          <option value="text">Text</option>
-          <option value="number">Number</option>
-          <option value="boolean">Boolean</option>
+          <option value="text">text</option>
+          <option value="number">number</option>
+          <option value="boolean">boolean</option>
         </select>
       </div>
       <div className="button-col">

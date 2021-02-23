@@ -86,13 +86,13 @@ tableController.createTable = async (ctx: any, next: Function) => {
       columnInfo += `${columnName} `;
       switch (dataType) {
         case 'text':
-          columnInfo += 'VARCHAR';
+          columnInfo += 'character varying';
           break;
         case 'number':
-          columnInfo += 'INTEGER';
+          columnInfo += 'integer';
           break;
         case 'boolean':
-          columnInfo += 'BOOLEAN';
+          columnInfo += 'boolean';
           break;
       }
 
@@ -102,6 +102,7 @@ tableController.createTable = async (ctx: any, next: Function) => {
 
   const text = `CREATE TABLE ${collectionName} (id SERIAL PRIMARY KEY, ${columnInfo})`;
 
+  console.log(text);
   try {
     const result = await runQuery(text);
 
@@ -233,7 +234,6 @@ tableController.createRow = async (ctx: any, next: any) => {
 
   const { value } = await ctx.request.body({ type: 'json' });
   const entries = Object.entries(await value);
-
   const bodyKeys: string[] = Object.keys(await value);
   const bodyVals: string[] = Object.values(await value);
 
@@ -248,8 +248,8 @@ tableController.createRow = async (ctx: any, next: any) => {
     values += `$${i + 1}`;
     if (i < entries.length - 1) values += ', ';
   }
-
-  const text = `INSERT INTO ${table} (${insert}) VALUES (${values}) RETURNING *;`;
+  
+  const text = `INSERT INTO ${table} (${insert}) VALUES (${values}) RETURNING *;`; 
   console.log({ text });
   console.log({ bodyVals });
   console.log({ entries });

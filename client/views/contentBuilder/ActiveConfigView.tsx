@@ -37,9 +37,12 @@ const ActiveConfigView = ({ type, refreshCollections, handleActiveChange, active
     setTimeout(() => {
       refreshConfigView();
       setFieldPopupActive(false);
-    }, 4000)
+    }, 3000)
   }
 
+  const handleFieldPopupclose = () => {
+    setFieldPopupActive(false);
+  };
 
 
   return (
@@ -78,7 +81,7 @@ const ActiveConfigView = ({ type, refreshCollections, handleActiveChange, active
             </tbody>
           </table>
           {fieldPopupActive &&
-            <FieldPopup handleFieldPopupSuccess={handleFieldPopupSuccess} activeConfig={activeConfig} />
+            <FieldPopup handleFieldPopupclose={handleFieldPopupclose} handleFieldPopupSuccess={handleFieldPopupSuccess} activeConfig={activeConfig} />
           }
           </div>
         </div>

@@ -17,7 +17,10 @@ const App = () => {
   const [view, setView] = useState('collection');
   // holds current collections currently stored in db
   const [collections, setCollections] = useState([]);
-
+  // holds boolean for state of results view 
+  // resultsView renders all entries in table when true
+  // and selected entry when false
+  const [resultsView, setResultsView] = useState(true);
 
   // will need to get current collections from api - these are dummy values for testing
   const currentCollections = collections;
@@ -49,13 +52,13 @@ const App = () => {
       if (currentTools.indexOf(activeItem) === -1) {
         setActiveItem(data.data[0]);
       }
-    });    
+    });
   }, []);
 
   useEffect(() => {
     if (activeItem !== '' && !collections.includes(activeItem)) {
+      setActiveItem('');
       setActiveItem(collections[0]);
-      // @ts-ignore
     }
   }, [collections]);
 
@@ -63,6 +66,11 @@ const App = () => {
   const handleActiveChange = (item: string) => {
     setActiveItem(item);
     setView('collection');
+  };
+
+  // handle update of results view
+  const handleResultsView = (open: boolean) => {
+    setResultsView(open);
   };
 
   /**
@@ -98,6 +106,7 @@ const App = () => {
         setView('collection');
         setActiveItem(active);
         refreshCollections();
+        handleResultsView(true);
     }
   };
 
@@ -109,6 +118,8 @@ const App = () => {
       activeView = <ActiveCollection
         activeCollection={activeItem}
         refreshCollections={refreshCollections}
+        resultsView={resultsView}
+        handleResultsView={handleResultsView}
       />
     } else if (view === 'content-builder') {
       activeView = <ContentBuilder

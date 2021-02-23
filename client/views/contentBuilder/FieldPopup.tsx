@@ -4,6 +4,7 @@ import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist
 interface FieldPopupProps {
   handleFieldPopupSuccess: () => void;
   activeConfig: string;
+  handleFieldPopupclose: () => void;
 }
 
 /**
@@ -19,7 +20,7 @@ interface FieldPopupProps {
  */
 
 
-const FieldPopup = ({ handleFieldPopupSuccess, activeConfig }: FieldPopupProps) => {
+const FieldPopup = ({ handleFieldPopupSuccess, activeConfig, handleFieldPopupclose }: FieldPopupProps) => {
 
   // holds current values for columName & dataType of selected field. Updates on change
   const [fields, setFields] = useState([{ columnName: '', dataType: 'text' }]);
@@ -60,6 +61,7 @@ const FieldPopup = ({ handleFieldPopupSuccess, activeConfig }: FieldPopupProps) 
       if (res.success) {
         setLoading(false);
         setSaveSuccess(true);
+        handleFieldPopupSuccess();
       } else {
         setLoading(false);
         setSaveFail(true);
@@ -67,13 +69,6 @@ const FieldPopup = ({ handleFieldPopupSuccess, activeConfig }: FieldPopupProps) 
     })
     .catch(err => console.error(err));    
   };
-
-  // invoked on updates to saveSuccess state
-  // invokes handleFieldPopupSuccess
-  useEffect(() => {
-    handleFieldPopupSuccess();
-  }, [saveSuccess])
-
 
   // declare loader - holds jsx for active loader to display - spinner, saveSuccess, or saveFail based on state
   let loader;
@@ -155,7 +150,7 @@ const FieldPopup = ({ handleFieldPopupSuccess, activeConfig }: FieldPopupProps) 
           ?  loader
           : (<p 
               className='fieldPopupCancel' 
-              onClick={() => handleFieldPopupSuccess()}
+              onClick={() => handleFieldPopupclose()}
              >
               cancel
              </p>)
