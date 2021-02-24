@@ -1,5 +1,5 @@
 import { Router } from 'oak';
-import { runQuery } from '../secret.ts';
+import { runQuery } from '../models/dbModel.ts';
 
 import defaultController from '../controllers/defaultController.ts';
 

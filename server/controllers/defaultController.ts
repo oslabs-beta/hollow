@@ -1,4 +1,4 @@
-import { runQuery } from '../secret.ts';
+import { runQuery } from '../models/dbModel.ts';
 
 import Dex from 'dex';
 const dex = Dex({client: 'postgres'});
