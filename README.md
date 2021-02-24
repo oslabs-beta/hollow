@@ -5,6 +5,13 @@
 	A <a href="https://en.wikipedia.org/wiki/Headless_content_management_system">headless CMS</a> built in a <a href="https://deno.land">Deno</a> runtime environment.
 </h4>
 
+<p align="center">
+  <img alt="license" src="https://img.shields.io/github/license/oslabs-beta/hollow?color=%23e87e4d&style=flat-square" >
+  <img alt="last commit" src="https://img.shields.io/github/last-commit/oslabs-beta/hollow?color=%23e87e4d&style=flat-square" >
+  <img alt="open issues" src="https://img.shields.io/github/issues-raw/oslabs-beta/hollow?color=%23bd5555&style=flat-square" >
+  <img alt="contributors" src="https://img.shields.io/github/contributors/oslabs-beta/hollow?color=%23e87e4d&style=flat-square" >
+</p>
+
 ## Overview
 Hollow is a first-of-its-kind headless CMS generating a backend exclusively in Deno. Hollow offers straightforward deployment through AWS, making it easy to manage your database, add content, and get an API up and running in minutes.
 
