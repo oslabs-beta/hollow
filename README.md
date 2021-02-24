@@ -2,6 +2,14 @@
 <p align="center">
   <img src="./assets/hollow_logo_1.png">
 </p>
+
+## Contents
+* [Overview](#Overview)
+* [Installation](#Installation)
+* [Guides](#Guides)
+* [Contributors](#Contributors)
+
+## Overview
 Hollow is a first-of-its-kind headless CMS generating a backend exclusively in Deno. Hollow offers straightforward deployment through AWS, making it easy to manage your database, add content, and get an API up and running in minutes.
 
 ## Installation
@@ -53,7 +61,7 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 
 ## Guides
 
-## Contributers
+## Contributors
 
 * [Matt Greenberg](https://github.com/mattagreenberg)
 * [Shelby Cotton](https://github.com/shelbycotton)
