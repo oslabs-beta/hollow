@@ -95,7 +95,7 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 
 ### Editing a Collection's Field
 
-#### WARNING: Updating a field's data type will overwrite any data currently stored under that field. Updating to a boolean defaults to true, while updating to an integer defaults to 
+#### WARNING: Updating a field's data type will overwrite any data currently stored under that field. Updating to a boolean defaults to true, while updating to an integer defaults to 1. 
 
 #### NOTE: You cannot edit the id field. It is required on every collection and is serialized automatically.
 
