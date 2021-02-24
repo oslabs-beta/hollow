@@ -9,7 +9,7 @@
 * [Overview](#Overview)
 * [Installation](#Installation)
 * [Guides](#Guides)
-* [How To Contribute](#How-To-Contibute)
+* [How To Contribute](#How-To-Contribute)
 * [Contributors](#Contributors)
 
 ## Overview
