@@ -88,9 +88,9 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 4. Fill out the input's and click on 'Add Field' to update the selected collection's field in your database.
 ### Editing a Collection's Field
 
-#### WARNING: ##### Updating a field's data type will overwrite any data currently stored under that field. Updating to a boolean defaults to true, while updating to an integer defaults to 1.
+#### WARNING: Updating a field's data type will overwrite any data currently stored under that field. Updating to a boolean defaults to true, while updating to an integer defaults to 1.
 
-#### NOTE: ##### You cannot edit the id field. It is required on every collection and is serialized automatically.
+#### NOTE: You cannot edit the id field. It is required on every collection and is serialized automatically.
 
 1. To edit a collection's field, navigate to the 'Tools' section in the main sidebar and click on 'Content-Builder'. This will open the Content-Builder page.
 2. In the Content-Builder sidebar that opens up, click on the collection you want to edit the field in. This will open up the collection's field's page.
@@ -112,7 +112,7 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 
 ### Editing an Entry in a Collection
 
-#### NOTE: ##### An entry's id cannot be edited.
+#### NOTE: An entry's id cannot be edited.
 
 1. To edit an entry in a collection, navigate to the 'Collection's' section in the main sidebar and click on the collection containing the entry you want to edit. This will open up the Edit Entry page.
 2. Edit the input's to reflect the changes you want to make.
