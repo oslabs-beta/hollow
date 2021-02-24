@@ -1,6 +1,9 @@
 /**
- * @description typescript models for sidebar
+ * @description type definitions for Sidebar
  */
+
+/******************************************************************************************* */
+// helpers
 
 export interface ItemType {
   key: string;
@@ -12,6 +15,10 @@ export interface ItemType {
 export interface HeaderType {
   type: string;
 }
+
+/******************************************************************************************* */
+
+// Sidebar
 
 export interface SidebarProps {
   activeItem: string;

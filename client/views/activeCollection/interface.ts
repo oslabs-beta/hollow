@@ -1,14 +1,10 @@
 /**
- * @description typescript models for ActiveComponent
+ * @description type definitions for ActiveCollection
  */
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      [elemName: string]: any;
-    }
-  }
-}
+/******************************************************************************************* */
+
+// ActiveCollection
 
 export interface ActiveCollectionProps {
   activeCollection: string;
@@ -17,22 +13,18 @@ export interface ActiveCollectionProps {
   handleResultsView: (open: boolean) => void;
 }
 
+/******************************************************************************************* */
+
+// helpers 
+
 export interface EntryProps  {
-  key: string;
   values: Array<string>;
   index: number;
   fieldNames: Array<string>;
   handleClick: (event: any) => void;
-  activeCollection: string;
-  entryCount: number;
 }
 
 export interface FieldProps {
-  index: number;
   fieldName: string;
   activeCollection: string;
-}
-
-export interface AddEntryProps {
-  
 }

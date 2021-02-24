@@ -2,6 +2,8 @@
  *  @description CSS rules for Content-Builder component
  */
 
+ /* Add New Collection */
+
 :root {
   --accent-color: #297373;
   --table-gap: 6px;
@@ -117,6 +119,16 @@ div.form-error {
   border-right: 1px solid #39393A;
   height: 100%;
   padding-top: 3rem;
+}
+
+.contentBuilderSidebarCollections {
+  overflow-y: auto;
+  max-height: 55%;
+  scrollbar-width: none;
+}
+
+.contentBuilderSidebarCollections::-webkit-scrollbar {
+  width: 0;
 }
 
 .contentBuilderContainer {

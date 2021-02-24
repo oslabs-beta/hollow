@@ -1,40 +1,51 @@
+// import preact
 import { h } from 'https://unpkg.com/preact@10.5.12?module';
 import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
 
-interface FieldPopupProps {
-  handleFieldPopupSuccess: () => void;
-  activeConfig: string;
-  handleFieldPopupclose: () => void;
-}
+// import type definitions
+import { FieldPopupProps } from './interface.ts';
+
+/******************************************************************************************* */
 
 /**
  * @description renders popup container which allows user to add a new field to selected 
  * collection while inside content-builder. If request to api returns success, popup will
  * unmount then refresh currently selected collection's field's to display newly added field.
  * 
- * @prop handleFieldPopSuccess - handler function defined in ActiveConfigView.tsx
+ * @param handleFieldPopSuccess - handler function defined in ActiveConfigView.tsx
  * sets timeout for 4 seconds, then refreshes selected collection's current field's
  * & sets fieldActivePopup to false, unmounting FieldPopup from the DOM.
  * 
- * @prop activeConfig - holds currently selected collection in content-builder.
+ * @param activeConfig - holds currently selected collection in content-builder.
+ * 
+ * @param handleFieldPopupClose - function which handles setting correct state to close field popup
  */
 
 
-const FieldPopup = ({ handleFieldPopupSuccess, activeConfig, handleFieldPopupclose }: FieldPopupProps) => {
+const FieldPopup = ({ 
+  handleFieldPopupSuccess, 
+  activeConfig, 
+  handleFieldPopupclose }: FieldPopupProps) => {
 
   // holds current values for columName & dataType of selected field. Updates on change
   const [fields, setFields] = useState([{ columnName: '', dataType: 'text' }]);
+
   // holds boolean representing a failed api request
   const [saveFail, setSaveFail] = useState(false);
+
   // holds a boolean representing a successful api request
   const [saveSuccess, setSaveSuccess] = useState(false);
+
   // holds a boolean representing loading state of api request
   const [loading, setLoading] = useState(false);
 
+  /******************************************************************************************* */
 
   // function which is invoked on any changes to input fields - sets field state to selected 
   // input value on any change
+
   const handleFieldChange = (e: any) => {
+
     const updatedFields = [...fields];
     updatedFields[e.target.dataset.idx][e.target.className] = e.target.value;
     setFields(updatedFields);
@@ -43,6 +54,7 @@ const FieldPopup = ({ handleFieldPopupSuccess, activeConfig, handleFieldPopupclo
   // function which is invoked on submission of form - onClick of Add Field button
   // sets loading state to true - rendering loading spinner
   // makes api request, then sets saveSuccess or saveFail to true based on response
+
   const handleSubmit = (event: any) => {
     event.preventDefault();
     setLoading(true);

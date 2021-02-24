@@ -1,26 +1,47 @@
+// import preact
 import { h } from 'https://unpkg.com/preact@10.5.12?module';
 import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
 
+// import components
 import Header from './header/Header.tsx';
 import Sidebar from './sidebar/Sidebar.tsx';
 import ContentBuilder from '../views/contentBuilder/ContentBuilder.tsx';
 import ActiveCollection from "../views/activeCollection/ActiveCollection.tsx";
 
+/******************************************************************************************* */
+
 /**
  * @description Top level component. Handles clicks of sidebar items
  * and renders correct view.
  */
+
+ // jsx type definition
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      [elemName: string]: any;
+    }
+  }
+}
+
 const App = () => {
+
+  
   // holds name of currently selected collection
   const [activeItem, setActiveItem] = useState('');
+
   // holds current view (collection, content-builder, settings)
   const [view, setView] = useState('collection');
+
   // holds current collections currently stored in db
   const [collections, setCollections] = useState([]);
+
   // holds boolean for state of results view 
   // resultsView renders all entries in table when true
   // and selected entry when false
   const [resultsView, setResultsView] = useState(true);
+
+  /******************************************************************************************* */
 
   // will need to get current collections from api - these are dummy values for testing
   const currentCollections = collections;
@@ -42,6 +63,7 @@ const App = () => {
   // make a request to api to get all table names (collections) - update state with results
   // make a request to api to get active table entries - update state with results
   // set activeItem as first colelction in response
+
   useEffect(() => {
     fetch('/api/tables')
     .then(data => data.json())
@@ -55,6 +77,9 @@ const App = () => {
     });
   }, []);
 
+  // invoked when updates to collections are recognized
+  // tries to force a rerender by updated activeItem
+
   useEffect(() => {
     if (activeItem !== '' && !collections.includes(activeItem)) {
       setActiveItem('');
@@ -62,29 +87,29 @@ const App = () => {
     }
   }, [collections]);
 
+  // function which resets activeItem and view
 
   const handleActiveChange = (item: string) => {
     setActiveItem(item);
     setView('collection');
   };
 
-  // handle update of results view
+  // function which handles update of results view
+
   const handleResultsView = (open: boolean) => {
     setResultsView(open);
   };
 
-  /**
-   * @description sets state to active item (collection or tool) on click of sidebar item
-   * @param event
-   */
+  // function which sets state to active item (collection or tool) on click of sidebar item
+
   const handleClick = (event: any) => {
+    
+    // set active based on the event target
     let active;
-    // @ts-ignore
     if (event.target.id === 'field') active = 'field';
-    // @ts-ignore
     else if (event.target.id === 'addNewEntryBtn') active = 'addField';
-    // @ts-ignore
     else active = event.target.innerText;
+
     // Sets correct view based on which item was clicked
     switch(active) {
       case 'Settings': {
