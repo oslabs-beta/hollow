@@ -71,10 +71,13 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 
 ## Guides
 ### Adding a New Collection
-* To add a new collection, navigate to the Tools section in the sidebar and click on 'Content-Builder'.
-* In the Content-Builder sidebar that opens up, click on 'Add New Collection'.
-* Fill out the input's and click on 'Add Collection' to add the collection.
+1. To add a new collection, navigate to the Tools section in the sidebar and click on 'Content-Builder'.
+2. In the Content-Builder sidebar that opens up, click on 'Add New Collection'.
+3. Fill out the input's and click on 'Add Collection' to add the collection to your database.
 ### Deleting a Collection
+1. To delete a collection, click on the collection you want to delete in the sidebar, this will bring up the collections page.
+2. On the left hand side click the red trash can, this will open a confirmation popup.
+3. Confirm that you want to delete the collection.
 ### Adding a Field to Collection
 ### Editing a Collection's Field
 ### Deleting a Collection's Field
