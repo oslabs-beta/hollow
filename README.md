@@ -14,8 +14,8 @@ Hollow is a first-of-its-kind headless CMS generating a backend exclusively in D
   * [Adding a New Collection](#Adding-a-New-Collection)
   * [Deleting a Collection](#Deleting-a-Collection)
   * [Adding a Field to Collection](#Adding-a-Field-to-Collection)
-  * [Editing a Collection's Field](#Editing-a-Collection's-Field)
-  * [Deleting a Collection's Field](#Deleting-a-Collection/'s-Field)
+  * [Editing a Collection's Field](#Editing-a-Collections-Field)
+  * [Deleting a Collection's Field](#Deleting-a-Collections-Field)
   * [Adding an Entry to a Collection](#Adding-an-Entry-to-a-Collection)
   * [Editing an Entry in a Collection](#Editing-an-Entry-in-a-Collection)
   * [Deleting an Entry from a Collection](#Deleting-an-Entry-from-a-Collection)
@@ -93,7 +93,7 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 
 ![ADD FIELD GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/add_field.gif)
 
-### Editing a Collection's Field
+### Editing a Collections Field
 
 #### WARNING: Updating a field's data type will overwrite any data currently stored under that field. Updating to a boolean defaults to true, while updating to an integer defaults to 1. 
 
@@ -107,7 +107,7 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 
 ![EDIT FIELD GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/edit_field.gif)
 
-### Deleting a Collection's Field
+### Deleting a Collections Field
 1. To delete a collection's field, navigate to the 'Tools' section in the main sidebar and click on 'Content-Builder'. This will open the Content-Builder page. 
 2. In the Content-Builder sidebar that opens up, click on the collection containing the field you want to delete. This will open up the collection's field's page.
 3. In the upper left hand side of the field's page, click the red trash can. This will open a confirmation popup.
