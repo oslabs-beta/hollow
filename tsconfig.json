@@ -3,9 +3,5 @@
     "jsx": "react",
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
-<<<<<<< HEAD
-    "isolatedModules": false
-=======
->>>>>>> main
   }
 }
