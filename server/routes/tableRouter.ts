@@ -1,4 +1,4 @@
-import { Router } from '../../deps.ts';
+import { Router } from 'oak';
 import tableController from '../controllers/tableController.ts';
 import routerController from '../controllers/routerController.ts';
 
@@ -15,7 +15,7 @@ router.get('/api/tables', tableController.getAllTables, (ctx) => {
 router.post(
   '/api/tables',
   tableController.createTable,
-  routerController.createRouter,
+  routerController.registerRoutes,
   (ctx) => {
     ctx.response.status = 200;
     ctx.response.body = {
@@ -38,7 +38,7 @@ router.get('/api/tables/:name', tableController.getTableByName, (ctx) => {
 router.delete(
   '/api/tables/:name',
   tableController.deleteTableByName,
-  routerController.deleteRouter,
+  routerController.deregisterRoutes,
   (ctx) => {
     ctx.response.status = 200;
     ctx.response.body = {
