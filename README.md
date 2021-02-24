@@ -1,10 +1,10 @@
-# Hollow
 <p align="center">
   <img src="./assets/hollow_logo_1.png">
 </p>
 <h4 align="center">
 	A <a href="https://en.wikipedia.org/wiki/Headless_content_management_system">headless CMS</a> built in a <a href="https://deno.land">Deno</a> runtime environment.
 </h4>
+
 ## Contents
 * [Overview](#Overview)
 * [Installation](#Installation)
