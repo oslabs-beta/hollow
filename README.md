@@ -11,7 +11,7 @@ Hollow is a first-of-its-kind headless CMS generating a backend exclusively in D
 ## Table of Contents
 * [Installation](#Installation)
 * [Guides](#Guides)
-  * [Adding a New Collection](#Adding-a-New-Collection)
+  * [Adding a New Collection](*Adding-a-New-Collection)
   * [Deleting a Collection](#Deleting-a-Collection)
   * [Adding a Field to Collection](#Adding-a-Field-to-Collection)
   * [Editing a Collection's Field](#Editing-a-Collection's-Field)
