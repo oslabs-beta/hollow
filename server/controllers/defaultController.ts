@@ -1,6 +1,6 @@
 import { runQuery } from '../secret.ts';
 
-import Dex from 'https://raw.githubusercontent.com/denjucks/dex/master/mod.ts';
+import Dex from 'dex';
 const dex = Dex({client: 'postgres'});
 
 const defaultController: any = {};

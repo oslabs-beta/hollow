@@ -1,10 +1,10 @@
-import { Application, Router } from 'https://deno.land/x/oak@v6.5.0/mod.ts';
+import { Application, Router } from 'oak';
 
 import apiRouter from './routes/apiRouter.ts';
 import tableRouter from './routes/tableRouter.ts';
 
-import { h } from 'https://unpkg.com/preact@10.5.12?module';
-import { render } from 'https://unpkg.com/preact-render-to-string@5.1.12?module';
+import { h } from 'preact';
+import { render } from 'preact-render-to-string';
 import App from '../client/components/App.tsx';
 
 const PORT = 3000;

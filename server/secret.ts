@@ -1,5 +1,5 @@
-import { Pool } from 'https://deno.land/x/postgres@v0.7.0/mod.ts';
-import { PoolClient } from 'https://deno.land/x/postgres/client.ts';
+import { Pool } from 'pg/mod.ts';
+import { PoolClient } from 'pg/client.ts';
 
 const POOL_CONNECTIONS = 1;
 export const dbPool = new Pool(

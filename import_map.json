@@ -1,0 +1,9 @@
+{
+  "imports": {
+    "oak": "https://deno.land/x/oak@v6.5.0/mod.ts",
+    "dex": "https://raw.githubusercontent.com/denjucks/dex/master/mod.ts",
+    "pg/": "https://deno.land/x/postgres@v0.7.0/",
+    "preact": "https://unpkg.com/preact@10.5.12?module",
+    "preact-render-to-string": "https://unpkg.com/preact-render-to-string@5.1.12?module"
+  }
+}
