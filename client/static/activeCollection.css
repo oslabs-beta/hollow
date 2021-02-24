@@ -204,3 +204,7 @@
 .resultsSlash {
   padding: .1rem;
 }
+
+.deletePopupBtnLoader {
+  margin-top: .5rem;
+}
