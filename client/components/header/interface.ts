@@ -1,8 +1,5 @@
 /**
- * @description typescript models for Header
+ * @description type definitions for Header
  */
 
-
-interface Props {
-    text: string;
-}
+/******************************************************************************************* */

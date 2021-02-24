@@ -1,9 +1,38 @@
+// import preact
 import { h, Fragment } from 'https://unpkg.com/preact@10.5.12?module';
 import { useState, useEffect } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
 
+// import type definitions
 import { FieldViewProps } from './interface.ts';
 
-const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: FieldViewProps) => {
+/******************************************************************************************* */
+
+/**
+ * @description renders the view for individual fields
+ * switches between a new entry view - for creating new entries
+ * into the selected collection, and a edit entry view - for
+ * editing the currently selected entry
+ * 
+ * @param activeEntry - an object holding keys for each field name, and value of
+ * an array containing 3 elements - [value (string), data type (string), error message (string)]
+ * 
+ * @param activeItem - the currently selected collection (string)
+ * 
+ * @param newEntry - a boolean representing if this is an entry being added (true) or an entry
+ * being edited (false)
+ * 
+ * @param collectionEntries - an array containing all active entries in the selected collection
+ * 
+ * @param handleResultsView - a function which sets the resultsView variable (boolean) determining
+ * if the view should be displaying all collection entries or an individual entry
+ */
+
+const FieldView = ({ 
+  activeEntry, 
+  activeItem, 
+  newEntry, 
+  collectionEntries, 
+  handleResultsView }: FieldViewProps) => {
 
   // holds state of api request for updating or adding new entry
   const [saveFail, setSaveFail] = useState(false);
@@ -15,9 +44,9 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
   const [loading, setLoading] = useState(false);
 
   // holds object of each entry. Each key is the field name, each value is
-  // an array containing the value of the input box, the data type, and the error message (or empty string if no error)
+  // an array containing the value of the input box, the data type, 
+  // and the error message (or empty string if no error)
   const [activeEntryValues, setActiveEntryValues] = useState(activeEntry);
-  console.log('activeEntries on mount: fv line 20:', activeEntryValues)
 
   // holds the value of the id on newly created entries
   const [newId, setNewId] = useState(1);
@@ -25,11 +54,20 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
   // used to force rerender on update of error message in activeEntryValues object
   const [changed, setChanged] = useState(0);
 
+  // holds boolean representing state of Confirm Delete popup - open or closed
+  const [deletePopup, setDeletePopup] = useState(false);
+
+  /******************************************************************************************* */
+
   // set activeEntryValues to passed down activeEntry prop on mount
   // if this is a new entry being created, set id to the id which the entry will be created with in the db
+  
   useEffect(() => {
     // @ts-ignore
-    if (newEntry && Number(collectionEntries[collectionEntries.length - 1].id) + 1 !== 0) setNewId(Number(collectionEntries[collectionEntries.length - 1].id) + 1);
+    if (newEntry && Number(collectionEntries[collectionEntries.length - 1].id) + 1 !== 0) {
+      // @ts-ignore
+      setNewId(Number(collectionEntries[collectionEntries.length - 1].id) + 1);
+    }
   }, []);
 
   // declare variable to hold 
@@ -37,21 +75,53 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
 
   // on update of changed - the state variable updated in handleChange and used to force rerender
   // - rebuild entryDataArr to display error message or remove error message for invalid input values
+
   useEffect(() => {
     entryDataArr = Object.entries(activeEntry).map(([field, value], index) => {
       
       if (index === 0) return (
-        <div className='fieldViewSect' key={`${field}-${index}`}>
-          <label className='fieldViewLabel' htmlFor={field}>{field}</label>
-          <input className='fieldViewInput' style={{ color: 'black' }} type='text' id={field} name={field} value={newEntry ? newId : activeEntryValues[field][0]} onChange={(e: any) => handleChange(e)}  disabled/>
+        <div
+          className='fieldViewSect' 
+          key={`${field}-${index}`}
+        >
+          <label
+            className='fieldViewLabel' 
+            htmlFor={field}
+          >
+            {field}
+          </label>
+          <input
+            className='fieldViewInput' 
+            style={{ color: 'black' }} 
+            type='text' id={field} 
+            name={field} 
+            value={newEntry ? newId : activeEntryValues[field][0]} 
+            onChange={(e: any) => handleChange(e)}
+            disabled
+          />
         </div>
       );
       return (
-        <div className='fieldViewSect' key={`${field}-${index}`}>
-          <label className='fieldViewLabel' htmlFor={field}>{field}</label>
-          <input className='fieldViewInput' type='text' id={field} name={field} value={activeEntryValues[field][0]} onChange={(e: any) => handleChange(e)} />
+        <div 
+          className='fieldViewSect' 
+          key={`${field}-${index}`}
+        >
+          <label
+            className='fieldViewLabel' 
+            htmlFor={field}>{field}
+          </label>
+          <input 
+            className='fieldViewInput' 
+            type='text' 
+            id={field} 
+            name={field} 
+            value={activeEntryValues[field][0]} 
+            onChange={(e: any) => handleChange(e)} 
+          />
           {activeEntryValues[field][2].length > 0
-            && <p className='fieldViewErrorMsg'>{activeEntryValues[field][2]}</p>
+            && <p className='fieldViewErrorMsg'>
+                {activeEntryValues[field][2]}
+              </p>
           }
         </div>
       );
@@ -118,7 +188,8 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
       })
       .catch(error => console.log(error))
 
-      // if saving an edited entry, send put request with updated information and handle loadng state based on response
+      // if saving an edited entry, send put request with updated information 
+      // and handle loadng state based on response
     } else {
       const value = activeEntryValues[Object.keys(activeEntryValues)[0]][0];
       fetch(`/api/tables/update/${activeItem}/${value}`, {
@@ -140,18 +211,55 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
     }
   };
 
+  // Renders the popup box which confirms that the user would
+  // intends to delete the selected entry
+  const ConfirmDelete = () => {
+    return (
+      <div className='confirmDeletePopup'>
+        <p className='confirmDeleteText'>
+          Are you sure you want to delete 
+          <br></br>
+          <span className='confirmDeleteHighlight'>{activeEntryValues[Object.keys(activeEntryValues)[0]][0]} </span> 
+           from 
+          <span className='confirmDeleteHighlight'> {activeItem} </span>
+          ?
+        </p>
+        <div className='confirmDeleteBtnContainer'>
+          <p 
+            className='confirmDeleteCancel'
+            onClick={() => setDeletePopup(false)}
+          >
+            cancel
+          </p>
+          <button
+            className='confirmDeleteBtn'
+            onClick={(e: any) => handleDelete(e)}
+          >
+            Delete Entry
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   // handles deletion of selected entry
   const handleDelete = (event: any) => {
 
-    // add popup here to confirm delete
-
-    const value = activeEntryValues[Object.keys(activeEntryValues)[0][0]];
-    fetch(`/api/tables/row/${activeItem}/${value}`, { method: 'DELETE' })
-      .then(res => res.json())
-      .then(res => {
-        console.log('delete res: ', res);
-      })
-      .catch(error => console.log(error));
+    // sets confirm delete popup to true (open), if its currently false (closed)
+    if (!deletePopup) setDeletePopup(true);
+    
+    // if the clicked buttons className is equal to 'confirmDeleteBtn',
+    // delete selected entry & reset view back to all of the collections entries
+    if (event.target.className === 'confirmDeleteBtn') {
+      const value = activeEntryValues.id[0];
+      fetch(`/api/tables/row/${activeItem}/${value}`, { method: 'DELETE' })
+        .then(res => res.json())
+        .then(res => {
+          handleResultsView(true);
+          setDeletePopup(false);
+        })
+        .catch(error => console.log(error));
+    }
   };
 
   // handles changes on each individual input field
@@ -230,7 +338,6 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
   // map through activeEntry entries and render labels & input fields for each entry
   // set the id field as disabled because it cannot be edited - id field should always be at index 0
   entryDataArr = Object.entries(activeEntry).map(([field, value], index) => {
-    console.log('data being passed in to inputs:', [field, value])
     if (index === 0) return (
       <div
         className='fieldViewSect'
@@ -284,9 +391,13 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
       <div className='fieldViewHeader'>
       <div className='deleteContainer'>
         <div className='fieldViewDetails'>
+          {/* if this is a new entry being added, display the newId
+            * if this is an entry being edited, display the selected entry's id
+          */}
           <p className='fieldViewName'>{newEntry ? newId : activeEntryValues[Object.keys(activeEntryValues)[0]][0]}</p>
           <p className='fieldViewCollection'>{activeItem}</p>
         </div>
+        {/* if this is a new entry being added, render the delete button */}
         {!newEntry &&
           (<div 
             className='deleteEntrySVG' 
@@ -320,6 +431,9 @@ const FieldView = ({ activeEntry, activeItem, newEntry, collectionEntries }: Fie
          }
         </div>
       </div>
+      {deletePopup
+        && <ConfirmDelete />
+      }
       <form 
         id='fieldViewForm' 
         className='fieldViewForm'

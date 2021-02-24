@@ -1,19 +1,45 @@
+// import preact
 import { h } from 'https://unpkg.com/preact@10.5.12?module';
 import { useState } from 'https://unpkg.com/preact@10.5.12/hooks/dist/hooks.module.js?module';
+
+// import components
 import * as helpers from './sidebarHelpers.tsx';
-import { def } from "https://deno.land/std@0.84.0/encoding/_yaml/schema/default.ts";
 
-interface ActiveConfigProps {
-  handleActiveChange: (activeItem: string) => void;
-  refreshCollections: () => void;
-}
+// import type definitions
+import { AddNewCollectionProps } from './interface.ts';
 
+/******************************************************************************************* */
 
-const AddNewCollection = ({ handleActiveChange, refreshCollections }: ActiveConfigProps) => {
+/**
+ * @description this component renders the view for adding a new collection inside of the 
+ * content builder.
+ * 
+ * @param handleActiveChange - function to handle changes to the active collection name to 
+ * the newly created collection
+ * 
+ * @param refreshCollections - function which forces a rerender of the active collections to 
+ * reflect any changes
+ */
 
+const AddNewCollection = ({ handleActiveChange, refreshCollections }: AddNewCollectionProps) => {
+
+  // holds the colleciton name as a string
   const [displayName, setDisplayName] = useState('');
+
+  // holds an object containing two properties
+  // a columName key with a value of a string & a dataType key
+  // with a value of a string - defaulted to text
+  //
+  // this is used to hold the selected information for the current field being created
   const [fields, setFields] = useState([{ columnName: '', dataType: 'text' }]);
+
+  // holds any error messages that may arise form invalid input
   const [messages, setMessages] = useState([]);
+
+  /******************************************************************************************* */
+
+  // function which handles changes to field inputs by setting fields state
+  // to values inputed by user
 
   const handleFieldChange = (e: any) => {
     const updatedFields = [...fields];
@@ -21,7 +47,11 @@ const AddNewCollection = ({ handleActiveChange, refreshCollections }: ActiveConf
     setFields(updatedFields);
   }
 
+  // function which is used to validate the form input data
+  // and display the correct error messages
+
   const validateData = (collectionName: string) => {
+
     const messageArr = [];
     
     // Ensure user has entered valid display name
@@ -36,11 +66,16 @@ const AddNewCollection = ({ handleActiveChange, refreshCollections }: ActiveConf
     } else if (fields.some((field: any) => /[^a-zA-Z0-9_]/.test(field.columnName))) {
       messageArr.push('Column names can only contain letters, numbers, and underscores.')
     }
-
     return messageArr;
   }
 
+  // function which handles submission of new collection
+  // sends request to create information in db and 
+  // changes view to the newly created collections active entry view
+  // as well as forces a rerender of sidebar to reflect new collection being created
+
   const handleSubmit = (e: any) => {
+
     e.preventDefault();
 
     const collectionName = displayName.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim().replace(/ +/g, '-');
@@ -75,11 +110,16 @@ const AddNewCollection = ({ handleActiveChange, refreshCollections }: ActiveConf
       .catch(err => console.log(err));
   }
 
+  // function which handles updated fields with a new object containing the new fields
+  // input values
+
   const addRow = (e: any) => {
     const fieldsCopy = fields.slice();
     fieldsCopy.push({ columnName: '', dataType: 'text' });
     setFields(fieldsCopy);
   }
+
+  // function which handles removing field objects already created from fields state - before collection is created
 
   const deleteRow = (e: any) => {
     if (fields.length > 1) {
@@ -88,6 +128,8 @@ const AddNewCollection = ({ handleActiveChange, refreshCollections }: ActiveConf
       setFields(fieldsCopy);
     }
   }
+
+  // map fields to field rows and render to display currently created fields
 
   const fieldRows = fields.map((field: {columnName: string, dataType: string}, index: number) => (<helpers.FieldRow
     index={index}

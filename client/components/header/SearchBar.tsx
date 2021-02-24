@@ -1,4 +1,11 @@
+// import preact
 import { h } from 'https://unpkg.com/preact@10.5.12?module';
+
+/******************************************************************************************* */
+
+/**
+ * @note then functionality for interacting for the sidebar has not been built out yet.
+ */
 
 // on submit, prevent default
 
