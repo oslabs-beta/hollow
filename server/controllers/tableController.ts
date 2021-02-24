@@ -215,9 +215,9 @@ tableController.renameColumn = async (ctx: any, next: any) => {
 tableController.getRow = async (ctx: any, next: any) => {
   const table = ctx.params.name;
   // testing text search
-  const text = `SELECT title FROM breweries WHERE to_tsvector(name) @@ to_tsquery('keith');`;
+  // const text = `SELECT title FROM breweries WHERE to_tsvector(name) @@ to_tsquery('keith');`;
 
-  // const text = `SELECT * FROM ${table} WHERE id = ${ctx.params.id};`;
+  const text = `SELECT * FROM ${table} WHERE id = ${ctx.params.id};`;
 
   try {
     const result = await runQuery(text);
