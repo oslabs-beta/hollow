@@ -2,7 +2,7 @@
   "name": "Hollow",
   "version": "1.0.0",
   "scripts": {
-    "start": "deno run --allow-net --allow-read --allow-write --watch --unstable --config tsconfig.json server/server.tsx",
+    "start": "RDS_USERNAME=rmybujry RDS_DB_NAME=rmybujry RDS_PASSWORD=3FFtxtka6wwc49VgxiqqF7IkbS2pnZgb RDS_HOSTNAME=ziggy.db.elephantsql.com deno run --allow-net --allow-env --allow-read --allow-write --watch --unstable --config tsconfig.json server/server.tsx",
     "start-api": "deno run --allow-net --allow-read --watch --unstable api/server.ts"
   }
 }
