@@ -153,3 +153,71 @@
 .fieldViewSect {
   float: left;
 }
+
+.fieldViewErrorMsg {
+  color: #bd5555;
+  font-size: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+/* Confirm Delete Popup */
+
+.confirmDeletePopup {
+  position: fixed;
+  left: 45%;
+  top: 30%;
+  z-index: 2;
+  background-color: #212021;
+  height: 15rem;
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 3px;
+  box-shadow: 3px 3px 3px #212021;
+  text-align: center;
+}
+
+.confirmDeleteText {
+  color: #819494;
+  margin-top: 1rem;
+  opacity: 0.6;
+  font-size: 1rem;
+  margin-top: 5rem;
+}
+
+.confirmDeleteHighlight {
+  margin-top: 1rem;
+  color: #297373;
+}
+
+.confirmDeleteBtnContainer {
+  display: flex;
+  align-self: flex-end;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.confirmDeleteCancel {
+  font-size: .8rem;
+  color: #8a128a;
+  margin-right: 1rem;
+  margin-top: .5rem;
+}
+
+.confirmDeleteCancel:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.confirmDeleteBtn {
+  cursor: pointer;
+  width: fit-content;
+  padding: .5rem;
+  height: 2rem;
+  border-radius: 5px;
+  background-color: #212021;
+  border: 1px solid #ad814b;
+  color: #ad814b;
+}
