@@ -2,7 +2,9 @@
 <p align="center">
   <img src="./assets/hollow_logo_1.png">
 </p>
-
+<p align="center">
+  A [headless CMS](https://en.wikipedia.org/wiki/Headless_content_management_system) built in a [Deno](https://deno.land) runtime environment
+</p>
 ## Contents
 * [Overview](#Overview)
 * [Installation](#Installation)
