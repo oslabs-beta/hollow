@@ -98,11 +98,9 @@ const FieldEdit = ({
         <p className='confirmDeleteText'>
           Are you sure you want to delete 
           <br></br>
-          <span className='confirmDeleteHighlight'>
-            {fieldEditData.column_name}  
-          </span> 
-           from 
-          <span className='confirmDeleteHighlight'> {activeConfig}</span>
+          <span className='confirmDeleteHighlight'> {fieldEditData.column_name} </span> 
+            from 
+          <span className='confirmDeleteHighlight'>  {activeConfig}</span>
           ?
         </p>
         <div className='confirmDeleteBtnContainer'>

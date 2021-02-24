@@ -27,6 +27,7 @@ import { ActiveCollectionProps } from './interface.ts';
  * invoked with true or false
  */
 
+
 const ActiveCollection = ({
   activeCollection,
   refreshCollections,
@@ -148,7 +149,7 @@ const ActiveCollection = ({
     while (count < length) {
       const value = e.target.parentNode.children[count].textContent;
 
-      // this creates a property on entry object, 
+      // this creates a property on data object, 
       // with key being the header (field name), and 
       // value being an array containing three elements [input value, data type, error message]
       // error message starts as empty strings because it will be updated and held in state when
@@ -232,7 +233,7 @@ const ActiveCollection = ({
     // and this if statement will pass, making the request to actually
     // delete the collection
 
-    if (event.target.className = 'confirmDelete') {
+    if (event.target.className === 'confirmDelete') {
       fetch(`/api/tables/${activeCollection}`, { method: 'DELETE' })
       .then((res) => res.json())
       .then((res) => {
@@ -316,7 +317,7 @@ const ActiveCollection = ({
 
   // if results view is truthy, render view which displays all entries
   // in selected collection
-  
+
   if (resultsView) {
     return (
       <div className="activeCollectionContainer">
