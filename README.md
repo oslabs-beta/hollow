@@ -55,7 +55,7 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 
 ## Contributers
 
-* ![Matt Greenberg] (https://github.com/mattagreenberg)
-* ![Shelby Cotton] (https://github.com/shelbycotton)
-* ![Keith Lisiak] (https://github.com/keithcoach)
-* ![Garrett Weaver] (https://github.com/G-Weaver)
+* [Matt Greenberg](https://github.com/mattagreenberg)
+* [Shelby Cotton](https://github.com/shelbycotton)
+* [Keith Lisiak](https://github.com/keithcoach)
+* [Garrett Weaver](https://github.com/G-Weaver)
