@@ -48,8 +48,8 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 	- Click **Create database**.
 	- You'll need the endpoint for your RDS instance. Find this under **DB Instances**. This will be your `RDS_HOSTNAME` environment variable later.
 2. **Modify your security group settings.**
-	- Navigate to **EC2** via the **Services** menu and click **Security groups** under **Resources**.
-	- Find your database security group—security group name should be `hollow-db`—and click the security group ID.
+	- Navigate to **EC2** via the **Services** menu.
+	- Click **Security groups** under **Resources** and find your database security group (the security group name should be `hollow-db`). Click the security group ID.
 	- In the **Inbound rules** panel, click **Edit inbound rules** and **Add rule**.
 	- Select PostgreSQL for **Type** and Custom for **Source**. Under **Source**, select the security group(s) associated with your Elastic Beanstalk EC2 environment.
 	- Click **Save rules**.
@@ -70,14 +70,14 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 	- Your new Hollow application should be ready to go with your newly created database.
 
 ## Guides
-#### Adding a New Collection
-#### Deleting a Collection
-#### Adding a Field to Collection
-#### Editing a Collection's Field
-#### Deleting a Collection's Field
-#### Adding an Entry to a Collection
-#### Editing an Entry in a Collection
-#### Deleting an Entry from a Collection
+### Adding a New Collection
+### Deleting a Collection
+### Adding a Field to Collection
+### Editing a Collection's Field
+### Deleting a Collection's Field
+### Adding an Entry to a Collection
+### Editing an Entry in a Collection
+### Deleting an Entry from a Collection
 
 ## How To Contribute
 If you come accross an issue you want to tackle or have a feature you think should be added, please feel free make a PR and someone from the core team will review it.
