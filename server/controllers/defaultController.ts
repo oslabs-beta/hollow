@@ -28,7 +28,7 @@ defaultController.getOne = async (ctx: any) => {
 
 defaultController.create = async (ctx: any) => {
   if (!ctx.request.hasBody) {
-    // throw error
+    throw new Error('No data');
   }
 
   const { value } = await ctx.request.body({ type: 'json' });
@@ -41,10 +41,9 @@ defaultController.create = async (ctx: any) => {
   };
 };
 
-// put vs patch???
 defaultController.update = async (ctx: any) => {
   if (!ctx.request.hasBody) {
-    // throw error
+    throw new Error('No data');
   }
 
   const { value } = await ctx.request.body({ type: 'json' });
