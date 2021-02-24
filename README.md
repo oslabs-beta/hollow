@@ -76,19 +76,26 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 2. In the Content-Builder sidebar that opens up, click on 'Add New Collection'.
 3. Fill out the input's and click on 'Add Collection' to add the collection to your database.
 
+![ADD COLLECTION GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/add_collection.gif)
+
 ### Deleting a Collection
 1. To delete a collection, navigate to the 'Collections' section in the main sidebar and click on the collection you want to delete. This will open up the collection's page.
 2. On the upper left hand side of the collection's page click the red trash can. This will open a confirmation popup.
 3. Confirm that you want to delete the collection. This will drop the selected collection from your database.
+
+![DELETE COLLECTION GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/delete_collection.gif)
 
 ### Adding a Field to Collection
 1. To add a field to a collection, navigate to the 'Tools' section in the main sidebar and click on 'Content-Builder'. This will open the Content-Builder page. 
 2. In the Content-Builder sidebar that opens up, click on the collection you want to add the field in. This will open up the collection's field's page.
 3. In the upper right hand side of the Content-Builder page, click on 'Add New Field'. This will open the Add Field popup.
 4. Fill out the input's and click on 'Add Field' to update the selected collection's field in your database.
+
+![ADD FIELD GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/add_field.gif)
+
 ### Editing a Collection's Field
 
-#### WARNING: Updating a field's data type will overwrite any data currently stored under that field. Updating to a boolean defaults to true, while updating to an integer defaults to 1.
+#### WARNING: Updating a field's data type will overwrite any data currently stored under that field. Updating to a boolean defaults to true, while updating to an integer defaults to 
 
 #### NOTE: You cannot edit the id field. It is required on every collection and is serialized automatically.
 
@@ -98,17 +105,23 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 4. Edit the input fields.
 5. In the upper right hand corner, click the 'Save' button to update the field in your databasae.
 
+![EDIT FIELD GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/edit_field.gif)
+
 ### Deleting a Collection's Field
 1. To delete a collection's field, navigate to the 'Tools' section in the main sidebar and click on 'Content-Builder'. This will open the Content-Builder page. 
 2. In the Content-Builder sidebar that opens up, click on the collection containing the field you want to delete. This will open up the collection's field's page.
 3. In the upper left hand side of the field's page, click the red trash can. This will open a confirmation popup.
 4. Confirm that you want to delete the field. This will delete the field, along with any data that may be saved under it, from the selected collection, in your database.
 
+![DELETE FIELD GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/delete_field.gif)
+
 ### Adding an Entry to a Collection
 1. To add an entry to a collection, navigate to the 'Collection's' section in the main sidebar and click on the collection you want to add an entry to. This will open up the collection's page.
 2. In the upper right hand side of the collection's page, click on 'Add New <collection>'. This will open up the Add Entry page.
 3. Fill out the input fields.
 4. In the upper right hand side of the Add Entry page, click on 'Add Entry' to add the entry to selected colleciton in your database.
+
+![ADD ENTRY GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/add%20entrygif.gif)
 
 ### Editing an Entry in a Collection
 
@@ -118,10 +131,14 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 2. Edit the input's to reflect the changes you want to make.
 3. In the upper right hand side of the Edit Entry page, click on 'Save' to update the entry in the selected collection, in your database.
 
+![EDIT ENTRY GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/edit_entry.gif)
+
 ### Deleting an Entry from a Collection
 1. To delete an entry in a colleciton, navigate to the 'Collection's' section in the main sidebar and click on the collection containing the entry you want to delete. This will open up the Edit Entry page.
 2. In the upper right hand side of the Edit Entry page, click on the red trash can. This will open a confirmation popup.
 3. Confirm you want to delete the entry. This will delete the entry from the selected collection, in your database.
+
+![DELETE ENTRY GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/delete_entry.gif)
 
 ## How To Contribute
 If you come accross an issue you want to tackle or have a feature you think should be added, please feel free make a PR and someone from the core team will review it.
