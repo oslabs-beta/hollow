@@ -71,13 +71,7 @@ const Sidebar = ({
           {collections}
         </div>
       <helpers.ListHeader type='Tools' />
-        {tools}
-      <div 
-        className='sidebarSettings' 
-        onClick={(e: any) => handleClick(e)}
-      >
-        <h3>Settings</h3>
-      </div>
+      {tools}
     </div>
     );
 }
