@@ -181,6 +181,7 @@ const FieldView = ({
         if (res.success) {
           setLoading(false);
           setSaveSuccess(true);
+          setTimeout(() => handleResultsView(true), 1000);
         } else {
           setLoading(false);
           setSaveFail(true);
@@ -202,6 +203,7 @@ const FieldView = ({
         if (res.success) {
           setLoading(false);
           setSaveSuccess(true);
+          setTimeout(() => handleResultsView(true), 1000);
         } else {
           setLoading(false);
           setSaveFail(true);
