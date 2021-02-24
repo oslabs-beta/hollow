@@ -50,3 +50,12 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 	- Navigate to **EC2** via the **Services** menu.
 	- Under your Hollow production environment, click **Go to environment**.
 	- Your new Hollow application should be ready to go with your newly created database.
+
+## Guides
+
+## Contributers
+
+* [Matt Greenberg] (https://github.com/mattagreenberg)
+* [Shelby Cotton] (https://github.com/shelbycotton)
+* [Keith Lisiak] (https://github.com/keithcoach)
+* [Garrett Weaver] (https://github.com/G-Weaver)
