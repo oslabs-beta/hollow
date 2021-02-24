@@ -27,7 +27,6 @@ import { ActiveCollectionProps } from './interface.ts';
  * invoked with true or false
  */
 
-
 const ActiveCollection = ({
   activeCollection,
   refreshCollections,
@@ -59,6 +58,15 @@ const ActiveCollection = ({
   // a boolean which determines the state of the confirm delete popup
   // open (true) or closed (false) - defaults to false
   const [deletePopup, setDeletePopup] = useState(false);
+
+  // holds state of api request for updating or adding new entry
+  const [saveFail, setSaveFail] = useState(false);
+
+  // holds state of api request for updating or adding new entry
+  const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // holds state of api request for updating or adding new entry
+  const [loading, setLoading] = useState(false);
 
 
   /******************************************************************************************* */
@@ -203,6 +211,46 @@ const ActiveCollection = ({
   // to delete the active collection
 
   const ConfirmDelete = () => {
+
+    // declare variable which will hold the correct loading svg to render based on loading state
+  let loader;
+
+  // if loading is true set loader to loading spinner
+  if (loading) {
+    loader = <div className='saveFieldBtnLoader deletePopupBtnLoader'></div>;
+
+    // if saveFail is true, set loader to failed svg x
+  } else if (saveFail) {
+    loader = (
+      <div>
+        <svg 
+          className='saveFieldFailSVG deletePopupBtnLoader' 
+          xmlns="http://www.w3.org/2000/svg" 
+          width="15" 
+          height="15" 
+          viewBox="0 0 24 24"
+        >
+          <path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/>
+        </svg>
+      </div>
+    );
+
+    // if saveSuccess is true, set loader to success svg checkmark
+  } else if (saveSuccess) {
+    loader = (
+        <svg 
+          className='saveFieldSuccessSVG deletePopupBtnLoader'
+          xmlns="http://www.w3.org/2000/svg" 
+          width="15" 
+          height="15" 
+          viewBox="0 0 24 24"
+        >
+          <path d="M0 11c2.761.575 6.312 1.688 9 3.438 3.157-4.23 8.828-8.187 15-11.438-5.861 5.775-10.711 12.328-14 18.917-2.651-3.766-5.547-7.271-10-10.917z"/>
+        </svg>
+    );
+  };
+  
+
     return (
       <div className='confirmDeletePopup'>
         <p className='confirmDeleteText'>
@@ -213,13 +261,15 @@ const ActiveCollection = ({
           ?
         </p>
         <div className='confirmDeleteBtnContainer'>
-          <p className='confirmDeleteCancel' onClick={() => setDeletePopup(false)}>cancel</p>
-          <button className='confirmDeleteBtn' onClick={(e: any) => handleDelete(e)}>Delete Table</button>
+          {loader}
+          {(!loading && !saveSuccess && !saveFail)
+            && <p className='confirmDeleteCancel' onClick={() => setDeletePopup(false)}>cancel</p>
+          }
+          <button className='confirmDeleteBtn' onClick={(e: any) => handleDelete(e)}>Delete Table</button>)
         </div>
       </div>
     );
   };
-
 
   // function which handles the click of the delete button as well as the confirm
   // button in the confirm delete popup
@@ -233,17 +283,23 @@ const ActiveCollection = ({
     // and this if statement will pass, making the request to actually
     // delete the collection
 
-    if (event.target.className === 'confirmDelete') {
+    if (event.target.className === 'confirmDeleteBtn') {
+      setLoading(true);
       fetch(`/api/tables/${activeCollection}`, { method: 'DELETE' })
       .then((res) => res.json())
       .then((res) => {
         if (res.success) {
           const copy = activeCollection;
+          setLoading(false);
+          setSaveSuccess(true);
           setDeletePopup(false);
           refreshCollections();
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setSaveFail(true);
+      });
     }
   };
 
@@ -314,6 +370,8 @@ const ActiveCollection = ({
       </a>
     );
   });
+
+  
 
   // if results view is truthy, render view which displays all entries
   // in selected collection
