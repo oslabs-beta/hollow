@@ -71,6 +71,9 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 
 ## Guides
 ### Adding a New Collection
+* To add a new collection, navigate to the Tools section in the sidebar and click on 'Content-Builder'.
+* In the Content-Builder sidebar that opens up, click on 'Add New Collection'.
+* Fill out the input's and click on 'Add Collection' to add the collection.
 ### Deleting a Collection
 ### Adding a Field to Collection
 ### Editing a Collection's Field
