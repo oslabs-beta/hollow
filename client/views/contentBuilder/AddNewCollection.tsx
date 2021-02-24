@@ -19,9 +19,14 @@ import { AddNewCollectionProps } from './interface.ts';
  * 
  * @param refreshCollections - function which forces a rerender of the active collections to 
  * reflect any changes
+ * 
+ * @param currentCollections - an array containing the current collections
  */
 
-const AddNewCollection = ({ handleActiveChange, refreshCollections }: AddNewCollectionProps) => {
+const AddNewCollection = ({ 
+  handleActiveChange, 
+  refreshCollections, 
+  currentCollections }: AddNewCollectionProps) => {
 
   // holds the colleciton name as a string
   const [displayName, setDisplayName] = useState('');
@@ -65,6 +70,8 @@ const AddNewCollection = ({ handleActiveChange, refreshCollections }: AddNewColl
       messageArr.push('Create at least one data field and try again.');
     } else if (fields.some((field: any) => /[^a-zA-Z0-9_]/.test(field.columnName))) {
       messageArr.push('Column names can only contain letters, numbers, and underscores.')
+    } else if (currentCollections.includes(collectionName)) {
+      messageArr.push('Collection name already exists. Must use a unique name')
     }
     return messageArr;
   }
@@ -139,7 +146,6 @@ const AddNewCollection = ({ handleActiveChange, refreshCollections }: AddNewColl
     deleteRow={deleteRow} 
   />));
 
-
   return (
     <div className="content-builder">
             <h2>Add New Collection</h2>
@@ -154,7 +160,7 @@ const AddNewCollection = ({ handleActiveChange, refreshCollections }: AddNewColl
                 />
               </div>
               <div className="content-table">
-                <div>
+                <div className='rowBuilder'>
                   <div className="name-col">Field Name</div>
                   <div className="type-col">Field Type</div>
                   <div className="button-col"></div>

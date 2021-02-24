@@ -16,7 +16,7 @@ import SearchBar from  './SearchBar.tsx'
 const Header = () => {
   return (
     <div className='headerContainer'> 
-      <SearchBar />
+      {/* <SearchBar /> */}
       <h1 className='headerTextRight'></h1> 
     </div>
   )
