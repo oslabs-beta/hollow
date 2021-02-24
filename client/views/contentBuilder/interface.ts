@@ -63,6 +63,7 @@ export interface FieldEditProps {
 export interface AddNewCollectionProps {
   handleActiveChange: (activeItem: string) => void;
   refreshCollections: () => void;
+  currentCollections: string[];
 }
 
 /******************************************************************************************* */
@@ -78,6 +79,7 @@ export interface ActiveConfigProps {
   fieldEditActive: boolean;
   fieldEditData: object;
   activeConfig: string;
+  currentCollections: string[];
 }
 
 /******************************************************************************************* */

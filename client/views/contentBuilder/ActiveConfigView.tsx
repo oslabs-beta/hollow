@@ -37,6 +37,8 @@ import { ActiveConfigProps } from './interface.ts';
  * @param fieldEditData - an object containing all of the selected collections field data
  * 
  * @param activeConfig - a string containing the selected content builder sidebar item
+ * 
+ * @param currentCollections - an array containing the current collections
  */
 
 const ActiveConfigView = ({ 
@@ -47,7 +49,8 @@ const ActiveConfigView = ({
   handleFieldClick, 
   fieldEditActive, 
   fieldEditData, 
-  activeConfig }: ActiveConfigProps) => {
+  activeConfig,
+  currentCollections }: ActiveConfigProps) => {
 
 
   // holds a boolean which determines whether or not the create new field
@@ -99,7 +102,8 @@ const ActiveConfigView = ({
       {activeConfig === 'Add New Collection'
         ? <AddNewCollection 
             handleActiveChange={handleActiveChange} 
-            refreshCollections={refreshCollections} 
+            refreshCollections={refreshCollections}
+            currentCollections={currentCollections} 
           />
           // if fieldEditActive is true, render the field edit component
        : fieldEditActive

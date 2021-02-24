@@ -170,7 +170,6 @@ const FieldEdit = ({
             name={field[1]}
             value={configFields[reads[index]]}
             onChange={(e: any) => handleChange(e)}
-            disabled
           />
         </div>
       )
