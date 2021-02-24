@@ -56,7 +56,7 @@ export const FieldRow = ({
   deleteRow }: FieldRowProps) => {
 
   return (
-    <div key={`row-${index}`}>
+    <div key={`row-${index}`} className='additionalInputs'>
       <div className="name-col">
         <input
           data-idx={index}
@@ -66,15 +66,15 @@ export const FieldRow = ({
           onChange={handleFieldChange}
         />
       </div>
-      <div className="type-col">
+      <div className="type-col selectType">
         <select
           data-idx={index}
           className="dataType"
           value={dataType}
           onChange={handleFieldChange}
         >
-          <option value="text">text</option>
-          <option value="number">number</option>
+          <option value="text">character varying</option>
+          <option value="number">integer</option>
           <option value="boolean">boolean</option>
         </select>
       </div>

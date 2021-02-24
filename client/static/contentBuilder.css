@@ -72,26 +72,34 @@
   flex-direction: column;
   row-gap: var(--table-gap);
   margin-top: 20px;
-  margin-bottom: calc(var(--table-gap) * 2);
+  margin-bottom: .5rem;
+  
 }
 
 .content-table > div {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   column-gap: var(--table-gap);
 }
 
 .content-table .name-col {
-  flex-grow: 2;
+  flex-grow: 1;
 }
 
 .content-table .type-col {
-  width: 100px;
+  width: 10rem;
 }
 
 .content-table .button-col {
   width: 100px;
+}
+
+.selectType {
+  margin-top: -.5rem;
+}
+
+.additionalInputs {
+  align-items: center;
 }
 
 .content-table input[type="text"],
@@ -106,10 +114,15 @@
 div.form-error {
   margin-top: calc(var(--table-gap) * 2);
   font-size: 12px;
+  color: #bd5555;
 }
 
 .form-error ul {
   list-style-type: none;
+}
+
+.rowBuilder {
+  align-items: center;
 }
 
 /* Inner Sidebar */
@@ -206,7 +219,7 @@ div.form-error {
   background-color: #819494;
   opacity: 0.5;
   border: none;
-  text-indent: .4rem;
+  text-indent: .2rem;
 }
 
 .addFieldPopupHeader {

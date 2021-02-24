@@ -296,6 +296,7 @@ const ActiveCollection = ({
           refreshCollections();
         }
       })
+      .then(() => setSaveSuccess(false))
       .catch((err) => {
         console.log(err);
         setSaveFail(true);

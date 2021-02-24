@@ -78,7 +78,7 @@ import { ContentBuilderProps } from './interface.ts';
   // the event target that was clicked
   const handleCollectionConfig = (event: any) => {
     let text;
-    if (event.target.innerText === '+ Add New Collection') text = 'Add New Collection';
+    if (event.target.innerText === '+ Add New Collection' || event.target.innerText === '+') text = 'Add New Collection';
     else if (event.target.classList[0] === 'contentBuilderSidebarTool') text = 'Add New Collection';
     else text = event.target.innerText;
     setActiveConfig(text);
@@ -87,6 +87,10 @@ import { ContentBuilderProps } from './interface.ts';
   // function which handles clicks on individual fields and sets the fieldEditData to reflect
   // the data that is in the event target of the clicked element
   const handleFieldClick = (event: any) => {
+
+    // id should not be edited, so if the id field is clicked, we force a return and nothing happens.
+    if (event.target.parentNode.firstElementChild.innerText === 'id') return;
+    
     if (fieldEditActive) {
       setFieldEditActive(false);
       setFieldEditData({});
@@ -148,6 +152,7 @@ import { ContentBuilderProps } from './interface.ts';
         activeConfigFields={activeConfigFields}
         fieldEditData={fieldEditData}
         activeConfig={activeConfig}
+        currentCollections={currentCollections}
       />
     </div>
   );
