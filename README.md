@@ -153,7 +153,7 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 ![DELETE ENTRY GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/delete_entry.gif)
 
 ## Endpoints
-*  Get all collection's: ``GET``` ```/api/tables```
+*  Get all collection's: ```GET``` ```/api/tables```
 *  Add collection: ```POST``` ```/api/tables```
 *  Get collection by name: ```GET``` ```/api/tables/:name```
 *  Delete collection: ```DELETE``` ```/api/tables/:name```
