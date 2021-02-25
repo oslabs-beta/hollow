@@ -133,7 +133,7 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 3. Fill out the input fields.
 4. In the upper right hand side of the Add Entry page, click on 'Add Entry' to add the entry to selected colleciton in your database.
 
-![ADD ENTRY GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/add%20entrygif.gif)
+![ADD ENTRY GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/add_entry.gif)
 
 ### Editing an Entry in a Collection
 
