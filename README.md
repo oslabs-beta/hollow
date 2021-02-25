@@ -30,7 +30,7 @@
   * [Adding an Entry to a Collection](#Adding-an-Entry-to-a-Collection)
   * [Editing an Entry in a Collection](#Editing-an-Entry-in-a-Collection)
   * [Deleting an Entry from a Collection](#Deleting-an-Entry-from-a-Collection)
-* [Endpoints](#Endpoints)
+* [API Endpoints](#API-Endpoints)
 * [How To Contribute](#How-To-Contribute)
 * [Contributors](#Contributors)
 
@@ -146,25 +146,18 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 ![EDIT ENTRY GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/edit_entry.gif)
 
 ### Deleting an Entry from a Collection
-1. To delete an entry in a colleciton, navigate to the 'Collection's' section in the main sidebar and click on the collection containing the entry you want to delete. This will open up the Edit Entry page.
+1. To delete an entry in a colleciton, navigate to the 'Collections' section in the main sidebar and click on the collection containing the entry you want to delete. This will open up the Edit Entry page.
 2. In the upper right hand side of the Edit Entry page, click on the red trash can. This will open a confirmation popup.
 3. Confirm you want to delete the entry. This will delete the entry from the selected collection, in your database.
 
 ![DELETE ENTRY GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/delete_entry.gif)
 
-## Endpoints
-*  Get all collection's: ```GET``` ```/api/tables```
-*  Add collection: ```POST``` ```/api/tables```
-*  Get collection by name: ```GET``` ```/api/tables/:name```
-*  Delete collection: ```DELETE``` ```/api/tables/:name```
-*  Rename collection: ```PUT``` ```/api/tables/:name```
-*  Get entry: ```GET``` ```/api/tables/:name/:id```
-*  Add entry: ```POST``` ```/api/tables/:name```
-*  Edit entry: ```PUT``` ```/api/tables/update/:name/:id```
-*  Delete entry: ```DELETE``` ```api/tables/row/:name/:id```
-*  Add collection field: ```POST``` ```/api/tables/:name/:fieldName```
-*  Edit collection field: ```PUT``` ```/api/tables/:name/:fieldName```
-*  Delete collection field: ```DELETE``` ```/api/tables/:name/:fieldName```
+## API Endpoints
+*  Get all items in a collection: ```GET``` ```/api/<collection-name>```
+*  Get one item in a collection: ```GET``` ```/api/<collection-name>/<item-id>```
+*  Add item to a collection: ```POST``` ```/api/<collection-name>```
+*  Update item in a collection: ```PUT``` ```/api/<collection-name>/<item-id>```
+*  Delete item in a collection: ```DELETE``` ```/api/<collection-name>/<item-id>```
 
 ## How To Contribute
 If you come accross an issue you want to solve or have a feature you'd like to add, please fork this repo. Commit changes to a feature branch then open a pull request. We would love to see this project grow!
