@@ -157,7 +157,7 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 * Table router
 
 ## How To Contribute
-If you come accross an issue you want to tackle or have a feature you think should be added, please feel free make a PR and someone from the core team will review it.
+If you come accross an issue you want to tackle or a feature you think should be added, please feel free make a PR and someone from the core team will review it.
 
 ## Contributors
 * [Matt Greenberg](https://github.com/mattagreenberg)
