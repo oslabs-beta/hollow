@@ -6,7 +6,7 @@
 </h4>
 
 <p align="center">
-  <img alt="license" src="https://img.shields.io/github/license/oslabs-beta/hollow?color=%23e87e4d&style=flat-square" >
+  <a href="https://github.com/oslabs-beta/hollow/blob/main/LICENSE"><img alt="license" src="https://img.shields.io/github/license/oslabs-beta/hollow?color=%23e87e4d&style=flat-square" ></a>
   <img alt="last commit" src="https://img.shields.io/github/last-commit/oslabs-beta/hollow?color=%23e87e4d&style=flat-square" >
   <img alt="open issues" src="https://img.shields.io/github/issues-raw/oslabs-beta/hollow?color=%23bd5555&style=flat-square" >
   <img alt="contributors" src="https://img.shields.io/github/contributors/oslabs-beta/hollow?color=%23e87e4d&style=flat-square" >
