@@ -10,6 +10,7 @@
   <a href="https://github.com/oslabs-beta/hollow/pulls?q=is%3Apr+is%3Aclosed"><img alt="last commit" src="https://img.shields.io/github/last-commit/oslabs-beta/hollow?color=%23e87e4d&style=flat-square" ></a>
   <a href="https://github.com/oslabs-beta/hollow/issues"><img alt="open issues" src="https://img.shields.io/github/issues-raw/oslabs-beta/hollow?color=%23bd5555&style=flat-square" ></a>
   <a href="https://github.com/oslabs-beta/hollow/graphs/contributors"><img alt="contributors" src="https://img.shields.io/github/contributors/oslabs-beta/hollow?color=%23e87e4d&style=flat-square" ></a>
+  <img alt="stars" src="https://img.shields.io/github/stars/oslabs-beta/hollow?style=social" 
 </p>
 
 ## Overview
