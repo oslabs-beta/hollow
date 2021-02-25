@@ -167,7 +167,15 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 *  Delete collection field: ```DELETE``` ```/api/tables/:name/:fieldName```
 
 ## How To Contribute
-If you come accross an issue you want to tackle or a feature you think should be added, please feel free make a PR and someone from the core team will review it.
+If you come accross an issue you want to solve or have a feature you'd like to add, please fork this repo and work off of a branch. There are many features that we would love to see 
+built out.
+
+**These features are at the top of our list:**
+* Building out a tool to handle setting roles & permissions
+* Adding support for more data types
+* Adding support for more DBMS's
+* Adding support for GraphQL
+* Adding settings for the Admin Tool
 
 ## Contributors
 * [Matt Greenberg](https://github.com/mattagreenberg)
