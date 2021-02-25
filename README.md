@@ -153,8 +153,18 @@ Hollow is currently only configured for AWS. Create an AWS account [here](https:
 ![DELETE ENTRY GIF](https://github.com/oslabs-beta/hollow/blob/main/assets/delete_entry.gif)
 
 ## Endpoints
-* API router
-* Table router
+*  Get all collection's: ``GET``` ```/api/tables```
+*  Add collection: ```POST``` ```/api/tables```
+*  Get collection by name: ```GET``` ```/api/tables/:name```
+*  Delete collection: ```DELETE``` ```/api/tables/:name```
+*  Rename collection: ```PUT``` ```/api/tables/:name```
+*  Get entry: ```GET``` ```/api/tables/:name/:id```
+*  Add entry: ```POST``` ```/api/tables/:name```
+*  Edit entry: ```PUT``` ```/api/tables/update/:name/:id```
+*  Delete entry: ```DELETE``` ```api/tables/row/:name/:id```
+*  Add collection field: ```POST``` ```/api/tables/:name/:fieldName```
+*  Edit collection field: ```PUT``` ```/api/tables/:name/:fieldName```
+*  Delete collection field: ```DELETE``` ```/api/tables/:name/:fieldName```
 
 ## How To Contribute
 If you come accross an issue you want to tackle or a feature you think should be added, please feel free make a PR and someone from the core team will review it.
